@@ -1,6 +1,6 @@
 package: opensubsonic
-output: ../../internal/api/opensubsonic/opensubsonic.go
 generate:
   models: true
   strict-server: true
   std-http-server: true
+output: ../../internal/api/opensubsonic/opensubsonic.gen.go

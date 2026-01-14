@@ -1,7 +1,4 @@
 package opensubsonic
 
-//go:generate go tool oapi-codegen -config cfg.yaml ./openapi/openapi.json
-//go:generate sed -i "/GetTranscodeDecision/! s/200JSONResponse/200JSONResponse_SubsonicResponse/g" ../../internal/api/opensubsonic/opensubsonic.go
-//go:generate sed -i "s/_SubsonicResponse_SubsonicResponse/_SubsonicResponse/g" ../../internal/api/opensubsonic/opensubsonic.go
-//go:generate sed -i "s/GetTranscodeDecision200JSONResponseTranscodeDecisionSourceStreamProtocol/string/g" ../../internal/api/opensubsonic/opensubsonic.go
-//go:generate sed -i "s/GetTranscodeDecision200JSONResponseTranscodeDecisionTranscodeStreamProtocol/string/g" ../../internal/api/opensubsonic/opensubsonic.go
+//go:generate npx @redocly/cli bundle https://raw.githubusercontent.com/opensubsonic/open-subsonic-api/refs/heads/main/openapi/openapi.json --output bundled.json --ext json
+//go:generate oapi-codegen -config cfg.yaml ./bundled.json

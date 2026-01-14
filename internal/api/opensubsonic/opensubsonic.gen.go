@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/oapi-codegen/runtime"
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
@@ -27,60 +28,376 @@ const (
 	UsernameScopes        = "username.Scopes"
 )
 
-// Defines values for GetAlbumListParamsType.
+// Defines values for AlbumListType.
 const (
-	GetAlbumListParamsTypeAlphabeticalByArtist GetAlbumListParamsType = "alphabeticalByArtist"
-	GetAlbumListParamsTypeAlphabeticalByName   GetAlbumListParamsType = "alphabeticalByName"
-	GetAlbumListParamsTypeByGenre              GetAlbumListParamsType = "byGenre"
-	GetAlbumListParamsTypeByYear               GetAlbumListParamsType = "byYear"
-	GetAlbumListParamsTypeFrequent             GetAlbumListParamsType = "frequent"
-	GetAlbumListParamsTypeHighest              GetAlbumListParamsType = "highest"
-	GetAlbumListParamsTypeNewest               GetAlbumListParamsType = "newest"
-	GetAlbumListParamsTypeRandom               GetAlbumListParamsType = "random"
-	GetAlbumListParamsTypeRecent               GetAlbumListParamsType = "recent"
-	GetAlbumListParamsTypeStarred              GetAlbumListParamsType = "starred"
+	AlbumListTypeAlphabeticalByArtist AlbumListType = "alphabeticalByArtist"
+	AlbumListTypeAlphabeticalByName   AlbumListType = "alphabeticalByName"
+	AlbumListTypeByGenre              AlbumListType = "byGenre"
+	AlbumListTypeByYear               AlbumListType = "byYear"
+	AlbumListTypeFrequent             AlbumListType = "frequent"
+	AlbumListTypeHighest              AlbumListType = "highest"
+	AlbumListTypeNewest               AlbumListType = "newest"
+	AlbumListTypeRandom               AlbumListType = "random"
+	AlbumListTypeRecent               AlbumListType = "recent"
+	AlbumListTypeStarred              AlbumListType = "starred"
 )
 
-// Defines values for PostGetAlbumListFormdataBodyType.
+// Defines values for CodecProfileType.
 const (
-	PostGetAlbumListFormdataBodyTypeAlphabeticalByArtist PostGetAlbumListFormdataBodyType = "alphabeticalByArtist"
-	PostGetAlbumListFormdataBodyTypeAlphabeticalByName   PostGetAlbumListFormdataBodyType = "alphabeticalByName"
-	PostGetAlbumListFormdataBodyTypeByGenre              PostGetAlbumListFormdataBodyType = "byGenre"
-	PostGetAlbumListFormdataBodyTypeByYear               PostGetAlbumListFormdataBodyType = "byYear"
-	PostGetAlbumListFormdataBodyTypeFrequent             PostGetAlbumListFormdataBodyType = "frequent"
-	PostGetAlbumListFormdataBodyTypeHighest              PostGetAlbumListFormdataBodyType = "highest"
-	PostGetAlbumListFormdataBodyTypeNewest               PostGetAlbumListFormdataBodyType = "newest"
-	PostGetAlbumListFormdataBodyTypeRandom               PostGetAlbumListFormdataBodyType = "random"
-	PostGetAlbumListFormdataBodyTypeRecent               PostGetAlbumListFormdataBodyType = "recent"
-	PostGetAlbumListFormdataBodyTypeStarred              PostGetAlbumListFormdataBodyType = "starred"
+	AudioCodec CodecProfileType = "AudioCodec"
 )
 
-// Defines values for GetAlbumList2ParamsType.
+// Defines values for CreatePlaylistSuccessResponseStatus.
 const (
-	GetAlbumList2ParamsTypeAlphabeticalByArtist GetAlbumList2ParamsType = "alphabeticalByArtist"
-	GetAlbumList2ParamsTypeAlphabeticalByName   GetAlbumList2ParamsType = "alphabeticalByName"
-	GetAlbumList2ParamsTypeByGenre              GetAlbumList2ParamsType = "byGenre"
-	GetAlbumList2ParamsTypeByYear               GetAlbumList2ParamsType = "byYear"
-	GetAlbumList2ParamsTypeFrequent             GetAlbumList2ParamsType = "frequent"
-	GetAlbumList2ParamsTypeHighest              GetAlbumList2ParamsType = "highest"
-	GetAlbumList2ParamsTypeNewest               GetAlbumList2ParamsType = "newest"
-	GetAlbumList2ParamsTypeRandom               GetAlbumList2ParamsType = "random"
-	GetAlbumList2ParamsTypeRecent               GetAlbumList2ParamsType = "recent"
-	GetAlbumList2ParamsTypeStarred              GetAlbumList2ParamsType = "starred"
+	CreatePlaylistSuccessResponseStatusOk CreatePlaylistSuccessResponseStatus = "ok"
 )
 
-// Defines values for PostGetAlbumList2FormdataBodyType.
+// Defines values for CreateSharesSuccessResponseStatus.
 const (
-	PostGetAlbumList2FormdataBodyTypeAlphabeticalByArtist PostGetAlbumList2FormdataBodyType = "alphabeticalByArtist"
-	PostGetAlbumList2FormdataBodyTypeAlphabeticalByName   PostGetAlbumList2FormdataBodyType = "alphabeticalByName"
-	PostGetAlbumList2FormdataBodyTypeByGenre              PostGetAlbumList2FormdataBodyType = "byGenre"
-	PostGetAlbumList2FormdataBodyTypeByYear               PostGetAlbumList2FormdataBodyType = "byYear"
-	PostGetAlbumList2FormdataBodyTypeFrequent             PostGetAlbumList2FormdataBodyType = "frequent"
-	PostGetAlbumList2FormdataBodyTypeHighest              PostGetAlbumList2FormdataBodyType = "highest"
-	PostGetAlbumList2FormdataBodyTypeNewest               PostGetAlbumList2FormdataBodyType = "newest"
-	PostGetAlbumList2FormdataBodyTypeRandom               PostGetAlbumList2FormdataBodyType = "random"
-	PostGetAlbumList2FormdataBodyTypeRecent               PostGetAlbumList2FormdataBodyType = "recent"
-	PostGetAlbumList2FormdataBodyTypeStarred              PostGetAlbumList2FormdataBodyType = "starred"
+	CreateSharesSuccessResponseStatusOk CreateSharesSuccessResponseStatus = "ok"
+)
+
+// Defines values for DirectPlayProfileProtocols.
+const (
+	DirectPlayProfileProtocolsHls  DirectPlayProfileProtocols = "hls"
+	DirectPlayProfileProtocolsHttp DirectPlayProfileProtocols = "http"
+)
+
+// Defines values for ErrorCode.
+const (
+	ErrorCodeN0  ErrorCode = 0
+	ErrorCodeN10 ErrorCode = 10
+	ErrorCodeN20 ErrorCode = 20
+	ErrorCodeN30 ErrorCode = 30
+	ErrorCodeN40 ErrorCode = 40
+	ErrorCodeN41 ErrorCode = 41
+	ErrorCodeN42 ErrorCode = 42
+	ErrorCodeN43 ErrorCode = 43
+	ErrorCodeN44 ErrorCode = 44
+	ErrorCodeN50 ErrorCode = 50
+	ErrorCodeN60 ErrorCode = 60
+	ErrorCodeN70 ErrorCode = 70
+)
+
+// Defines values for ExplicitStatus.
+const (
+	Clean    ExplicitStatus = "clean"
+	Empty    ExplicitStatus = ""
+	Explicit ExplicitStatus = "explicit"
+)
+
+// Defines values for GenericMediaType.
+const (
+	GenericMediaTypeAudiobook GenericMediaType = "audiobook"
+	GenericMediaTypeMusic     GenericMediaType = "music"
+	GenericMediaTypePodcast   GenericMediaType = "podcast"
+	GenericMediaTypeVideo     GenericMediaType = "video"
+)
+
+// Defines values for GetAlbumInfoSuccessResponseStatus.
+const (
+	GetAlbumInfoSuccessResponseStatusOk GetAlbumInfoSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetAlbumList2SuccessResponseStatus.
+const (
+	GetAlbumList2SuccessResponseStatusOk GetAlbumList2SuccessResponseStatus = "ok"
+)
+
+// Defines values for GetAlbumListSuccessResponseStatus.
+const (
+	GetAlbumListSuccessResponseStatusOk GetAlbumListSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetAlbumSuccessResponseStatus.
+const (
+	GetAlbumSuccessResponseStatusOk GetAlbumSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetArtistInfo2SuccessResponseStatus.
+const (
+	GetArtistInfo2SuccessResponseStatusOk GetArtistInfo2SuccessResponseStatus = "ok"
+)
+
+// Defines values for GetArtistInfoSuccessResponseStatus.
+const (
+	GetArtistInfoSuccessResponseStatusOk GetArtistInfoSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetArtistSuccessResponseStatus.
+const (
+	GetArtistSuccessResponseStatusOk GetArtistSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetArtistsSuccessResponseStatus.
+const (
+	GetArtistsSuccessResponseStatusOk GetArtistsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetBookmarksSuccessResponseStatus.
+const (
+	GetBookmarksSuccessResponseStatusOk GetBookmarksSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetChatMessagesSuccessResponseStatus.
+const (
+	GetChatMessagesSuccessResponseStatusOk GetChatMessagesSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetGenresSuccessResponseStatus.
+const (
+	GetGenresSuccessResponseStatusOk GetGenresSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetIndexesSuccessResponseStatus.
+const (
+	GetIndexesSuccessResponseStatusOk GetIndexesSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetInternetRadioStationsSuccessResponseStatus.
+const (
+	GetInternetRadioStationsSuccessResponseStatusOk GetInternetRadioStationsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetLicenseSuccessResponseStatus.
+const (
+	GetLicenseSuccessResponseStatusOk GetLicenseSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetLyricsBySongIdSuccessResponseStatus.
+const (
+	GetLyricsBySongIdSuccessResponseStatusOk GetLyricsBySongIdSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetLyricsSuccessResponseStatus.
+const (
+	GetLyricsSuccessResponseStatusOk GetLyricsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetMusicDirectorySuccessResponseStatus.
+const (
+	GetMusicDirectorySuccessResponseStatusOk GetMusicDirectorySuccessResponseStatus = "ok"
+)
+
+// Defines values for GetMusicFoldersSuccessResponseStatus.
+const (
+	GetMusicFoldersSuccessResponseStatusOk GetMusicFoldersSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetNewestPodcastsSuccessResponseStatus.
+const (
+	GetNewestPodcastsSuccessResponseStatusOk GetNewestPodcastsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetNowPlayingSuccessResponseStatus.
+const (
+	GetNowPlayingSuccessResponseStatusOk GetNowPlayingSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetOpenSubsonicExtensionsSuccessResponseStatus.
+const (
+	GetOpenSubsonicExtensionsSuccessResponseStatusOk GetOpenSubsonicExtensionsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPlayQueueByIndexSuccessResponseStatus.
+const (
+	GetPlayQueueByIndexSuccessResponseStatusOk GetPlayQueueByIndexSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPlayQueueSuccessResponseStatus.
+const (
+	GetPlayQueueSuccessResponseStatusOk GetPlayQueueSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPlaylistSuccessResponseStatus.
+const (
+	GetPlaylistSuccessResponseStatusOk GetPlaylistSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPlaylistsSuccessResponseStatus.
+const (
+	GetPlaylistsSuccessResponseStatusOk GetPlaylistsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPodcastEpisodeSuccessResponseStatus.
+const (
+	GetPodcastEpisodeSuccessResponseStatusOk GetPodcastEpisodeSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetPodcastsSuccessResponseStatus.
+const (
+	GetPodcastsSuccessResponseStatusOk GetPodcastsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetRandomSongsSuccessResponseStatus.
+const (
+	GetRandomSongsSuccessResponseStatusOk GetRandomSongsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetScanStatusSuccessResponseStatus.
+const (
+	GetScanStatusSuccessResponseStatusOk GetScanStatusSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetSharesSuccessResponseStatus.
+const (
+	GetSharesSuccessResponseStatusOk GetSharesSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetSimilarSongs2SuccessResponseStatus.
+const (
+	GetSimilarSongs2SuccessResponseStatusOk GetSimilarSongs2SuccessResponseStatus = "ok"
+)
+
+// Defines values for GetSimilarSongsSuccessResponseStatus.
+const (
+	GetSimilarSongsSuccessResponseStatusOk GetSimilarSongsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetSongSuccessResponseStatus.
+const (
+	GetSongSuccessResponseStatusOk GetSongSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetSongsByGenreSuccessResponseStatus.
+const (
+	GetSongsByGenreSuccessResponseStatusOk GetSongsByGenreSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetStarred2SuccessResponseStatus.
+const (
+	GetStarred2SuccessResponseStatusOk GetStarred2SuccessResponseStatus = "ok"
+)
+
+// Defines values for GetStarredSuccessResponseStatus.
+const (
+	GetStarredSuccessResponseStatusOk GetStarredSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetTokenInfoSuccessResponseStatus.
+const (
+	GetTokenInfoSuccessResponseStatusOk GetTokenInfoSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetTopSongsSuccessResponseStatus.
+const (
+	GetTopSongsSuccessResponseStatusOk GetTopSongsSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetUserSuccessResponseStatus.
+const (
+	GetUserSuccessResponseStatusOk GetUserSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetUsersSuccessResponseStatus.
+const (
+	GetUsersSuccessResponseStatusOk GetUsersSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetVideoInfoSuccessResponseStatus.
+const (
+	GetVideoInfoSuccessResponseStatusOk GetVideoInfoSuccessResponseStatus = "ok"
+)
+
+// Defines values for GetVideosSuccessResponseStatus.
+const (
+	GetVideosSuccessResponseStatusOk GetVideosSuccessResponseStatus = "ok"
+)
+
+// Defines values for JukeboxAction.
+const (
+	Add     JukeboxAction = "add"
+	Clear   JukeboxAction = "clear"
+	Get     JukeboxAction = "get"
+	Remove  JukeboxAction = "remove"
+	Set     JukeboxAction = "set"
+	SetGain JukeboxAction = "setGain"
+	Shuffle JukeboxAction = "shuffle"
+	Skip    JukeboxAction = "skip"
+	Start   JukeboxAction = "start"
+	Status  JukeboxAction = "status"
+	Stop    JukeboxAction = "stop"
+)
+
+// Defines values for JukeboxControlSuccessResponseStatus.
+const (
+	JukeboxControlSuccessResponseStatusOk JukeboxControlSuccessResponseStatus = "ok"
+)
+
+// Defines values for LimitationComparison.
+const (
+	Equals           LimitationComparison = "Equals"
+	GreaterThanEqual LimitationComparison = "GreaterThanEqual"
+	LessThanEqual    LimitationComparison = "LessThanEqual"
+	NotEquals        LimitationComparison = "NotEquals"
+)
+
+// Defines values for LimitationName.
+const (
+	AudioBitdepth   LimitationName = "audioBitdepth"
+	AudioBitrate    LimitationName = "audioBitrate"
+	AudioChannels   LimitationName = "audioChannels"
+	AudioProfile    LimitationName = "audioProfile"
+	AudioSamplerate LimitationName = "audioSamplerate"
+)
+
+// Defines values for MediaType.
+const (
+	MediaTypeAlbum  MediaType = "album"
+	MediaTypeArtist MediaType = "artist"
+	MediaTypeSong   MediaType = "song"
+)
+
+// Defines values for PodcastStatus.
+const (
+	PodcastStatusCompleted   PodcastStatus = "completed"
+	PodcastStatusDeleted     PodcastStatus = "deleted"
+	PodcastStatusDownloading PodcastStatus = "downloading"
+	PodcastStatusError       PodcastStatus = "error"
+	PodcastStatusNew         PodcastStatus = "new"
+	PodcastStatusSkipped     PodcastStatus = "skipped"
+)
+
+// Defines values for Search2SuccessResponseStatus.
+const (
+	Search2SuccessResponseStatusOk Search2SuccessResponseStatus = "ok"
+)
+
+// Defines values for Search3SuccessResponseStatus.
+const (
+	Search3SuccessResponseStatusOk Search3SuccessResponseStatus = "ok"
+)
+
+// Defines values for SearchSuccessResponseStatus.
+const (
+	SearchSuccessResponseStatusOk SearchSuccessResponseStatus = "ok"
+)
+
+// Defines values for StartScanSuccessResponseStatus.
+const (
+	StartScanSuccessResponseStatusOk StartScanSuccessResponseStatus = "ok"
+)
+
+// Defines values for StreamDetailsProtocol.
+const (
+	StreamDetailsProtocolHls  StreamDetailsProtocol = "hls"
+	StreamDetailsProtocolHttp StreamDetailsProtocol = "http"
+)
+
+// Defines values for SubsonicFailureResponseStatus.
+const (
+	Failed SubsonicFailureResponseStatus = "failed"
+)
+
+// Defines values for SubsonicSuccessResponseStatus.
+const (
+	SubsonicSuccessResponseStatusOk SubsonicSuccessResponseStatus = "ok"
+)
+
+// Defines values for TranscodingProfileProtocol.
+const (
+	Hls  TranscodingProfileProtocol = "hls"
+	Http TranscodingProfileProtocol = "http"
 )
 
 // Defines values for GetCaptionsParamsFormat.
@@ -101,59 +418,10 @@ const (
 	GetTranscodeDecisionParamsMediaTypeSong    GetTranscodeDecisionParamsMediaType = "song"
 )
 
-// Defines values for GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison.
-const (
-	Equals           GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison = "Equals"
-	GreaterThanEqual GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison = "GreaterThanEqual"
-	LessThanEqual    GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison = "LessThanEqual"
-	NotEquals        GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison = "NotEquals"
-)
-
-// Defines values for GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName.
-const (
-	AudioBitdepth   GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName = "audioBitdepth"
-	AudioBitrate    GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName = "audioBitrate"
-	AudioChannels   GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName = "audioChannels"
-	AudioProfile    GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName = "audioProfile"
-	AudioSamplerate GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName = "audioSamplerate"
-)
-
-// Defines values for GetTranscodeDecisionJSONBodyCodecProfilesType.
-const (
-	AudioCodec GetTranscodeDecisionJSONBodyCodecProfilesType = "AudioCodec"
-)
-
-// Defines values for GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols.
-const (
-	GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocolsHls  GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols = "hls"
-	GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocolsHttp GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols = "http"
-)
-
-// Defines values for GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol.
-const (
-	GetTranscodeDecisionJSONBodyTranscodingProfilesProtocolHls  GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol = "hls"
-	GetTranscodeDecisionJSONBodyTranscodingProfilesProtocolHttp GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol = "http"
-)
-
 // Defines values for GetTranscodeStreamParamsMediaType.
 const (
 	GetTranscodeStreamParamsMediaTypePodcast GetTranscodeStreamParamsMediaType = "podcast"
 	GetTranscodeStreamParamsMediaTypeSong    GetTranscodeStreamParamsMediaType = "song"
-)
-
-// Defines values for JukeboxControlParamsAction.
-const (
-	Add     JukeboxControlParamsAction = "add"
-	Clear   JukeboxControlParamsAction = "clear"
-	Get     JukeboxControlParamsAction = "get"
-	Remove  JukeboxControlParamsAction = "remove"
-	Set     JukeboxControlParamsAction = "set"
-	SetGain JukeboxControlParamsAction = "setGain"
-	Shuffle JukeboxControlParamsAction = "shuffle"
-	Skip    JukeboxControlParamsAction = "skip"
-	Start   JukeboxControlParamsAction = "start"
-	Status  JukeboxControlParamsAction = "status"
-	Stop    JukeboxControlParamsAction = "stop"
 )
 
 // Defines values for UpdateUserParamsMaxBitRate.
@@ -177,22 +445,3440 @@ const (
 
 // Defines values for PostUpdateUserFormdataBodyMaxBitRate.
 const (
-	PostUpdateUserFormdataBodyMaxBitRateN0   PostUpdateUserFormdataBodyMaxBitRate = 0
-	PostUpdateUserFormdataBodyMaxBitRateN112 PostUpdateUserFormdataBodyMaxBitRate = 112
-	PostUpdateUserFormdataBodyMaxBitRateN128 PostUpdateUserFormdataBodyMaxBitRate = 128
-	PostUpdateUserFormdataBodyMaxBitRateN160 PostUpdateUserFormdataBodyMaxBitRate = 160
-	PostUpdateUserFormdataBodyMaxBitRateN192 PostUpdateUserFormdataBodyMaxBitRate = 192
-	PostUpdateUserFormdataBodyMaxBitRateN224 PostUpdateUserFormdataBodyMaxBitRate = 224
-	PostUpdateUserFormdataBodyMaxBitRateN256 PostUpdateUserFormdataBodyMaxBitRate = 256
-	PostUpdateUserFormdataBodyMaxBitRateN32  PostUpdateUserFormdataBodyMaxBitRate = 32
-	PostUpdateUserFormdataBodyMaxBitRateN320 PostUpdateUserFormdataBodyMaxBitRate = 320
-	PostUpdateUserFormdataBodyMaxBitRateN40  PostUpdateUserFormdataBodyMaxBitRate = 40
-	PostUpdateUserFormdataBodyMaxBitRateN48  PostUpdateUserFormdataBodyMaxBitRate = 48
-	PostUpdateUserFormdataBodyMaxBitRateN56  PostUpdateUserFormdataBodyMaxBitRate = 56
-	PostUpdateUserFormdataBodyMaxBitRateN64  PostUpdateUserFormdataBodyMaxBitRate = 64
-	PostUpdateUserFormdataBodyMaxBitRateN80  PostUpdateUserFormdataBodyMaxBitRate = 80
-	PostUpdateUserFormdataBodyMaxBitRateN96  PostUpdateUserFormdataBodyMaxBitRate = 96
+	N0   PostUpdateUserFormdataBodyMaxBitRate = 0
+	N112 PostUpdateUserFormdataBodyMaxBitRate = 112
+	N128 PostUpdateUserFormdataBodyMaxBitRate = 128
+	N160 PostUpdateUserFormdataBodyMaxBitRate = 160
+	N192 PostUpdateUserFormdataBodyMaxBitRate = 192
+	N224 PostUpdateUserFormdataBodyMaxBitRate = 224
+	N256 PostUpdateUserFormdataBodyMaxBitRate = 256
+	N32  PostUpdateUserFormdataBodyMaxBitRate = 32
+	N320 PostUpdateUserFormdataBodyMaxBitRate = 320
+	N40  PostUpdateUserFormdataBodyMaxBitRate = 40
+	N48  PostUpdateUserFormdataBodyMaxBitRate = 48
+	N56  PostUpdateUserFormdataBodyMaxBitRate = 56
+	N64  PostUpdateUserFormdataBodyMaxBitRate = 64
+	N80  PostUpdateUserFormdataBodyMaxBitRate = 80
+	N96  PostUpdateUserFormdataBodyMaxBitRate = 96
 )
+
+// AlbumID3 Album with songs.
+type AlbumID3 struct {
+	// Artist Artist name.
+	Artist *string `json:"artist,omitempty"`
+
+	// ArtistId The id of the artist
+	ArtistId *string `json:"artistId,omitempty"`
+
+	// Artists The list of all album artists of the album.
+	Artists *[]ArtistID3 `json:"artists,omitempty"`
+
+	// CoverArt A covertArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Date the album was added. [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// DiscTitles The list of all disc titles of the album.
+	DiscTitles *[]DiscTitle `json:"discTitles,omitempty"`
+
+	// DisplayArtist The single value display artist.
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// Duration Total duration of the album in seconds
+	Duration int `json:"duration"`
+
+	// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+	ExplicitStatus *ExplicitStatus `json:"explicitStatus,omitempty"`
+
+	// Genre The album genre
+	Genre *string `json:"genre,omitempty"`
+
+	// Genres The list of all genres of the album.
+	Genres *[]ItemGenre `json:"genres,omitempty"`
+
+	// Id The id of the album
+	Id string `json:"id"`
+
+	// IsCompilation True if the album is a compilation.
+	IsCompilation *bool `json:"isCompilation,omitempty"`
+
+	// Moods The list of all moods of the album.
+	Moods *[]string `json:"moods,omitempty"`
+
+	// MusicBrainzId The album MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// Name The album name.
+	Name string `json:"name"`
+
+	// OriginalReleaseDate Date the album was originally released.
+	OriginalReleaseDate *ItemDate `json:"originalReleaseDate,omitempty"`
+
+	// PlayCount Number of play of the album
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Played Date the album was last played. [ISO 8601]
+	Played *time.Time `json:"played,omitempty"`
+
+	// RecordLabels The labels producing the album.
+	RecordLabels *[]RecordLabel `json:"recordLabels,omitempty"`
+
+	// ReleaseDate Date the specific edition of the album was released. Note: for files using ID3 tags, releaseDate should generally be read from the TDRL tag. Servers that use a different source for this field should document the behavior.
+	ReleaseDate *ItemDate `json:"releaseDate,omitempty"`
+
+	// ReleaseTypes The types of this album release. (Album, Compilation, EP, Remix, …).
+	ReleaseTypes *[]string `json:"releaseTypes,omitempty"`
+
+	// Song The list of songs
+	Song *[]Child `json:"song,omitempty"`
+
+	// SongCount Number of songs
+	SongCount int `json:"songCount"`
+
+	// SortName The album sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the album was added. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// UserRating The user rating of the album. [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+
+	// Version The album version name (Remastered, Anniversary Box Set, …).
+	Version *string `json:"version,omitempty"`
+
+	// Year The album year
+	Year *int `json:"year,omitempty"`
+}
+
+// AlbumID3WithSongs defines model for AlbumID3WithSongs.
+type AlbumID3WithSongs struct {
+	// Artist Artist name.
+	Artist *string `json:"artist,omitempty"`
+
+	// ArtistId The id of the artist
+	ArtistId *string `json:"artistId,omitempty"`
+
+	// Artists The list of all album artists of the album.
+	Artists *[]ArtistID3 `json:"artists,omitempty"`
+
+	// CoverArt A covertArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Date the album was added. [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// DiscTitles The list of all disc titles of the album.
+	DiscTitles *[]DiscTitle `json:"discTitles,omitempty"`
+
+	// DisplayArtist The single value display artist.
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// Duration Total duration of the album in seconds
+	Duration int `json:"duration"`
+
+	// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+	ExplicitStatus *ExplicitStatus `json:"explicitStatus,omitempty"`
+
+	// Genre The album genre
+	Genre *string `json:"genre,omitempty"`
+
+	// Genres The list of all genres of the album.
+	Genres *[]ItemGenre `json:"genres,omitempty"`
+
+	// Id The id of the album
+	Id string `json:"id"`
+
+	// IsCompilation True if the album is a compilation.
+	IsCompilation *bool `json:"isCompilation,omitempty"`
+
+	// Moods The list of all moods of the album.
+	Moods *[]string `json:"moods,omitempty"`
+
+	// MusicBrainzId The album MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// Name The album name.
+	Name string `json:"name"`
+
+	// OriginalReleaseDate Date the album was originally released.
+	OriginalReleaseDate *ItemDate `json:"originalReleaseDate,omitempty"`
+
+	// PlayCount Number of play of the album
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Played Date the album was last played. [ISO 8601]
+	Played *time.Time `json:"played,omitempty"`
+
+	// RecordLabels The labels producing the album.
+	RecordLabels *[]RecordLabel `json:"recordLabels,omitempty"`
+
+	// ReleaseDate Date the specific edition of the album was released. Note: for files using ID3 tags, releaseDate should generally be read from the TDRL tag. Servers that use a different source for this field should document the behavior.
+	ReleaseDate *ItemDate `json:"releaseDate,omitempty"`
+
+	// ReleaseTypes The types of this album release. (Album, Compilation, EP, Remix, …).
+	ReleaseTypes *[]string `json:"releaseTypes,omitempty"`
+
+	// Song The list of songs
+	Song []Child `json:"song"`
+
+	// SongCount Number of songs
+	SongCount int `json:"songCount"`
+
+	// SortName The album sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the album was added. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// UserRating The user rating of the album. [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+
+	// Version The album version name (Remastered, Anniversary Box Set, …).
+	Version *string `json:"version,omitempty"`
+
+	// Year The album year
+	Year *int `json:"year,omitempty"`
+}
+
+// AlbumInfo Album info.
+type AlbumInfo struct {
+	// LargeImageUrl Album largeImageUrl
+	LargeImageUrl *string `json:"largeImageUrl,omitempty"`
+
+	// LastFmUrl Album lastFmUrl
+	LastFmUrl *string `json:"lastFmUrl,omitempty"`
+
+	// MediumImageUrl Album mediumImageUrl
+	MediumImageUrl *string `json:"mediumImageUrl,omitempty"`
+
+	// MusicBrainzId Album musicBrainzId
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// Notes Album notes
+	Notes *string `json:"notes,omitempty"`
+
+	// SmallImageUrl Album smallImageUrl
+	SmallImageUrl *string `json:"smallImageUrl,omitempty"`
+}
+
+// AlbumList Album list.
+type AlbumList struct {
+	// Album Artist albums
+	Album *[]Child `json:"album,omitempty"`
+}
+
+// AlbumListType The list type. Must be one of the following: random, newest, highest, frequent, recent. Since 1.8.0 you can also use alphabeticalByName or alphabeticalByArtist to page through all albums alphabetically, and starred to retrieve starred albums. Since 1.10.1 you can use byYear and byGenre to list albums in a given year range or genre.
+type AlbumListType string
+
+// Artist Artist details.
+type Artist struct {
+	// ArtistImageUrl Artist image url
+	ArtistImageUrl *string `json:"artistImageUrl,omitempty"`
+
+	// AverageRating Artist average rating [1.0-5.0]
+	AverageRating *float32 `json:"averageRating,omitempty"`
+
+	// Id Artist id
+	Id string `json:"id"`
+
+	// Name Artist name
+	Name string `json:"name"`
+
+	// Starred Artist starred date [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// UserRating Artist rating [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+}
+
+// ArtistID3 An artist from ID3 tags.
+type ArtistID3 struct {
+	// AlbumCount Artist album count.
+	AlbumCount *int `json:"albumCount,omitempty"`
+
+	// ArtistImageUrl An url to an external image source.
+	ArtistImageUrl *string `json:"artistImageUrl,omitempty"`
+
+	// CoverArt A covertArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Id The id of the artist
+	Id string `json:"id"`
+
+	// MusicBrainzId The artist MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// Name The artist name.
+	Name string `json:"name"`
+
+	// Roles The list of all roles this artist has in the library.
+	Roles *[]string `json:"roles,omitempty"`
+
+	// SortName The artist sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the artist was starred. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+}
+
+// ArtistInfo Artist info.
+type ArtistInfo struct {
+	// Biography Artist biography
+	Biography *string `json:"biography,omitempty"`
+
+	// LargeImageUrl Artist largeImageUrl
+	LargeImageUrl *string `json:"largeImageUrl,omitempty"`
+
+	// LastFmUrl Artist lastFmUrl
+	LastFmUrl *string `json:"lastFmUrl,omitempty"`
+
+	// MediumImageUrl Artist mediumImageUrl
+	MediumImageUrl *string `json:"mediumImageUrl,omitempty"`
+
+	// MusicBrainzId Artist musicBrainzId
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// SimilarArtist Similar artists
+	SimilarArtist *[]Artist `json:"similarArtist,omitempty"`
+
+	// SmallImageUrl Artist smallImageUrl
+	SmallImageUrl *string `json:"smallImageUrl,omitempty"`
+}
+
+// ArtistInfo2 Artist info.
+type ArtistInfo2 struct {
+	// Biography Artist biography
+	Biography *string `json:"biography,omitempty"`
+
+	// LargeImageUrl Artist largeImageUrl
+	LargeImageUrl *string `json:"largeImageUrl,omitempty"`
+
+	// LastFmUrl Artist lastFmUrl
+	LastFmUrl *string `json:"lastFmUrl,omitempty"`
+
+	// MediumImageUrl Artist mediumImageUrl
+	MediumImageUrl *string `json:"mediumImageUrl,omitempty"`
+
+	// MusicBrainzId Artist musicBrainzId
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// SimilarArtist Similar artists
+	SimilarArtist *[]ArtistID3 `json:"similarArtist,omitempty"`
+
+	// SmallImageUrl Artist smallImageUrl
+	SmallImageUrl *string `json:"smallImageUrl,omitempty"`
+}
+
+// ArtistWithAlbumsID3 defines model for ArtistWithAlbumsID3.
+type ArtistWithAlbumsID3 struct {
+	// Album Artist albums
+	Album []AlbumID3 `json:"album"`
+
+	// AlbumCount Artist album count.
+	AlbumCount *int `json:"albumCount,omitempty"`
+
+	// ArtistImageUrl An url to an external image source.
+	ArtistImageUrl *string `json:"artistImageUrl,omitempty"`
+
+	// CoverArt A covertArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Id The id of the artist
+	Id string `json:"id"`
+
+	// MusicBrainzId The artist MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// Name The artist name.
+	Name string `json:"name"`
+
+	// Roles The list of all roles this artist has in the library.
+	Roles *[]string `json:"roles,omitempty"`
+
+	// SortName The artist sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the artist was starred. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+}
+
+// ArtistsID3 A list of indexed Artists.
+type ArtistsID3 struct {
+	// IgnoredArticles List of ignored articles space separated
+	IgnoredArticles *string `json:"ignoredArticles,omitempty"`
+
+	// Index Index list
+	Index *[]ArtistID3 `json:"index,omitempty"`
+}
+
+// Bookmark A bookmark.
+type Bookmark struct {
+	// Changed Bookmark last updated date [ISO 8601]
+	Changed time.Time `json:"changed"`
+
+	// Comment Bookmark comment
+	Comment *string `json:"comment,omitempty"`
+
+	// Created Bookmark creation date [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// Entry The bookmark file
+	Entry Child `json:"entry"`
+
+	// Position Bookmark position in milliseconds
+	Position int `json:"position"`
+
+	// Username Username
+	Username string `json:"username"`
+}
+
+// Bookmarks Bookmarks list.
+type Bookmarks struct {
+	// Bookmark List of bookmark
+	Bookmark *[]Bookmark `json:"bookmark,omitempty"`
+}
+
+// ChatMessage A chatMessage.
+type ChatMessage struct {
+	// Message The message
+	Message string `json:"message"`
+
+	// Time Time in millis since Jan 1 1970
+	Time int `json:"time"`
+
+	// Username Username
+	Username string `json:"username"`
+}
+
+// ChatMessages Chat messages list.
+type ChatMessages struct {
+	// ChatMessage List of chatMessage
+	ChatMessage *[]ChatMessage `json:"chatMessage,omitempty"`
+}
+
+// Child A media.
+type Child struct {
+	// Album The album name.
+	Album *string `json:"album,omitempty"`
+
+	// AlbumArtists The list of all album artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	AlbumArtists *[]ArtistID3 `json:"albumArtists,omitempty"`
+
+	// AlbumId The corresponding album id
+	AlbumId *string `json:"albumId,omitempty"`
+
+	// Artist The artist name.
+	Artist *string `json:"artist,omitempty"`
+
+	// ArtistId The corresponding artist id
+	ArtistId *string `json:"artistId,omitempty"`
+
+	// Artists The list of all song artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	Artists *[]ArtistID3 `json:"artists,omitempty"`
+
+	// AverageRating The average rating of the media [1.0-5.0]
+	AverageRating *float32 `json:"averageRating,omitempty"`
+
+	// BitDepth The bit depth of the media.
+	BitDepth *int `json:"bitDepth,omitempty"`
+
+	// BitRate The bitrate of the media.
+	BitRate *int `json:"bitRate,omitempty"`
+
+	// BookmarkPosition The bookmark position in seconds
+	BookmarkPosition *int `json:"bookmarkPosition,omitempty"`
+
+	// Bpm The BPM of the song.
+	Bpm *int `json:"bpm,omitempty"`
+
+	// ChannelCount The number of channels of the media.
+	ChannelCount *int `json:"channelCount,omitempty"`
+
+	// Comment The comment tag of the song.
+	Comment *string `json:"comment,omitempty"`
+
+	// ContentType The mimeType of the media.
+	ContentType *string `json:"contentType,omitempty"`
+
+	// Contributors The list of all contributor artists of the song.
+	Contributors *[]Contributor `json:"contributors,omitempty"`
+
+	// CoverArt The coverArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Date the media was created. [ISO 8601]
+	Created *time.Time `json:"created,omitempty"`
+
+	// DiscNumber The disc number.
+	DiscNumber *int `json:"discNumber,omitempty"`
+
+	// DisplayAlbumArtist The single value display album artist.
+	DisplayAlbumArtist *string `json:"displayAlbumArtist,omitempty"`
+
+	// DisplayArtist The single value display artist.
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// DisplayComposer The single value display composer.
+	DisplayComposer *string `json:"displayComposer,omitempty"`
+
+	// Duration The duration of the media in seconds.
+	Duration *int `json:"duration,omitempty"`
+
+	// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+	ExplicitStatus *ExplicitStatus `json:"explicitStatus,omitempty"`
+
+	// Genre The media genre
+	Genre *string `json:"genre,omitempty"`
+
+	// Genres The list of all genres of the song.
+	Genres *[]ItemGenre `json:"genres,omitempty"`
+
+	// Id The id of the media.
+	Id string `json:"id"`
+
+	// IsDir The media is a directory
+	IsDir bool `json:"isDir"`
+
+	// IsVideo Media is a video
+	IsVideo *bool `json:"isVideo,omitempty"`
+
+	// Isrc The track ISRC(s).
+	Isrc *[]string `json:"isrc,omitempty"`
+
+	// MediaType Note: If you support `musicBrainzId` you must support this field to ensure clients knows what the ID refers to.
+	MediaType *MediaType `json:"mediaType,omitempty"`
+
+	// Moods The list of all moods of the song.
+	Moods *[]string `json:"moods,omitempty"`
+
+	// MusicBrainzId The track MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// OriginalHeight The video original Height
+	OriginalHeight *int `json:"originalHeight,omitempty"`
+
+	// OriginalWidth The video original Width
+	OriginalWidth *int `json:"originalWidth,omitempty"`
+
+	// Parent The id of the parent (folder/album)
+	Parent *string `json:"parent,omitempty"`
+
+	// Path The full path of the media.
+	Path *string `json:"path,omitempty"`
+
+	// PlayCount The play count.
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Played Date the album was last played. [ISO 8601]
+	Played *time.Time `json:"played,omitempty"`
+
+	// ReplayGain The replay gain data of the song.
+	ReplayGain *ReplayGain `json:"replayGain,omitempty"`
+
+	// SamplingRate The sampling rate of the media.
+	SamplingRate *int `json:"samplingRate,omitempty"`
+
+	// Size A file size of the media.
+	Size *int `json:"size,omitempty"`
+
+	// SortName The song sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the media was starred. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// Suffix The file suffix of the media.
+	Suffix *string `json:"suffix,omitempty"`
+
+	// Title The media name.
+	Title string `json:"title"`
+
+	// Track The track number.
+	Track *int `json:"track,omitempty"`
+
+	// TranscodedContentType The transcoded mediaType if transcoding should happen.
+	TranscodedContentType *string `json:"transcodedContentType,omitempty"`
+
+	// TranscodedSuffix The file suffix of the transcoded media.
+	TranscodedSuffix *string `json:"transcodedSuffix,omitempty"`
+
+	// Type The generic type of media [music/podcast/audiobook/video]
+	Type *GenericMediaType `json:"type,omitempty"`
+
+	// UserRating The user rating of the media [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+
+	// Year The media year.
+	Year *int `json:"year,omitempty"`
+}
+
+// ClientInfo defines model for ClientInfo.
+type ClientInfo struct {
+	CodecProfiles              *[]CodecProfile       `json:"codecProfiles,omitempty"`
+	DirectPlayProfiles         *[]DirectPlayProfile  `json:"directPlayProfiles,omitempty"`
+	MaxAudioBitrate            *int                  `json:"maxAudioBitrate,omitempty"`
+	MaxTranscodingAudioBitrate *int                  `json:"maxTranscodingAudioBitrate,omitempty"`
+	Name                       string                `json:"name"`
+	Platform                   string                `json:"platform"`
+	TranscodingProfiles        *[]TranscodingProfile `json:"transcodingProfiles,omitempty"`
+}
+
+// CodecProfile defines model for CodecProfile.
+type CodecProfile struct {
+	Limitations *[]Limitation    `json:"limitations,omitempty"`
+	Name        string           `json:"name"`
+	Type        CodecProfileType `json:"type"`
+}
+
+// CodecProfileType defines model for CodecProfile.Type.
+type CodecProfileType string
+
+// Contributor A contributor artist for a song or an album
+type Contributor struct {
+	// Artist An artist from ID3 tags.
+	Artist ArtistID3 `json:"artist"`
+
+	// Role The contributor role.
+	Role string `json:"role"`
+
+	// SubRole The subRole for roles that may require it. Ex: The instrument for the performer role (TMCL/performer tags). Note: For consistency between different tag formats, the TIPL sub roles should be directly exposed in the role field.
+	SubRole *string `json:"subRole,omitempty"`
+}
+
+// CreatePlaylistResponse A subsonic-response element with a nested playlist element on success.
+type CreatePlaylistResponse struct {
+	SubsonicResponse *CreatePlaylistResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// CreatePlaylistResponse_SubsonicResponse defines model for CreatePlaylistResponse.SubsonicResponse.
+type CreatePlaylistResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// CreatePlaylistSuccessResponse defines model for CreatePlaylistSuccessResponse.
+type CreatePlaylistSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool              `json:"openSubsonic"`
+	Playlist     PlaylistWithSongs `json:"playlist"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status CreatePlaylistSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// CreatePlaylistSuccessResponseStatus The command result. `ok`
+type CreatePlaylistSuccessResponseStatus string
+
+// CreateSharesResponse A subsonic-response element with a nested shares element on success. Which in turns contains a single share element for the newly created share
+type CreateSharesResponse struct {
+	SubsonicResponse *CreateSharesResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// CreateSharesResponse_SubsonicResponse defines model for CreateSharesResponse.SubsonicResponse.
+type CreateSharesResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// CreateSharesSuccessResponse defines model for CreateSharesSuccessResponse.
+type CreateSharesSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Shares Shares.
+	Shares Shares `json:"shares"`
+
+	// Status The command result. `ok`
+	Status CreateSharesSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// CreateSharesSuccessResponseStatus The command result. `ok`
+type CreateSharesSuccessResponseStatus string
+
+// DirectPlayProfile defines model for DirectPlayProfile.
+type DirectPlayProfile struct {
+	// AudioCodecs The list of supported codecs. An empty array means any codecs.
+	AudioCodecs []string `json:"audioCodecs"`
+
+	// Containers The list of supported containers. An empty array means any containers.
+	Containers       []string `json:"containers"`
+	MaxAudioChannels *int     `json:"maxAudioChannels,omitempty"`
+
+	// Protocols The list of supported protocols. An empty array means any protocols.
+	Protocols []DirectPlayProfileProtocols `json:"protocols"`
+}
+
+// DirectPlayProfileProtocols defines model for DirectPlayProfile.Protocols.
+type DirectPlayProfileProtocols string
+
+// Directory Directory.
+type Directory struct {
+	// AverageRating The average rating [1-5]
+	AverageRating *float32 `json:"averageRating,omitempty"`
+
+	// Child The directory content
+	Child *[]Child `json:"child,omitempty"`
+
+	// Id The id
+	Id string `json:"id"`
+
+	// Name The directory name
+	Name string `json:"name"`
+
+	// Parent Parent item
+	Parent *string `json:"parent,omitempty"`
+
+	// PlayCount The play count
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Starred Starred date [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// UserRating The user rating [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+}
+
+// DiscTitle A disc title for an album
+type DiscTitle struct {
+	// Disc The disc number.
+	Disc int `json:"disc"`
+
+	// Title The name of the disc.
+	Title string `json:"title"`
+}
+
+// Error defines model for Error.
+type Error struct {
+	// Code The error code.
+	// * 0: A generic error.
+	// * 10: Required parameter is missing.
+	// * 20: Incompatible Subsonic REST protocol version. Client must upgrade.
+	// * 30: Incompatible Subsonic REST protocol version. Server must upgrade.
+	// * 40: Wrong username or password.
+	// * 41: Token authentication not supported for LDAP users.
+	// * 42: Provided authentication mechanism not supported.
+	// * 43: Multiple conflicting authentication mechanisms provided.
+	// * 44: Invalid API key.
+	// * 50: User is not authorized for the given operation.
+	// * 60: The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
+	// * 70: The requested data was not found.
+	Code ErrorCode `json:"code"`
+
+	// HelpUrl A URL (documentation, configuration, etc) which may provide additional context for the error)
+	HelpUrl *string `json:"helpUrl,omitempty"`
+
+	// Message The optional error message
+	Message *string `json:"message,omitempty"`
+}
+
+// ErrorCode The error code.
+// * 0: A generic error.
+// * 10: Required parameter is missing.
+// * 20: Incompatible Subsonic REST protocol version. Client must upgrade.
+// * 30: Incompatible Subsonic REST protocol version. Server must upgrade.
+// * 40: Wrong username or password.
+// * 41: Token authentication not supported for LDAP users.
+// * 42: Provided authentication mechanism not supported.
+// * 43: Multiple conflicting authentication mechanisms provided.
+// * 44: Invalid API key.
+// * 50: User is not authorized for the given operation.
+// * 60: The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.
+// * 70: The requested data was not found.
+type ErrorCode int
+
+// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+type ExplicitStatus string
+
+// GenericMediaType The generic type of media [music/podcast/audiobook/video]
+type GenericMediaType string
+
+// Genre A genre.
+type Genre struct {
+	// AlbumCount Genre album count
+	AlbumCount int `json:"albumCount"`
+
+	// SongCount Genre song count
+	SongCount int `json:"songCount"`
+
+	// Value Genre name
+	Value string `json:"value"`
+}
+
+// Genres Genres list.
+type Genres struct {
+	// Genre List of genre
+	Genre *[]Genre `json:"genre,omitempty"`
+}
+
+// GetAlbumInfoResponse A subsonic-response element with a nested albumInfo element on success.
+type GetAlbumInfoResponse struct {
+	SubsonicResponse *GetAlbumInfoResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetAlbumInfoResponse_SubsonicResponse defines model for GetAlbumInfoResponse.SubsonicResponse.
+type GetAlbumInfoResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetAlbumInfoSuccessResponse defines model for GetAlbumInfoSuccessResponse.
+type GetAlbumInfoSuccessResponse struct {
+	// AlbumInfo Album info.
+	AlbumInfo AlbumInfo `json:"albumInfo"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetAlbumInfoSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetAlbumInfoSuccessResponseStatus The command result. `ok`
+type GetAlbumInfoSuccessResponseStatus string
+
+// GetAlbumList2Response A subsonic-response element with a nested albumList2 element on success.
+type GetAlbumList2Response struct {
+	SubsonicResponse *GetAlbumList2Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetAlbumList2Response_SubsonicResponse defines model for GetAlbumList2Response.SubsonicResponse.
+type GetAlbumList2Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetAlbumList2SuccessResponse defines model for GetAlbumList2SuccessResponse.
+type GetAlbumList2SuccessResponse struct {
+	// AlbumList2 Album list.
+	AlbumList2 AlbumList `json:"albumList2"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetAlbumList2SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetAlbumList2SuccessResponseStatus The command result. `ok`
+type GetAlbumList2SuccessResponseStatus string
+
+// GetAlbumListResponse A subsonic-response element with a nested albumList element on success.
+type GetAlbumListResponse struct {
+	SubsonicResponse *GetAlbumListResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetAlbumListResponse_SubsonicResponse defines model for GetAlbumListResponse.SubsonicResponse.
+type GetAlbumListResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetAlbumListSuccessResponse defines model for GetAlbumListSuccessResponse.
+type GetAlbumListSuccessResponse struct {
+	// AlbumList Album list.
+	AlbumList AlbumList `json:"albumList"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetAlbumListSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetAlbumListSuccessResponseStatus The command result. `ok`
+type GetAlbumListSuccessResponseStatus string
+
+// GetAlbumResponse A subsonic-response element with a nested album element on success.
+type GetAlbumResponse struct {
+	SubsonicResponse *GetAlbumResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetAlbumResponse_SubsonicResponse defines model for GetAlbumResponse.SubsonicResponse.
+type GetAlbumResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetAlbumSuccessResponse defines model for GetAlbumSuccessResponse.
+type GetAlbumSuccessResponse struct {
+	Album AlbumID3WithSongs `json:"album"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetAlbumSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetAlbumSuccessResponseStatus The command result. `ok`
+type GetAlbumSuccessResponseStatus string
+
+// GetArtistInfo2Response A subsonic-response element with a nested artistInfo2 element on success.
+type GetArtistInfo2Response struct {
+	SubsonicResponse *GetArtistInfo2Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetArtistInfo2Response_SubsonicResponse defines model for GetArtistInfo2Response.SubsonicResponse.
+type GetArtistInfo2Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetArtistInfo2SuccessResponse defines model for GetArtistInfo2SuccessResponse.
+type GetArtistInfo2SuccessResponse struct {
+	// ArtistInfo2 Artist info.
+	ArtistInfo2 ArtistInfo2 `json:"artistInfo2"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetArtistInfo2SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetArtistInfo2SuccessResponseStatus The command result. `ok`
+type GetArtistInfo2SuccessResponseStatus string
+
+// GetArtistInfoResponse A subsonic-response element with a nested artistInfo element on success.
+type GetArtistInfoResponse struct {
+	SubsonicResponse *GetArtistInfoResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetArtistInfoResponse_SubsonicResponse defines model for GetArtistInfoResponse.SubsonicResponse.
+type GetArtistInfoResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetArtistInfoSuccessResponse defines model for GetArtistInfoSuccessResponse.
+type GetArtistInfoSuccessResponse struct {
+	// ArtistInfo Artist info.
+	ArtistInfo ArtistInfo `json:"artistInfo"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetArtistInfoSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetArtistInfoSuccessResponseStatus The command result. `ok`
+type GetArtistInfoSuccessResponseStatus string
+
+// GetArtistResponse A subsonic-response element with a nested artist element on success.
+type GetArtistResponse struct {
+	SubsonicResponse *GetArtistResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetArtistResponse_SubsonicResponse defines model for GetArtistResponse.SubsonicResponse.
+type GetArtistResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetArtistSuccessResponse defines model for GetArtistSuccessResponse.
+type GetArtistSuccessResponse struct {
+	Artist ArtistWithAlbumsID3 `json:"artist"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetArtistSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetArtistSuccessResponseStatus The command result. `ok`
+type GetArtistSuccessResponseStatus string
+
+// GetArtistsResponse A subsonic-response element with a nested artists element on success.
+type GetArtistsResponse struct {
+	SubsonicResponse *GetArtistsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetArtistsResponse_SubsonicResponse defines model for GetArtistsResponse.SubsonicResponse.
+type GetArtistsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetArtistsSuccessResponse defines model for GetArtistsSuccessResponse.
+type GetArtistsSuccessResponse struct {
+	// Artists A list of indexed Artists.
+	Artists ArtistsID3 `json:"artists"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetArtistsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetArtistsSuccessResponseStatus The command result. `ok`
+type GetArtistsSuccessResponseStatus string
+
+// GetBookmarksResponse A subsonic-response element with a nested bookmarks element on success.
+type GetBookmarksResponse struct {
+	SubsonicResponse *GetBookmarksResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetBookmarksResponse_SubsonicResponse defines model for GetBookmarksResponse.SubsonicResponse.
+type GetBookmarksResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetBookmarksSuccessResponse defines model for GetBookmarksSuccessResponse.
+type GetBookmarksSuccessResponse struct {
+	// Bookmarks Bookmarks list.
+	Bookmarks Bookmarks `json:"bookmarks"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetBookmarksSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetBookmarksSuccessResponseStatus The command result. `ok`
+type GetBookmarksSuccessResponseStatus string
+
+// GetChatMessagesResponse A subsonic-response element with a nested chatMessages element on success.
+type GetChatMessagesResponse struct {
+	SubsonicResponse *GetChatMessagesResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetChatMessagesResponse_SubsonicResponse defines model for GetChatMessagesResponse.SubsonicResponse.
+type GetChatMessagesResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetChatMessagesSuccessResponse defines model for GetChatMessagesSuccessResponse.
+type GetChatMessagesSuccessResponse struct {
+	// ChatMessages Chat messages list.
+	ChatMessages ChatMessages `json:"chatMessages"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetChatMessagesSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetChatMessagesSuccessResponseStatus The command result. `ok`
+type GetChatMessagesSuccessResponseStatus string
+
+// GetGenresResponse A subsonic-response element with a nested genres element on success.
+type GetGenresResponse struct {
+	SubsonicResponse *GetGenresResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetGenresResponse_SubsonicResponse defines model for GetGenresResponse.SubsonicResponse.
+type GetGenresResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetGenresSuccessResponse defines model for GetGenresSuccessResponse.
+type GetGenresSuccessResponse struct {
+	// Genres Genres list.
+	Genres Genres `json:"genres"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetGenresSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetGenresSuccessResponseStatus The command result. `ok`
+type GetGenresSuccessResponseStatus string
+
+// GetIndexesResponse A subsonic-response element with a nested indexes element on success.
+type GetIndexesResponse struct {
+	SubsonicResponse *GetIndexesResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetIndexesResponse_SubsonicResponse defines model for GetIndexesResponse.SubsonicResponse.
+type GetIndexesResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetIndexesSuccessResponse defines model for GetIndexesSuccessResponse.
+type GetIndexesSuccessResponse struct {
+	// Indexes Artist list.
+	Indexes Indexes `json:"indexes"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetIndexesSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetIndexesSuccessResponseStatus The command result. `ok`
+type GetIndexesSuccessResponseStatus string
+
+// GetInternetRadioStationsResponse A subsonic-response element with a nested internetRadioStations element on success.
+type GetInternetRadioStationsResponse struct {
+	SubsonicResponse *GetInternetRadioStationsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetInternetRadioStationsResponse_SubsonicResponse defines model for GetInternetRadioStationsResponse.SubsonicResponse.
+type GetInternetRadioStationsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetInternetRadioStationsSuccessResponse defines model for GetInternetRadioStationsSuccessResponse.
+type GetInternetRadioStationsSuccessResponse struct {
+	// InternetRadioStations internetRadioStations.
+	InternetRadioStations InternetRadioStations `json:"internetRadioStations"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetInternetRadioStationsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetInternetRadioStationsSuccessResponseStatus The command result. `ok`
+type GetInternetRadioStationsSuccessResponseStatus string
+
+// GetLicenseResponse A subsonic-response element with a nested license element on success.
+type GetLicenseResponse struct {
+	SubsonicResponse *GetLicenseResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetLicenseResponse_SubsonicResponse defines model for GetLicenseResponse.SubsonicResponse.
+type GetLicenseResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetLicenseSuccessResponse defines model for GetLicenseSuccessResponse.
+type GetLicenseSuccessResponse struct {
+	// License getLicense result.
+	License License `json:"license"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetLicenseSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetLicenseSuccessResponseStatus The command result. `ok`
+type GetLicenseSuccessResponseStatus string
+
+// GetLyricsBySongIdResponse A subsonic-response element with a nested lyricsList
+type GetLyricsBySongIdResponse struct {
+	SubsonicResponse *GetLyricsBySongIdResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetLyricsBySongIdResponse_SubsonicResponse defines model for GetLyricsBySongIdResponse.SubsonicResponse.
+type GetLyricsBySongIdResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetLyricsBySongIdSuccessResponse defines model for GetLyricsBySongIdSuccessResponse.
+type GetLyricsBySongIdSuccessResponse struct {
+	// LyricsList List of structured lyrics
+	LyricsList LyricsList `json:"lyricsList"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetLyricsBySongIdSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetLyricsBySongIdSuccessResponseStatus The command result. `ok`
+type GetLyricsBySongIdSuccessResponseStatus string
+
+// GetLyricsResponse A subsonic-response element with a nested lyrics element on success.
+type GetLyricsResponse struct {
+	SubsonicResponse *GetLyricsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetLyricsResponse_SubsonicResponse defines model for GetLyricsResponse.SubsonicResponse.
+type GetLyricsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetLyricsSuccessResponse defines model for GetLyricsSuccessResponse.
+type GetLyricsSuccessResponse struct {
+	// Lyrics Lyrics.
+	Lyrics Lyrics `json:"lyrics"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetLyricsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetLyricsSuccessResponseStatus The command result. `ok`
+type GetLyricsSuccessResponseStatus string
+
+// GetMusicDirectoryResponse A subsonic-response element with a nested directory element on success.
+type GetMusicDirectoryResponse struct {
+	SubsonicResponse *GetMusicDirectoryResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetMusicDirectoryResponse_SubsonicResponse defines model for GetMusicDirectoryResponse.SubsonicResponse.
+type GetMusicDirectoryResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetMusicDirectorySuccessResponse defines model for GetMusicDirectorySuccessResponse.
+type GetMusicDirectorySuccessResponse struct {
+	// Directory Directory.
+	Directory Directory `json:"directory"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetMusicDirectorySuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetMusicDirectorySuccessResponseStatus The command result. `ok`
+type GetMusicDirectorySuccessResponseStatus string
+
+// GetMusicFoldersResponse A subsonic-response element with a nested musicFolders element on success.
+type GetMusicFoldersResponse struct {
+	SubsonicResponse *GetMusicFoldersResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetMusicFoldersResponse_SubsonicResponse defines model for GetMusicFoldersResponse.SubsonicResponse.
+type GetMusicFoldersResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetMusicFoldersSuccessResponse defines model for GetMusicFoldersSuccessResponse.
+type GetMusicFoldersSuccessResponse struct {
+	// MusicFolders MusicFolders.
+	MusicFolders MusicFolders `json:"musicFolders"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetMusicFoldersSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetMusicFoldersSuccessResponseStatus The command result. `ok`
+type GetMusicFoldersSuccessResponseStatus string
+
+// GetNewestPodcastsResponse A subsonic-response element with a nested `newestPodcasts` element on success.
+type GetNewestPodcastsResponse struct {
+	SubsonicResponse *GetNewestPodcastsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetNewestPodcastsResponse_SubsonicResponse defines model for GetNewestPodcastsResponse.SubsonicResponse.
+type GetNewestPodcastsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetNewestPodcastsSuccessResponse defines model for GetNewestPodcastsSuccessResponse.
+type GetNewestPodcastsSuccessResponse struct {
+	// NewestPodcasts NewestPodcasts.
+	NewestPodcasts NewestPodcasts `json:"newestPodcasts"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetNewestPodcastsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetNewestPodcastsSuccessResponseStatus The command result. `ok`
+type GetNewestPodcastsSuccessResponseStatus string
+
+// GetNowPlayingResponse A subsonic-response element with a nested `nowPlaying` element on success.
+type GetNowPlayingResponse struct {
+	SubsonicResponse *GetNowPlayingResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetNowPlayingResponse_SubsonicResponse defines model for GetNowPlayingResponse.SubsonicResponse.
+type GetNowPlayingResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetNowPlayingSuccessResponse defines model for GetNowPlayingSuccessResponse.
+type GetNowPlayingSuccessResponse struct {
+	// NowPlaying nowPlaying.
+	NowPlaying NowPlaying `json:"nowPlaying"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetNowPlayingSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetNowPlayingSuccessResponseStatus The command result. `ok`
+type GetNowPlayingSuccessResponseStatus string
+
+// GetOpenSubsonicExtensionsResponse A subsonic-response element with a nested `openSubsonicExtensions` element on success.
+type GetOpenSubsonicExtensionsResponse struct {
+	SubsonicResponse *GetOpenSubsonicExtensionsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetOpenSubsonicExtensionsResponse_SubsonicResponse defines model for GetOpenSubsonicExtensionsResponse.SubsonicResponse.
+type GetOpenSubsonicExtensionsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetOpenSubsonicExtensionsSuccessResponse defines model for GetOpenSubsonicExtensionsSuccessResponse.
+type GetOpenSubsonicExtensionsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic           bool                    `json:"openSubsonic"`
+	OpenSubsonicExtensions []OpenSubsonicExtension `json:"openSubsonicExtensions"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetOpenSubsonicExtensionsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetOpenSubsonicExtensionsSuccessResponseStatus The command result. `ok`
+type GetOpenSubsonicExtensionsSuccessResponseStatus string
+
+// GetPlayQueueByIndexResponse A subsonic-response element with a nested `PlayQueueByIndex` element on success.
+type GetPlayQueueByIndexResponse struct {
+	SubsonicResponse *GetPlayQueueByIndexResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPlayQueueByIndexResponse_SubsonicResponse defines model for GetPlayQueueByIndexResponse.SubsonicResponse.
+type GetPlayQueueByIndexResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPlayQueueByIndexSuccessResponse defines model for GetPlayQueueByIndexSuccessResponse.
+type GetPlayQueueByIndexSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// PlayQueueByIndex NowPlayingEntry with queue index.
+	PlayQueueByIndex PlayQueueByIndex `json:"playQueueByIndex"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPlayQueueByIndexSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPlayQueueByIndexSuccessResponseStatus The command result. `ok`
+type GetPlayQueueByIndexSuccessResponseStatus string
+
+// GetPlayQueueResponse A subsonic-response element with a nested `playQueue` element on success.
+type GetPlayQueueResponse struct {
+	SubsonicResponse *GetPlayQueueResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPlayQueueResponse_SubsonicResponse defines model for GetPlayQueueResponse.SubsonicResponse.
+type GetPlayQueueResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPlayQueueSuccessResponse defines model for GetPlayQueueSuccessResponse.
+type GetPlayQueueSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// PlayQueue NowPlayingEntry.
+	PlayQueue PlayQueue `json:"playQueue"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPlayQueueSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPlayQueueSuccessResponseStatus The command result. `ok`
+type GetPlayQueueSuccessResponseStatus string
+
+// GetPlaylistResponse A subsonic-response element with a nested playlist element on success.
+type GetPlaylistResponse struct {
+	SubsonicResponse *GetPlaylistResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPlaylistResponse_SubsonicResponse defines model for GetPlaylistResponse.SubsonicResponse.
+type GetPlaylistResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPlaylistSuccessResponse defines model for GetPlaylistSuccessResponse.
+type GetPlaylistSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool              `json:"openSubsonic"`
+	Playlist     PlaylistWithSongs `json:"playlist"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPlaylistSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPlaylistSuccessResponseStatus The command result. `ok`
+type GetPlaylistSuccessResponseStatus string
+
+// GetPlaylistsResponse A subsonic-response element with a nested `playlists` element on success.
+type GetPlaylistsResponse struct {
+	SubsonicResponse *GetPlaylistsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPlaylistsResponse_SubsonicResponse defines model for GetPlaylistsResponse.SubsonicResponse.
+type GetPlaylistsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPlaylistsSuccessResponse defines model for GetPlaylistsSuccessResponse.
+type GetPlaylistsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// Playlists Playlists.
+	Playlists Playlists `json:"playlists"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPlaylistsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPlaylistsSuccessResponseStatus The command result. `ok`
+type GetPlaylistsSuccessResponseStatus string
+
+// GetPodcastEpisodeResponse A subsonic-response element with a nested `podcastEpisode` element on success.
+type GetPodcastEpisodeResponse struct {
+	SubsonicResponse *GetPodcastEpisodeResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPodcastEpisodeResponse_SubsonicResponse defines model for GetPodcastEpisodeResponse.SubsonicResponse.
+type GetPodcastEpisodeResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPodcastEpisodeSuccessResponse defines model for GetPodcastEpisodeSuccessResponse.
+type GetPodcastEpisodeSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic   bool           `json:"openSubsonic"`
+	PodcastEpisode PodcastEpisode `json:"podcastEpisode"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPodcastEpisodeSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPodcastEpisodeSuccessResponseStatus The command result. `ok`
+type GetPodcastEpisodeSuccessResponseStatus string
+
+// GetPodcastsResponse A subsonic-response element with a nested `podcasts` element on success.
+type GetPodcastsResponse struct {
+	SubsonicResponse *GetPodcastsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetPodcastsResponse_SubsonicResponse defines model for GetPodcastsResponse.SubsonicResponse.
+type GetPodcastsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetPodcastsSuccessResponse defines model for GetPodcastsSuccessResponse.
+type GetPodcastsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// Podcasts Podcasts.
+	Podcasts Podcasts `json:"podcasts"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetPodcastsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetPodcastsSuccessResponseStatus The command result. `ok`
+type GetPodcastsSuccessResponseStatus string
+
+// GetRandomSongsResponse A subsonic-response element with a nested `randomSongs` element on success.
+type GetRandomSongsResponse struct {
+	SubsonicResponse *GetRandomSongsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetRandomSongsResponse_SubsonicResponse defines model for GetRandomSongsResponse.SubsonicResponse.
+type GetRandomSongsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetRandomSongsSuccessResponse defines model for GetRandomSongsSuccessResponse.
+type GetRandomSongsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// RandomSongs Songs list.
+	RandomSongs Songs `json:"randomSongs"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetRandomSongsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetRandomSongsSuccessResponseStatus The command result. `ok`
+type GetRandomSongsSuccessResponseStatus string
+
+// GetScanStatusResponse A subsonic-response element with a nested `scanStatus` element on success.
+type GetScanStatusResponse struct {
+	SubsonicResponse *GetScanStatusResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetScanStatusResponse_SubsonicResponse defines model for GetScanStatusResponse.SubsonicResponse.
+type GetScanStatusResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetScanStatusSuccessResponse defines model for GetScanStatusSuccessResponse.
+type GetScanStatusSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ScanStatus Scan status information.
+	ScanStatus ScanStatus `json:"scanStatus"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetScanStatusSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetScanStatusSuccessResponseStatus The command result. `ok`
+type GetScanStatusSuccessResponseStatus string
+
+// GetSharesResponse A subsonic-response element with a nested `shares` element on success.
+type GetSharesResponse struct {
+	SubsonicResponse *GetSharesResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetSharesResponse_SubsonicResponse defines model for GetSharesResponse.SubsonicResponse.
+type GetSharesResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetSharesSuccessResponse defines model for GetSharesSuccessResponse.
+type GetSharesSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Shares Shares.
+	Shares Shares `json:"shares"`
+
+	// Status The command result. `ok`
+	Status GetSharesSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetSharesSuccessResponseStatus The command result. `ok`
+type GetSharesSuccessResponseStatus string
+
+// GetSimilarSongs2Response A subsonic-response element with a nested `similarSongs2` element on success.
+type GetSimilarSongs2Response struct {
+	SubsonicResponse *GetSimilarSongs2Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetSimilarSongs2Response_SubsonicResponse defines model for GetSimilarSongs2Response.SubsonicResponse.
+type GetSimilarSongs2Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetSimilarSongs2SuccessResponse defines model for GetSimilarSongs2SuccessResponse.
+type GetSimilarSongs2SuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// SimilarSongs2 SimilarSongs2 list.
+	SimilarSongs2 SimilarSongs2 `json:"similarSongs2"`
+
+	// Status The command result. `ok`
+	Status GetSimilarSongs2SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetSimilarSongs2SuccessResponseStatus The command result. `ok`
+type GetSimilarSongs2SuccessResponseStatus string
+
+// GetSimilarSongsResponse A subsonic-response element with a nested `similarSongs` element on success.
+type GetSimilarSongsResponse struct {
+	SubsonicResponse *GetSimilarSongsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetSimilarSongsResponse_SubsonicResponse defines model for GetSimilarSongsResponse.SubsonicResponse.
+type GetSimilarSongsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetSimilarSongsSuccessResponse defines model for GetSimilarSongsSuccessResponse.
+type GetSimilarSongsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// SimilarSongs SimilarSongs list.
+	SimilarSongs SimilarSongs `json:"similarSongs"`
+
+	// Status The command result. `ok`
+	Status GetSimilarSongsSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetSimilarSongsSuccessResponseStatus The command result. `ok`
+type GetSimilarSongsSuccessResponseStatus string
+
+// GetSongResponse A subsonic-response element with a nested `song` element on success.
+type GetSongResponse struct {
+	SubsonicResponse *GetSongResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetSongResponse_SubsonicResponse defines model for GetSongResponse.SubsonicResponse.
+type GetSongResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetSongSuccessResponse defines model for GetSongSuccessResponse.
+type GetSongSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Song A media.
+	Song Child `json:"song"`
+
+	// Status The command result. `ok`
+	Status GetSongSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetSongSuccessResponseStatus The command result. `ok`
+type GetSongSuccessResponseStatus string
+
+// GetSongsByGenreResponse A subsonic-response element with a nested `songsByGenre` element on success.
+type GetSongsByGenreResponse struct {
+	SubsonicResponse *GetSongsByGenreResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetSongsByGenreResponse_SubsonicResponse defines model for GetSongsByGenreResponse.SubsonicResponse.
+type GetSongsByGenreResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetSongsByGenreSuccessResponse defines model for GetSongsByGenreSuccessResponse.
+type GetSongsByGenreSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// SongsByGenre Songs list.
+	SongsByGenre Songs `json:"songsByGenre"`
+
+	// Status The command result. `ok`
+	Status GetSongsByGenreSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetSongsByGenreSuccessResponseStatus The command result. `ok`
+type GetSongsByGenreSuccessResponseStatus string
+
+// GetStarred2Response A subsonic-response element with a nested `starred2` element on success.
+type GetStarred2Response struct {
+	SubsonicResponse *GetStarred2Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetStarred2Response_SubsonicResponse defines model for GetStarred2Response.SubsonicResponse.
+type GetStarred2Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetStarred2SuccessResponse defines model for GetStarred2SuccessResponse.
+type GetStarred2SuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Starred2 Starred2.
+	Starred2 Starred2 `json:"starred2"`
+
+	// Status The command result. `ok`
+	Status GetStarred2SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetStarred2SuccessResponseStatus The command result. `ok`
+type GetStarred2SuccessResponseStatus string
+
+// GetStarredResponse A subsonic-response element with a nested `starred` element on success.
+type GetStarredResponse struct {
+	SubsonicResponse *GetStarredResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetStarredResponse_SubsonicResponse defines model for GetStarredResponse.SubsonicResponse.
+type GetStarredResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetStarredSuccessResponse defines model for GetStarredSuccessResponse.
+type GetStarredSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Starred starred.
+	Starred Starred `json:"starred"`
+
+	// Status The command result. `ok`
+	Status GetStarredSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetStarredSuccessResponseStatus The command result. `ok`
+type GetStarredSuccessResponseStatus string
+
+// GetTokenInfoResponse A subsonic-response element with a nested tokenInfo on success, or error 44 on invalid token.
+type GetTokenInfoResponse struct {
+	SubsonicResponse *GetTokenInfoResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetTokenInfoResponse_SubsonicResponse defines model for GetTokenInfoResponse.SubsonicResponse.
+type GetTokenInfoResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetTokenInfoSuccessResponse defines model for GetTokenInfoSuccessResponse.
+type GetTokenInfoSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetTokenInfoSuccessResponseStatus `json:"status"`
+
+	// TokenInfo Information about an API key
+	TokenInfo TokenInfo `json:"tokenInfo"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetTokenInfoSuccessResponseStatus The command result. `ok`
+type GetTokenInfoSuccessResponseStatus string
+
+// GetTopSongsResponse A subsonic-response element with a nested `topSongs` element on success.
+type GetTopSongsResponse struct {
+	SubsonicResponse *GetTopSongsResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetTopSongsResponse_SubsonicResponse defines model for GetTopSongsResponse.SubsonicResponse.
+type GetTopSongsResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetTopSongsSuccessResponse defines model for GetTopSongsSuccessResponse.
+type GetTopSongsSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetTopSongsSuccessResponseStatus `json:"status"`
+
+	// TopSongs TopSongs list.
+	TopSongs TopSongs `json:"topSongs"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetTopSongsSuccessResponseStatus The command result. `ok`
+type GetTopSongsSuccessResponseStatus string
+
+// GetUserResponse A subsonic-response element with a nested `user` element on success.
+type GetUserResponse struct {
+	SubsonicResponse *GetUserResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetUserResponse_SubsonicResponse defines model for GetUserResponse.SubsonicResponse.
+type GetUserResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetUserSuccessResponse defines model for GetUserSuccessResponse.
+type GetUserSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetUserSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// User user.
+	User User `json:"user"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetUserSuccessResponseStatus The command result. `ok`
+type GetUserSuccessResponseStatus string
+
+// GetUsersResponse A subsonic-response element with a nested `user` element on success.
+type GetUsersResponse struct {
+	SubsonicResponse *GetUsersResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetUsersResponse_SubsonicResponse defines model for GetUsersResponse.SubsonicResponse.
+type GetUsersResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetUsersSuccessResponse defines model for GetUsersSuccessResponse.
+type GetUsersSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetUsersSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Users users.
+	Users Users `json:"users"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// GetUsersSuccessResponseStatus The command result. `ok`
+type GetUsersSuccessResponseStatus string
+
+// GetVideoInfoResponse A subsonic-response element with a nested `videoInfo` element on success.
+type GetVideoInfoResponse struct {
+	SubsonicResponse *GetVideoInfoResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetVideoInfoResponse_SubsonicResponse defines model for GetVideoInfoResponse.SubsonicResponse.
+type GetVideoInfoResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetVideoInfoSuccessResponse defines model for GetVideoInfoSuccessResponse.
+type GetVideoInfoSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetVideoInfoSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+
+	// VideoInfo videoInfo. TODO
+	VideoInfo VideoInfo `json:"videoInfo"`
+}
+
+// GetVideoInfoSuccessResponseStatus The command result. `ok`
+type GetVideoInfoSuccessResponseStatus string
+
+// GetVideosResponse A subsonic-response element with a nested `videos` element on success.
+type GetVideosResponse struct {
+	SubsonicResponse *GetVideosResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// GetVideosResponse_SubsonicResponse defines model for GetVideosResponse.SubsonicResponse.
+type GetVideosResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// GetVideosSuccessResponse defines model for GetVideosSuccessResponse.
+type GetVideosSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status GetVideosSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+
+	// Videos videos. TODO
+	Videos Videos `json:"videos"`
+}
+
+// GetVideosSuccessResponseStatus The command result. `ok`
+type GetVideosSuccessResponseStatus string
+
+// Index An indexed artist list.
+type Index struct {
+	// Artist Artist list
+	Artist *[]Artist `json:"artist,omitempty"`
+
+	// Name Index name
+	Name string `json:"name"`
+}
+
+// Indexes Artist list.
+type Indexes struct {
+	// Child Array of children
+	Child *[]Child `json:"child,omitempty"`
+
+	// IgnoredArticles The ignored articles
+	IgnoredArticles string `json:"ignoredArticles"`
+
+	// Index Indexed artists
+	Index *[]Index `json:"index,omitempty"`
+
+	// LastModified Last time the index was modified in milliseconds after January 1, 1970 UTC
+	LastModified int `json:"lastModified"`
+
+	// Shortcut Shortcut
+	Shortcut *[]Artist `json:"shortcut,omitempty"`
+}
+
+// InternetRadioStation An internetRadioStation.
+type InternetRadioStation struct {
+	// HomePageUrl Genre name
+	HomePageUrl *string `json:"homePageUrl,omitempty"`
+
+	// Id The Id
+	Id string `json:"id"`
+
+	// Name The name
+	Name string `json:"name"`
+
+	// StreamUrl The streamUrl
+	StreamUrl string `json:"streamUrl"`
+}
+
+// InternetRadioStations internetRadioStations.
+type InternetRadioStations struct {
+	// InternetRadioStation A list of internetRadioStation
+	InternetRadioStation *[]InternetRadioStation `json:"internetRadioStation,omitempty"`
+}
+
+// ItemDate A date for a media item that may be just a year, or year-month, or full date.
+type ItemDate struct {
+	// Day The day (1-31)
+	Day *int `json:"day,omitempty"`
+
+	// Month The month (1-12)
+	Month *int `json:"month,omitempty"`
+
+	// Year The year
+	Year *int `json:"year,omitempty"`
+}
+
+// ItemGenre A genre returned in list of genres for an item.
+type ItemGenre struct {
+	// Name Genre name
+	Name string `json:"name"`
+}
+
+// JukeboxAction JukeBox action.
+type JukeboxAction string
+
+// JukeboxControlResponse A subsonic-response element with a nested :
+//
+// - jukeboxStatus for all actions but get
+// - jukeboxPlaylist for get action
+type JukeboxControlResponse struct {
+	SubsonicResponse *JukeboxControlResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// JukeboxControlResponse_SubsonicResponse defines model for JukeboxControlResponse.SubsonicResponse.
+type JukeboxControlResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// JukeboxControlSuccessResponse defines model for JukeboxControlSuccessResponse.
+type JukeboxControlSuccessResponse struct {
+	JukeboxPlaylist *JukeboxPlaylist `json:"jukeboxPlaylist,omitempty"`
+
+	// JukeboxStatus jukeboxStatus.
+	JukeboxStatus *JukeboxStatus `json:"jukeboxStatus,omitempty"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status JukeboxControlSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// JukeboxControlSuccessResponseStatus The command result. `ok`
+type JukeboxControlSuccessResponseStatus string
+
+// JukeboxPlaylist defines model for JukeboxPlaylist.
+type JukeboxPlaylist struct {
+	// CurrentIndex The current index of the song being played
+	CurrentIndex int `json:"currentIndex"`
+
+	// Entry The songs currently enqueued in the jukebox
+	Entry *[]Child `json:"entry,omitempty"`
+
+	// Playing Whether the queue is currently playing
+	Playing bool `json:"playing"`
+
+	// Position The current position of the track in seconds
+	Position *int `json:"position,omitempty"`
+
+	// Volume Volume, in a range of [0.0, 1.0]
+	Volume int `json:"volume"`
+}
+
+// JukeboxStatus jukeboxStatus.
+type JukeboxStatus struct {
+	// CurrentIndex The current index of the song being played
+	CurrentIndex int `json:"currentIndex"`
+
+	// Playing Whether the queue is currently playing
+	Playing bool `json:"playing"`
+
+	// Position The current position of the track in seconds
+	Position *int `json:"position,omitempty"`
+
+	// Volume Volume, in a range of [0.0, 1.0]
+	Volume int `json:"volume"`
+}
+
+// License getLicense result.
+type License struct {
+	// Email User email
+	Email *string `json:"email,omitempty"`
+
+	// LicenseExpires End of license date. [ISO 8601]
+	LicenseExpires *time.Time `json:"licenseExpires,omitempty"`
+
+	// TrialExpires End of trial date. [ISO 8601]
+	TrialExpires *time.Time `json:"trialExpires,omitempty"`
+
+	// Valid The status of the license
+	Valid bool `json:"valid"`
+}
+
+// Limitation defines model for Limitation.
+type Limitation struct {
+	// Comparison The comparison operator.
+	Comparison LimitationComparison `json:"comparison"`
+
+	// Name The name of the limitation.
+	Name LimitationName `json:"name"`
+
+	// Required Whether this limitation is required.
+	Required bool `json:"required"`
+
+	// Values The values to compare against. For LessThanEqual and GreaterThanEqual only the first value will be used.
+	Values []string `json:"values"`
+}
+
+// LimitationComparison The comparison operator.
+type LimitationComparison string
+
+// LimitationName The name of the limitation.
+type LimitationName string
+
+// Line One line of a song lyric
+type Line struct {
+	// Start The start time of the lyrics, relative to the start time of the track, in milliseconds. If this is not part of synced lyrics, start __must__ be omitted
+	Start *float32 `json:"start,omitempty"`
+
+	// Value The actual text of this line
+	Value string `json:"value"`
+}
+
+// Lyrics Lyrics.
+type Lyrics struct {
+	// Artist The artist name
+	Artist *string `json:"artist,omitempty"`
+
+	// Title The song title
+	Title *string `json:"title,omitempty"`
+
+	// Value The lyrics
+	Value string `json:"value"`
+}
+
+// LyricsList List of structured lyrics
+type LyricsList struct {
+	// StructuredLyrics Structured lyrics. There can be multiple lyrics of the same type with the same language
+	StructuredLyrics *[]StructuredLyrics `json:"structuredLyrics,omitempty"`
+}
+
+// MediaType Note: If you support `musicBrainzId` you must support this field to ensure clients knows what the ID refers to.
+type MediaType string
+
+// MusicFolder MusicFolder.
+type MusicFolder struct {
+	// Id The id
+	Id int `json:"id"`
+
+	// Name The folder name
+	Name *string `json:"name,omitempty"`
+}
+
+// MusicFolders MusicFolders.
+type MusicFolders struct {
+	// MusicFolder The folders
+	MusicFolder *[]MusicFolder `json:"musicFolder,omitempty"`
+}
+
+// NewestPodcasts NewestPodcasts.
+type NewestPodcasts struct {
+	Episode *[]PodcastEpisode `json:"episode,omitempty"`
+}
+
+// NowPlaying nowPlaying.
+type NowPlaying struct {
+	// Entry The now playing entries
+	Entry []NowPlayingEntry `json:"entry"`
+}
+
+// NowPlayingEntry defines model for NowPlayingEntry.
+type NowPlayingEntry struct {
+	// Album The album name.
+	Album *string `json:"album,omitempty"`
+
+	// AlbumArtists The list of all album artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	AlbumArtists *[]ArtistID3 `json:"albumArtists,omitempty"`
+
+	// AlbumId The corresponding album id
+	AlbumId *string `json:"albumId,omitempty"`
+
+	// Artist The artist name.
+	Artist *string `json:"artist,omitempty"`
+
+	// ArtistId The corresponding artist id
+	ArtistId *string `json:"artistId,omitempty"`
+
+	// Artists The list of all song artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	Artists *[]ArtistID3 `json:"artists,omitempty"`
+
+	// AverageRating The average rating of the media [1.0-5.0]
+	AverageRating *float32 `json:"averageRating,omitempty"`
+
+	// BitDepth The bit depth of the media.
+	BitDepth *int `json:"bitDepth,omitempty"`
+
+	// BitRate The bitrate of the media.
+	BitRate *int `json:"bitRate,omitempty"`
+
+	// BookmarkPosition The bookmark position in seconds
+	BookmarkPosition *int `json:"bookmarkPosition,omitempty"`
+
+	// Bpm The BPM of the song.
+	Bpm *int `json:"bpm,omitempty"`
+
+	// ChannelCount The number of channels of the media.
+	ChannelCount *int `json:"channelCount,omitempty"`
+
+	// Comment The comment tag of the song.
+	Comment *string `json:"comment,omitempty"`
+
+	// ContentType The mimeType of the media.
+	ContentType *string `json:"contentType,omitempty"`
+
+	// Contributors The list of all contributor artists of the song.
+	Contributors *[]Contributor `json:"contributors,omitempty"`
+
+	// CoverArt The coverArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Date the media was created. [ISO 8601]
+	Created *time.Time `json:"created,omitempty"`
+
+	// DiscNumber The disc number.
+	DiscNumber *int `json:"discNumber,omitempty"`
+
+	// DisplayAlbumArtist The single value display album artist.
+	DisplayAlbumArtist *string `json:"displayAlbumArtist,omitempty"`
+
+	// DisplayArtist The single value display artist.
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// DisplayComposer The single value display composer.
+	DisplayComposer *string `json:"displayComposer,omitempty"`
+
+	// Duration The duration of the media in seconds.
+	Duration *int `json:"duration,omitempty"`
+
+	// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+	ExplicitStatus *ExplicitStatus `json:"explicitStatus,omitempty"`
+
+	// Genre The media genre
+	Genre *string `json:"genre,omitempty"`
+
+	// Genres The list of all genres of the song.
+	Genres *[]ItemGenre `json:"genres,omitempty"`
+
+	// Id The id of the media.
+	Id string `json:"id"`
+
+	// IsDir The media is a directory
+	IsDir bool `json:"isDir"`
+
+	// IsVideo Media is a video
+	IsVideo *bool `json:"isVideo,omitempty"`
+
+	// Isrc The track ISRC(s).
+	Isrc *[]string `json:"isrc,omitempty"`
+
+	// MediaType Note: If you support `musicBrainzId` you must support this field to ensure clients knows what the ID refers to.
+	MediaType *MediaType `json:"mediaType,omitempty"`
+
+	// MinutesAgo Last update
+	MinutesAgo int `json:"minutesAgo"`
+
+	// Moods The list of all moods of the song.
+	Moods *[]string `json:"moods,omitempty"`
+
+	// MusicBrainzId The track MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// OriginalHeight The video original Height
+	OriginalHeight *int `json:"originalHeight,omitempty"`
+
+	// OriginalWidth The video original Width
+	OriginalWidth *int `json:"originalWidth,omitempty"`
+
+	// Parent The id of the parent (folder/album)
+	Parent *string `json:"parent,omitempty"`
+
+	// Path The full path of the media.
+	Path *string `json:"path,omitempty"`
+
+	// PlayCount The play count.
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Played Date the album was last played. [ISO 8601]
+	Played *time.Time `json:"played,omitempty"`
+
+	// PlayerId Player Id
+	PlayerId int `json:"playerId"`
+
+	// PlayerName Player name
+	PlayerName *string `json:"playerName,omitempty"`
+
+	// ReplayGain The replay gain data of the song.
+	ReplayGain *ReplayGain `json:"replayGain,omitempty"`
+
+	// SamplingRate The sampling rate of the media.
+	SamplingRate *int `json:"samplingRate,omitempty"`
+
+	// Size A file size of the media.
+	Size *int `json:"size,omitempty"`
+
+	// SortName The song sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the media was starred. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// Suffix The file suffix of the media.
+	Suffix *string `json:"suffix,omitempty"`
+
+	// Title The media name.
+	Title string `json:"title"`
+
+	// Track The track number.
+	Track *int `json:"track,omitempty"`
+
+	// TranscodedContentType The transcoded mediaType if transcoding should happen.
+	TranscodedContentType *string `json:"transcodedContentType,omitempty"`
+
+	// TranscodedSuffix The file suffix of the transcoded media.
+	TranscodedSuffix *string `json:"transcodedSuffix,omitempty"`
+
+	// Type The generic type of media [music/podcast/audiobook/video]
+	Type *GenericMediaType `json:"type,omitempty"`
+
+	// UserRating The user rating of the media [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+
+	// Username The username
+	Username string `json:"username"`
+
+	// Year The media year.
+	Year *int `json:"year,omitempty"`
+}
+
+// OpenSubsonicExtension A supported OpenSubsonic API extension.
+type OpenSubsonicExtension struct {
+	// Name The name of the extension.
+	Name string `json:"name"`
+
+	// Versions The list of supported versions of the this extension.
+	Versions []int `json:"versions"`
+}
+
+// PlayQueue NowPlayingEntry.
+type PlayQueue struct {
+	// Changed Date modified [ISO 8601]
+	Changed time.Time `json:"changed"`
+
+	// ChangedBy Name of client app
+	ChangedBy string `json:"changedBy"`
+
+	// Current ID of currently playing track. This will be provided if one or more entries exists
+	Current *string `json:"current,omitempty"`
+
+	// Entry The list of songs in the queue
+	Entry *[]Child `json:"entry,omitempty"`
+
+	// Position Position in milliseconds of currently playing track. If not provided, treat this value as 0
+	Position *int `json:"position,omitempty"`
+
+	// Username The user this queue belongs to
+	Username string `json:"username"`
+}
+
+// PlayQueueByIndex NowPlayingEntry with queue index.
+type PlayQueueByIndex struct {
+	// Changed Date modified [ISO 8601]
+	Changed time.Time `json:"changed"`
+
+	// ChangedBy Name of client app
+	ChangedBy string `json:"changedBy"`
+
+	// CurrentIndex Index of currently playing track.  This must be provided if one or more entries exists
+	CurrentIndex *int `json:"currentIndex,omitempty"`
+
+	// Entry The list of songs in the queue
+	Entry *[]Child `json:"entry,omitempty"`
+
+	// Position Position in milliseconds of currently playing track. If not provided, treat this value as 0
+	Position *int `json:"position,omitempty"`
+
+	// Username The user this queue belongs to
+	Username string `json:"username"`
+}
+
+// Playlist Playlist.
+type Playlist struct {
+	// AllowedUser A list of allowed usernames
+	AllowedUser *[]string `json:"allowedUser,omitempty"`
+
+	// Changed Last changed date [ISO 8601]
+	Changed time.Time `json:"changed"`
+
+	// Comment A comment
+	Comment *string `json:"comment,omitempty"`
+
+	// CoverArt A cover Art Id
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Creation date [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// Duration Playlist duration in seconds
+	Duration int `json:"duration"`
+
+	// Id Id of the playlist
+	Id string `json:"id"`
+
+	// Name Name of the playlist
+	Name string `json:"name"`
+
+	// Owner Owner of the playlist
+	Owner *string `json:"owner,omitempty"`
+
+	// Public Is the playlist public
+	Public *bool `json:"public,omitempty"`
+
+	// SongCount number of songs
+	SongCount int `json:"songCount"`
+}
+
+// PlaylistWithSongs defines model for PlaylistWithSongs.
+type PlaylistWithSongs struct {
+	// AllowedUser A list of allowed usernames
+	AllowedUser *[]string `json:"allowedUser,omitempty"`
+
+	// Changed Last changed date [ISO 8601]
+	Changed time.Time `json:"changed"`
+
+	// Comment A comment
+	Comment *string `json:"comment,omitempty"`
+
+	// CoverArt A cover Art Id
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Creation date [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// Duration Playlist duration in seconds
+	Duration int `json:"duration"`
+
+	// Entry The list of songs
+	Entry *[]Child `json:"entry,omitempty"`
+
+	// Id Id of the playlist
+	Id string `json:"id"`
+
+	// Name Name of the playlist
+	Name string `json:"name"`
+
+	// Owner Owner of the playlist
+	Owner *string `json:"owner,omitempty"`
+
+	// Public Is the playlist public
+	Public *bool `json:"public,omitempty"`
+
+	// SongCount number of songs
+	SongCount int `json:"songCount"`
+}
+
+// Playlists Playlists.
+type Playlists struct {
+	// Playlist The playlists
+	Playlist *[]Playlist `json:"playlist,omitempty"`
+}
+
+// PodcastChannel A Podcast channel
+type PodcastChannel struct {
+	// CoverArt ID used for retrieving cover art
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Description The channel description
+	Description *string `json:"description,omitempty"`
+
+	// Episode Podcast episodes with this channel
+	Episode *[]PodcastEpisode `json:"episode,omitempty"`
+
+	// ErrorMessage An error message
+	ErrorMessage *string `json:"errorMessage,omitempty"`
+
+	// Id The channel ID
+	Id string `json:"id"`
+
+	// OriginalImageUrl URL for original image of podcast channel
+	OriginalImageUrl *string `json:"originalImageUrl,omitempty"`
+
+	// Status An enumeration of possible podcast statuses
+	Status PodcastStatus `json:"status"`
+
+	// Title The channel title
+	Title *string `json:"title,omitempty"`
+
+	// Url Podcast channel URL
+	Url string `json:"url"`
+}
+
+// PodcastEpisode defines model for PodcastEpisode.
+type PodcastEpisode struct {
+	// Album The album name.
+	Album *string `json:"album,omitempty"`
+
+	// AlbumArtists The list of all album artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	AlbumArtists *[]ArtistID3 `json:"albumArtists,omitempty"`
+
+	// AlbumId The corresponding album id
+	AlbumId *string `json:"albumId,omitempty"`
+
+	// Artist The artist name.
+	Artist *string `json:"artist,omitempty"`
+
+	// ArtistId The corresponding artist id
+	ArtistId *string `json:"artistId,omitempty"`
+
+	// Artists The list of all song artists of the song. (Note: Only the required `ArtistID3` fields should be returned by default)
+	Artists *[]ArtistID3 `json:"artists,omitempty"`
+
+	// AverageRating The average rating of the media [1.0-5.0]
+	AverageRating *float32 `json:"averageRating,omitempty"`
+
+	// BitDepth The bit depth of the media.
+	BitDepth *int `json:"bitDepth,omitempty"`
+
+	// BitRate The bitrate of the media.
+	BitRate *int `json:"bitRate,omitempty"`
+
+	// BookmarkPosition The bookmark position in seconds
+	BookmarkPosition *int `json:"bookmarkPosition,omitempty"`
+
+	// Bpm The BPM of the song.
+	Bpm *int `json:"bpm,omitempty"`
+
+	// ChannelCount The number of channels of the media.
+	ChannelCount *int `json:"channelCount,omitempty"`
+
+	// ChannelId TID of the podcast channel
+	ChannelId string `json:"channelId"`
+
+	// Comment The comment tag of the song.
+	Comment *string `json:"comment,omitempty"`
+
+	// ContentType The mimeType of the media.
+	ContentType *string `json:"contentType,omitempty"`
+
+	// Contributors The list of all contributor artists of the song.
+	Contributors *[]Contributor `json:"contributors,omitempty"`
+
+	// CoverArt The coverArt id.
+	CoverArt *string `json:"coverArt,omitempty"`
+
+	// Created Date the media was created. [ISO 8601]
+	Created *time.Time `json:"created,omitempty"`
+
+	// Description Episode description
+	Description *string `json:"description,omitempty"`
+
+	// DiscNumber The disc number.
+	DiscNumber *int `json:"discNumber,omitempty"`
+
+	// DisplayAlbumArtist The single value display album artist.
+	DisplayAlbumArtist *string `json:"displayAlbumArtist,omitempty"`
+
+	// DisplayArtist The single value display artist.
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// DisplayComposer The single value display composer.
+	DisplayComposer *string `json:"displayComposer,omitempty"`
+
+	// Duration The duration of the media in seconds.
+	Duration *int `json:"duration,omitempty"`
+
+	// ExplicitStatus Returns “explicit”, “clean” or “”. (For songs extracted from tags “ITUNESADVISORY”: 1 = explicit, 2 = clean, MP4 “rtng”: 1 or 4 = explicit, 2 = clean. See `albumID3` for albums)
+	ExplicitStatus *ExplicitStatus `json:"explicitStatus,omitempty"`
+
+	// Genre The media genre
+	Genre *string `json:"genre,omitempty"`
+
+	// Genres The list of all genres of the song.
+	Genres *[]ItemGenre `json:"genres,omitempty"`
+
+	// Id The id of the media.
+	Id string `json:"id"`
+
+	// IsDir The media is a directory
+	IsDir bool `json:"isDir"`
+
+	// IsVideo Media is a video
+	IsVideo *bool `json:"isVideo,omitempty"`
+
+	// Isrc The track ISRC(s).
+	Isrc *[]string `json:"isrc,omitempty"`
+
+	// MediaType Note: If you support `musicBrainzId` you must support this field to ensure clients knows what the ID refers to.
+	MediaType *MediaType `json:"mediaType,omitempty"`
+
+	// Moods The list of all moods of the song.
+	Moods *[]string `json:"moods,omitempty"`
+
+	// MusicBrainzId The track MusicBrainzID.
+	MusicBrainzId *string `json:"musicBrainzId,omitempty"`
+
+	// OriginalHeight The video original Height
+	OriginalHeight *int `json:"originalHeight,omitempty"`
+
+	// OriginalWidth The video original Width
+	OriginalWidth *int `json:"originalWidth,omitempty"`
+
+	// Parent The id of the parent (folder/album)
+	Parent *string `json:"parent,omitempty"`
+
+	// Path The full path of the media.
+	Path *string `json:"path,omitempty"`
+
+	// PlayCount The play count.
+	PlayCount *int `json:"playCount,omitempty"`
+
+	// Played Date the album was last played. [ISO 8601]
+	Played *time.Time `json:"played,omitempty"`
+
+	// PublishDate Date the episode was published [ISO 8601]
+	PublishDate *time.Time `json:"publishDate,omitempty"`
+
+	// ReplayGain The replay gain data of the song.
+	ReplayGain *ReplayGain `json:"replayGain,omitempty"`
+
+	// SamplingRate The sampling rate of the media.
+	SamplingRate *int `json:"samplingRate,omitempty"`
+
+	// Size A file size of the media.
+	Size *int `json:"size,omitempty"`
+
+	// SortName The song sort name.
+	SortName *string `json:"sortName,omitempty"`
+
+	// Starred Date the media was starred. [ISO 8601]
+	Starred *time.Time `json:"starred,omitempty"`
+
+	// Status An enumeration of possible podcast statuses
+	Status PodcastStatus `json:"status"`
+
+	// StreamId ID used for streaming podcast
+	StreamId *string `json:"streamId,omitempty"`
+
+	// Suffix The file suffix of the media.
+	Suffix *string `json:"suffix,omitempty"`
+
+	// Title The media name.
+	Title string `json:"title"`
+
+	// Track The track number.
+	Track *int `json:"track,omitempty"`
+
+	// TranscodedContentType The transcoded mediaType if transcoding should happen.
+	TranscodedContentType *string `json:"transcodedContentType,omitempty"`
+
+	// TranscodedSuffix The file suffix of the transcoded media.
+	TranscodedSuffix *string `json:"transcodedSuffix,omitempty"`
+
+	// Type The generic type of media [music/podcast/audiobook/video]
+	Type *GenericMediaType `json:"type,omitempty"`
+
+	// UserRating The user rating of the media [1-5]
+	UserRating *int `json:"userRating,omitempty"`
+
+	// Year The media year.
+	Year *int `json:"year,omitempty"`
+}
+
+// PodcastStatus An enumeration of possible podcast statuses
+type PodcastStatus string
+
+// Podcasts Podcasts.
+type Podcasts struct {
+	// Channel Podcast channel(s)
+	Channel *[]PodcastChannel `json:"channel,omitempty"`
+}
+
+// RecordLabel A record label for an album.
+type RecordLabel struct {
+	Name string `json:"name"`
+}
+
+// ReplayGain The replay gain data of a song. Note: If the data is not present the field must be ommited in the answer. (But the replayGain field on Child must always be present)
+type ReplayGain struct {
+	// AlbumGain The album replay gain value. (In Db)
+	AlbumGain *float32 `json:"albumGain,omitempty"`
+
+	// AlbumPeak The album peak value. (Must be positive)
+	AlbumPeak *float32 `json:"albumPeak,omitempty"`
+
+	// BaseGain The base gain value. (In Db) (Ogg Opus Output Gain for example)
+	BaseGain *float32 `json:"baseGain,omitempty"`
+
+	// FallbackGain An optional fallback gain that clients should apply when the corresponding gain value is missing. (Can be computed from the tracks or exposed as an user setting.)
+	FallbackGain *float32 `json:"fallbackGain,omitempty"`
+
+	// TrackGain The track replay gain value. (In Db)
+	TrackGain *float32 `json:"trackGain,omitempty"`
+
+	// TrackPeak The track peak value. (Must be positive)
+	TrackPeak *float32 `json:"trackPeak,omitempty"`
+}
+
+// ScanStatus Scan status information.
+type ScanStatus struct {
+	// Count Scanned item count
+	Count *int `json:"count,omitempty"`
+
+	// Scanning The status of the scan
+	Scanning bool `json:"scanning"`
+}
+
+// Search2Response A subsonic-response element with a nested `searchResult2` element on success.
+type Search2Response struct {
+	SubsonicResponse *Search2Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// Search2Response_SubsonicResponse defines model for Search2Response.SubsonicResponse.
+type Search2Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// Search2SuccessResponse defines model for Search2SuccessResponse.
+type Search2SuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// SearchResult2 searchResult2
+	SearchResult2 SearchResult2 `json:"searchResult2"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status Search2SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// Search2SuccessResponseStatus The command result. `ok`
+type Search2SuccessResponseStatus string
+
+// Search3Response A subsonic-response element with a nested `searchResult3` element on success.
+type Search3Response struct {
+	SubsonicResponse *Search3Response_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// Search3Response_SubsonicResponse defines model for Search3Response.SubsonicResponse.
+type Search3Response_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// Search3SuccessResponse defines model for Search3SuccessResponse.
+type Search3SuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// SearchResult3 searchResult3
+	SearchResult3 SearchResult3 `json:"searchResult3"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status Search3SuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// Search3SuccessResponseStatus The command result. `ok`
+type Search3SuccessResponseStatus string
+
+// SearchResponse A subsonic-response element with a nested `searchResult` element on success.
+type SearchResponse struct {
+	SubsonicResponse *SearchResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// SearchResponse_SubsonicResponse defines model for SearchResponse.SubsonicResponse.
+type SearchResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// SearchResult searchResult. TODO
+type SearchResult = map[string]interface{}
+
+// SearchResult2 searchResult2
+type SearchResult2 struct {
+	// Album Starred albums
+	Album *[]Child `json:"album,omitempty"`
+
+	// Artist Starred artists
+	Artist *[]Artist `json:"artist,omitempty"`
+
+	// Song Starred songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// SearchResult3 searchResult3
+type SearchResult3 struct {
+	// Album Matching albums
+	Album *[]AlbumID3 `json:"album,omitempty"`
+
+	// Artist Matching artists
+	Artist *[]ArtistID3 `json:"artist,omitempty"`
+
+	// Song Matching songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// SearchSuccessResponse defines model for SearchSuccessResponse.
+type SearchSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// SearchResult searchResult. TODO
+	SearchResult SearchResult `json:"searchResult"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status SearchSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// SearchSuccessResponseStatus The command result. `ok`
+type SearchSuccessResponseStatus string
+
+// Share Share.
+type Share struct {
+	// Created Creation date [ISO 8601]
+	Created time.Time `json:"created"`
+
+	// Description A description
+	Description *string `json:"description,omitempty"`
+
+	// Entry A list of share
+	Entry *[]Child `json:"entry,omitempty"`
+
+	// Expires Share expiration [ISO 8601]
+	Expires *time.Time `json:"expires,omitempty"`
+
+	// Id The share Id
+	Id string `json:"id"`
+
+	// LastVisited Last visit [ISO 8601]
+	LastVisited *time.Time `json:"lastVisited,omitempty"`
+
+	// Url The share url
+	Url string `json:"url"`
+
+	// Username The username
+	Username string `json:"username"`
+
+	// VisitCount Visit count
+	VisitCount int `json:"visitCount"`
+}
+
+// Shares Shares.
+type Shares struct {
+	// Share A list of share
+	Share *[]Share `json:"share,omitempty"`
+}
+
+// SimilarSongs SimilarSongs list.
+type SimilarSongs struct {
+	// Song List of songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// SimilarSongs2 SimilarSongs2 list.
+type SimilarSongs2 struct {
+	// Song List of songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// Songs Songs list.
+type Songs struct {
+	// Song List of songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// Starred starred.
+type Starred struct {
+	// Album Starred albums
+	Album *[]Child `json:"album,omitempty"`
+
+	// Artist Starred artists
+	Artist *[]Artist `json:"artist,omitempty"`
+
+	// Song Starred songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// Starred2 Starred2.
+type Starred2 struct {
+	// Album Starred albums
+	Album *[]AlbumID3 `json:"album,omitempty"`
+
+	// Artist Starred artists
+	Artist *[]ArtistID3 `json:"artist,omitempty"`
+
+	// Song Starred songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// StartScanResponse A subsonic-response element with a nested `scanStatus` element on success.
+type StartScanResponse struct {
+	SubsonicResponse *StartScanResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// StartScanResponse_SubsonicResponse defines model for StartScanResponse.SubsonicResponse.
+type StartScanResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// StartScanSuccessResponse defines model for StartScanSuccessResponse.
+type StartScanSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ScanStatus Scan status information.
+	ScanStatus ScanStatus `json:"scanStatus"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status StartScanSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// StartScanSuccessResponseStatus The command result. `ok`
+type StartScanSuccessResponseStatus string
+
+// StreamDetails defines model for StreamDetails.
+type StreamDetails struct {
+	AudioBitdepth   *int                  `json:"audioBitdepth,omitempty"`
+	AudioBitrate    *int                  `json:"audioBitrate,omitempty"`
+	AudioChannels   *int                  `json:"audioChannels,omitempty"`
+	AudioProfile    *string               `json:"audioProfile,omitempty"`
+	AudioSamplerate *int                  `json:"audioSamplerate,omitempty"`
+	Codec           string                `json:"codec"`
+	Container       string                `json:"container"`
+	Protocol        StreamDetailsProtocol `json:"protocol"`
+}
+
+// StreamDetailsProtocol defines model for StreamDetails.Protocol.
+type StreamDetailsProtocol string
+
+// StructuredLyrics Structured lyrics
+type StructuredLyrics struct {
+	// DisplayArtist The artist name to display. This could be the localized name, or any other value
+	DisplayArtist *string `json:"displayArtist,omitempty"`
+
+	// DisplayTitle The title to display. This could be the song title (localized), or any other value
+	DisplayTitle *string `json:"displayTitle,omitempty"`
+
+	// Lang The lyrics language (ideally ISO 639). If the language is unknown (e.g. lrc file), the server must return `und` (ISO standard) or `xxx` (common value for taggers). Ideally, the server will return lang as an ISO 639 (2/3) code. However, tagged files and external lyrics can come with any value as a potential language code, so clients should take care when displaying lang.
+	//
+	// Furthermore, there is special behavior for the value xxx. While not an ISO code, it is commonly used by taggers and other parsing software. Clients should treat xxx as not having a specified language (equivalent to the und code).
+	Lang string `json:"lang"`
+
+	// Line The actual lyrics. Ordered by start time (synced) or appearance order (unsynced)
+	Line []Line `json:"line"`
+
+	// Offset The offset to apply to all lyrics, in milliseconds. Positive means lyrics appear sooner, negative means later. If not included, the offset must be assumed to be 0
+	Offset *float32 `json:"offset,omitempty"`
+
+	// Synced True if the lyrics are synced, false otherwise
+	Synced bool `json:"synced"`
+}
+
+// SubsonicBaseResponse defines model for SubsonicBaseResponse.
+type SubsonicBaseResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// SubsonicFailureResponse defines model for SubsonicFailureResponse.
+type SubsonicFailureResponse struct {
+	Error Error `json:"error"`
+
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `failed`
+	Status SubsonicFailureResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// SubsonicFailureResponseStatus The command result. `failed`
+type SubsonicFailureResponseStatus string
+
+// SubsonicResponse Common answer wrapper.
+type SubsonicResponse struct {
+	SubsonicResponse *SubsonicResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+}
+
+// SubsonicResponse_SubsonicResponse defines model for SubsonicResponse.SubsonicResponse.
+type SubsonicResponse_SubsonicResponse struct {
+	union json.RawMessage
+}
+
+// SubsonicSuccessResponse defines model for SubsonicSuccessResponse.
+type SubsonicSuccessResponse struct {
+	// OpenSubsonic Must return true if the server support OpenSubsonic API v1
+	OpenSubsonic bool `json:"openSubsonic"`
+
+	// ServerVersion The server version.
+	ServerVersion string `json:"serverVersion"`
+
+	// Status The command result. `ok`
+	Status SubsonicSuccessResponseStatus `json:"status"`
+
+	// Type The server actual name. [Ex: Navidrome or gonic]
+	Type string `json:"type"`
+
+	// Version The server supported Subsonic API version.
+	Version string `json:"version"`
+}
+
+// SubsonicSuccessResponseStatus The command result. `ok`
+type SubsonicSuccessResponseStatus string
+
+// TokenInfo Information about an API key
+type TokenInfo struct {
+	// Username Username associated with token
+	Username string `json:"username"`
+}
+
+// TopSongs TopSongs list.
+type TopSongs struct {
+	// Song List of songs
+	Song *[]Child `json:"song,omitempty"`
+}
+
+// TranscodeDecision defines model for TranscodeDecision.
+type TranscodeDecision struct {
+	CanDirectPlay   bool           `json:"canDirectPlay"`
+	CanTranscode    bool           `json:"canTranscode"`
+	ErrorReason     *string        `json:"errorReason,omitempty"`
+	SourceStream    *StreamDetails `json:"sourceStream,omitempty"`
+	TranscodeParams *string        `json:"transcodeParams,omitempty"`
+	TranscodeReason *[]string      `json:"transcodeReason,omitempty"`
+	TranscodeStream *StreamDetails `json:"transcodeStream,omitempty"`
+}
+
+// TranscodingProfile defines model for TranscodingProfile.
+type TranscodingProfile struct {
+	AudioCodec       string                     `json:"audioCodec"`
+	Container        string                     `json:"container"`
+	MaxAudioChannels *int                       `json:"maxAudioChannels,omitempty"`
+	Protocol         TranscodingProfileProtocol `json:"protocol"`
+}
+
+// TranscodingProfileProtocol defines model for TranscodingProfile.Protocol.
+type TranscodingProfileProtocol string
+
+// User user.
+type User struct {
+	// AdminRole Whether the user is an admin
+	AdminRole bool `json:"adminRole"`
+
+	// AvatarLastChanged Last time the avatar was changed [ISO 8601]
+	AvatarLastChanged *time.Time `json:"avatarLastChanged,omitempty"`
+
+	// CommentRole Whether the user can create comments
+	CommentRole bool `json:"commentRole"`
+
+	// CoverArtRole Whether the user can get cover art
+	CoverArtRole bool `json:"coverArtRole"`
+
+	// DownloadRole Whether the user can download
+	DownloadRole bool `json:"downloadRole"`
+
+	// Folder Folder ID(s)
+	Folder *[]int `json:"folder,omitempty"`
+
+	// JukeboxRole Whether the user can control the jukebox
+	JukeboxRole bool `json:"jukeboxRole"`
+	MaxBitRate  *int `json:"maxBitRate,omitempty"`
+
+	// PlaylistRole Whether the user can create playlists
+	PlaylistRole bool `json:"playlistRole"`
+
+	// PodcastRole Whether the user can create/refresh podcasts
+	PodcastRole bool `json:"podcastRole"`
+
+	// ScrobblingEnabled Scrobbling enabled
+	ScrobblingEnabled bool `json:"scrobblingEnabled"`
+
+	// SettingsRole Whether the user is can edit settings
+	SettingsRole bool `json:"settingsRole"`
+
+	// ShareRole Whether the user can create a stream
+	ShareRole bool `json:"shareRole"`
+
+	// StreamRole Whether the user can stream
+	StreamRole bool `json:"streamRole"`
+
+	// UploadRole Whether the user can upload
+	UploadRole bool `json:"uploadRole"`
+
+	// Username Username
+	Username string `json:"username"`
+
+	// VideoConversionRole Whether the user can convert videos
+	VideoConversionRole bool `json:"videoConversionRole"`
+}
+
+// Users users.
+type Users struct {
+	// User Array of users
+	User *[]User `json:"user,omitempty"`
+}
+
+// VideoInfo videoInfo. TODO
+type VideoInfo = map[string]interface{}
+
+// Videos videos. TODO
+type Videos = map[string]interface{}
+
+// EmptySubsonicResponse Common answer wrapper.
+type EmptySubsonicResponse = SubsonicResponse
+
+// TranscodeDecisionResponse defines model for TranscodeDecisionResponse.
+type TranscodeDecisionResponse struct {
+	TranscodeDecision *TranscodeDecision `json:"transcodeDecision,omitempty"`
+}
 
 // GetAddChatMessageParams defines parameters for GetAddChatMessage.
 type GetAddChatMessageParams struct {
@@ -586,7 +4272,7 @@ type PostGetAlbumInfo2FormdataBody struct {
 
 // GetAlbumListParams defines parameters for GetAlbumList.
 type GetAlbumListParams struct {
-	Type GetAlbumListParamsType `form:"type" json:"type"`
+	Type AlbumListType `form:"type" json:"type"`
 
 	// Size The number of albums to return. Max 500.
 	Size *int `form:"size,omitempty" json:"size,omitempty"`
@@ -606,9 +4292,6 @@ type GetAlbumListParams struct {
 	// MusicFolderId (Since 1.11.0) Only return albums in the music folder with the given ID. See `getMusicFolders`.
 	MusicFolderId *string `form:"musicFolderId,omitempty" json:"musicFolderId,omitempty"`
 }
-
-// GetAlbumListParamsType defines parameters for GetAlbumList.
-type GetAlbumListParamsType string
 
 // PostGetAlbumListFormdataBody defines parameters for PostGetAlbumList.
 type PostGetAlbumListFormdataBody struct {
@@ -631,15 +4314,12 @@ type PostGetAlbumListFormdataBody struct {
 	ToYear *int `form:"toYear,omitempty" json:"toYear,omitempty"`
 
 	// Type The list type. Must be one of the following: random, newest, highest, frequent, recent. Since 1.8.0 you can also use alphabeticalByName or alphabeticalByArtist to page through all albums alphabetically, and starred to retrieve starred albums. Since 1.10.1 you can use byYear and byGenre to list albums in a given year range or genre.
-	Type PostGetAlbumListFormdataBodyType `form:"type" json:"type"`
+	Type AlbumListType `form:"type" json:"type"`
 }
-
-// PostGetAlbumListFormdataBodyType defines parameters for PostGetAlbumList.
-type PostGetAlbumListFormdataBodyType string
 
 // GetAlbumList2Params defines parameters for GetAlbumList2.
 type GetAlbumList2Params struct {
-	Type GetAlbumList2ParamsType `form:"type" json:"type"`
+	Type AlbumListType `form:"type" json:"type"`
 
 	// Size The number of albums to return. Max 500.
 	Size *int `form:"size,omitempty" json:"size,omitempty"`
@@ -659,9 +4339,6 @@ type GetAlbumList2Params struct {
 	// MusicFolderId (Since 1.11.0) Only return albums in the music folder with the given ID. See `getMusicFolders`.
 	MusicFolderId *string `form:"musicFolderId,omitempty" json:"musicFolderId,omitempty"`
 }
-
-// GetAlbumList2ParamsType defines parameters for GetAlbumList2.
-type GetAlbumList2ParamsType string
 
 // PostGetAlbumList2FormdataBody defines parameters for PostGetAlbumList2.
 type PostGetAlbumList2FormdataBody struct {
@@ -684,11 +4361,8 @@ type PostGetAlbumList2FormdataBody struct {
 	ToYear *int `form:"toYear,omitempty" json:"toYear,omitempty"`
 
 	// Type The list type. Must be one of the following: random, newest, highest, frequent, recent. Since 1.8.0 you can also use alphabeticalByName or alphabeticalByArtist to page through all albums alphabetically, and starred to retrieve starred albums. Since 1.10.1 you can use byYear and byGenre to list albums in a given year range or genre.
-	Type PostGetAlbumList2FormdataBodyType `form:"type" json:"type"`
+	Type AlbumListType `form:"type" json:"type"`
 }
-
-// PostGetAlbumList2FormdataBodyType defines parameters for PostGetAlbumList2.
-type PostGetAlbumList2FormdataBodyType string
 
 // GetArtistParams defines parameters for GetArtist.
 type GetArtistParams struct {
@@ -1141,48 +4815,6 @@ type PostGetTopSongsFormdataBody struct {
 	Id string `form:"id" json:"id"`
 }
 
-// GetTranscodeDecisionJSONBody defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBody struct {
-	CodecProfiles *[]struct {
-		Limitations *[]struct {
-			// Comparison The comparison operator.
-			Comparison GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison `json:"comparison"`
-
-			// Name The name of the limitation.
-			Name GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName `json:"name"`
-
-			// Required Whether this limitation is required.
-			Required bool `json:"required"`
-
-			// Values The values to compare against. For LessThanEqual and GreaterThanEqual only the first value will be used.
-			Values []string `json:"values"`
-		} `json:"limitations,omitempty"`
-		Name string                                        `json:"name"`
-		Type GetTranscodeDecisionJSONBodyCodecProfilesType `json:"type"`
-	} `json:"codecProfiles,omitempty"`
-	DirectPlayProfiles *[]struct {
-		// AudioCodecs The list of supported codecs. An empty array means any codecs.
-		AudioCodecs []string `json:"audioCodecs"`
-
-		// Containers The list of supported containers. An empty array means any containers.
-		Containers       []string `json:"containers"`
-		MaxAudioChannels *int     `json:"maxAudioChannels,omitempty"`
-
-		// Protocols The list of supported protocols. An empty array means any protocols.
-		Protocols []GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols `json:"protocols"`
-	} `json:"directPlayProfiles,omitempty"`
-	MaxAudioBitrate            *int   `json:"maxAudioBitrate,omitempty"`
-	MaxTranscodingAudioBitrate *int   `json:"maxTranscodingAudioBitrate,omitempty"`
-	Name                       string `json:"name"`
-	Platform                   string `json:"platform"`
-	TranscodingProfiles        *[]struct {
-		AudioCodec       string                                                  `json:"audioCodec"`
-		Container        string                                                  `json:"container"`
-		MaxAudioChannels *int                                                    `json:"maxAudioChannels,omitempty"`
-		Protocol         GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol `json:"protocol"`
-	} `json:"transcodingProfiles,omitempty"`
-}
-
 // GetTranscodeDecisionParams defines parameters for GetTranscodeDecision.
 type GetTranscodeDecisionParams struct {
 	// MediaId The ID of the media.
@@ -1194,21 +4826,6 @@ type GetTranscodeDecisionParams struct {
 
 // GetTranscodeDecisionParamsMediaType defines parameters for GetTranscodeDecision.
 type GetTranscodeDecisionParamsMediaType string
-
-// GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBodyCodecProfilesLimitationsComparison string
-
-// GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBodyCodecProfilesLimitationsName string
-
-// GetTranscodeDecisionJSONBodyCodecProfilesType defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBodyCodecProfilesType string
-
-// GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBodyDirectPlayProfilesProtocols string
-
-// GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol defines parameters for GetTranscodeDecision.
-type GetTranscodeDecisionJSONBodyTranscodingProfilesProtocol string
 
 // GetTranscodeStreamParams defines parameters for GetTranscodeStream.
 type GetTranscodeStreamParams struct {
@@ -1287,7 +4904,7 @@ type PostHlsM3u8FormdataBody struct {
 // JukeboxControlParams defines parameters for JukeboxControl.
 type JukeboxControlParams struct {
 	// Action The operation to perform. Must be one of: get, status (since 1.7.0), set (since 1.7.0), start, stop, skip, add, clear, remove, shuffle, setGain
-	Action JukeboxControlParamsAction `form:"action" json:"action"`
+	Action JukeboxAction `form:"action" json:"action"`
 
 	// Index Used by `skip` and `remove`. Zero-based index of the song to skip to or remove.
 	Index *int `form:"index,omitempty" json:"index,omitempty"`
@@ -1301,9 +4918,6 @@ type JukeboxControlParams struct {
 	// Gain Used by `setGain` to control the playback volume. A float value between 0.0 and 1.0.
 	Gain *float32 `form:"gain,omitempty" json:"gain,omitempty"`
 }
-
-// JukeboxControlParamsAction defines parameters for JukeboxControl.
-type JukeboxControlParamsAction string
 
 // PostJukeboxControlFormdataBody defines parameters for PostJukeboxControl.
 type PostJukeboxControlFormdataBody struct {
@@ -2107,7 +5721,7 @@ type PostGetStarred2FormdataRequestBody = PostGetStarred2FormdataBody
 type PostGetTopSongsFormdataRequestBody PostGetTopSongsFormdataBody
 
 // GetTranscodeDecisionJSONRequestBody defines body for GetTranscodeDecision for application/json ContentType.
-type GetTranscodeDecisionJSONRequestBody GetTranscodeDecisionJSONBody
+type GetTranscodeDecisionJSONRequestBody = ClientInfo
 
 // PostGetUserFormdataRequestBody defines body for PostGetUser for application/x-www-form-urlencoded ContentType.
 type PostGetUserFormdataRequestBody PostGetUserFormdataBody
@@ -2180,6 +5794,3106 @@ type PostUpdateShareFormdataRequestBody PostUpdateShareFormdataBody
 
 // PostUpdateUserFormdataRequestBody defines body for PostUpdateUser for application/x-www-form-urlencoded ContentType.
 type PostUpdateUserFormdataRequestBody PostUpdateUserFormdataBody
+
+// AsCreatePlaylistSuccessResponse returns the union data inside the CreatePlaylistResponse_SubsonicResponse as a CreatePlaylistSuccessResponse
+func (t CreatePlaylistResponse_SubsonicResponse) AsCreatePlaylistSuccessResponse() (CreatePlaylistSuccessResponse, error) {
+	var body CreatePlaylistSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreatePlaylistSuccessResponse overwrites any union data inside the CreatePlaylistResponse_SubsonicResponse as the provided CreatePlaylistSuccessResponse
+func (t *CreatePlaylistResponse_SubsonicResponse) FromCreatePlaylistSuccessResponse(v CreatePlaylistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreatePlaylistSuccessResponse performs a merge with any union data inside the CreatePlaylistResponse_SubsonicResponse, using the provided CreatePlaylistSuccessResponse
+func (t *CreatePlaylistResponse_SubsonicResponse) MergeCreatePlaylistSuccessResponse(v CreatePlaylistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the CreatePlaylistResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t CreatePlaylistResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the CreatePlaylistResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *CreatePlaylistResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the CreatePlaylistResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *CreatePlaylistResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreatePlaylistResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreatePlaylistResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsCreateSharesSuccessResponse returns the union data inside the CreateSharesResponse_SubsonicResponse as a CreateSharesSuccessResponse
+func (t CreateSharesResponse_SubsonicResponse) AsCreateSharesSuccessResponse() (CreateSharesSuccessResponse, error) {
+	var body CreateSharesSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromCreateSharesSuccessResponse overwrites any union data inside the CreateSharesResponse_SubsonicResponse as the provided CreateSharesSuccessResponse
+func (t *CreateSharesResponse_SubsonicResponse) FromCreateSharesSuccessResponse(v CreateSharesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeCreateSharesSuccessResponse performs a merge with any union data inside the CreateSharesResponse_SubsonicResponse, using the provided CreateSharesSuccessResponse
+func (t *CreateSharesResponse_SubsonicResponse) MergeCreateSharesSuccessResponse(v CreateSharesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the CreateSharesResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t CreateSharesResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the CreateSharesResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *CreateSharesResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the CreateSharesResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *CreateSharesResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t CreateSharesResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *CreateSharesResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetAlbumInfoSuccessResponse returns the union data inside the GetAlbumInfoResponse_SubsonicResponse as a GetAlbumInfoSuccessResponse
+func (t GetAlbumInfoResponse_SubsonicResponse) AsGetAlbumInfoSuccessResponse() (GetAlbumInfoSuccessResponse, error) {
+	var body GetAlbumInfoSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetAlbumInfoSuccessResponse overwrites any union data inside the GetAlbumInfoResponse_SubsonicResponse as the provided GetAlbumInfoSuccessResponse
+func (t *GetAlbumInfoResponse_SubsonicResponse) FromGetAlbumInfoSuccessResponse(v GetAlbumInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetAlbumInfoSuccessResponse performs a merge with any union data inside the GetAlbumInfoResponse_SubsonicResponse, using the provided GetAlbumInfoSuccessResponse
+func (t *GetAlbumInfoResponse_SubsonicResponse) MergeGetAlbumInfoSuccessResponse(v GetAlbumInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetAlbumInfoResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetAlbumInfoResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetAlbumInfoResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetAlbumInfoResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetAlbumInfoResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetAlbumInfoResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetAlbumInfoResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetAlbumInfoResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetAlbumList2SuccessResponse returns the union data inside the GetAlbumList2Response_SubsonicResponse as a GetAlbumList2SuccessResponse
+func (t GetAlbumList2Response_SubsonicResponse) AsGetAlbumList2SuccessResponse() (GetAlbumList2SuccessResponse, error) {
+	var body GetAlbumList2SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetAlbumList2SuccessResponse overwrites any union data inside the GetAlbumList2Response_SubsonicResponse as the provided GetAlbumList2SuccessResponse
+func (t *GetAlbumList2Response_SubsonicResponse) FromGetAlbumList2SuccessResponse(v GetAlbumList2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetAlbumList2SuccessResponse performs a merge with any union data inside the GetAlbumList2Response_SubsonicResponse, using the provided GetAlbumList2SuccessResponse
+func (t *GetAlbumList2Response_SubsonicResponse) MergeGetAlbumList2SuccessResponse(v GetAlbumList2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetAlbumList2Response_SubsonicResponse as a SubsonicFailureResponse
+func (t GetAlbumList2Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetAlbumList2Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetAlbumList2Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetAlbumList2Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetAlbumList2Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetAlbumList2Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetAlbumList2Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetAlbumListSuccessResponse returns the union data inside the GetAlbumListResponse_SubsonicResponse as a GetAlbumListSuccessResponse
+func (t GetAlbumListResponse_SubsonicResponse) AsGetAlbumListSuccessResponse() (GetAlbumListSuccessResponse, error) {
+	var body GetAlbumListSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetAlbumListSuccessResponse overwrites any union data inside the GetAlbumListResponse_SubsonicResponse as the provided GetAlbumListSuccessResponse
+func (t *GetAlbumListResponse_SubsonicResponse) FromGetAlbumListSuccessResponse(v GetAlbumListSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetAlbumListSuccessResponse performs a merge with any union data inside the GetAlbumListResponse_SubsonicResponse, using the provided GetAlbumListSuccessResponse
+func (t *GetAlbumListResponse_SubsonicResponse) MergeGetAlbumListSuccessResponse(v GetAlbumListSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetAlbumListResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetAlbumListResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetAlbumListResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetAlbumListResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetAlbumListResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetAlbumListResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetAlbumListResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetAlbumListResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetAlbumSuccessResponse returns the union data inside the GetAlbumResponse_SubsonicResponse as a GetAlbumSuccessResponse
+func (t GetAlbumResponse_SubsonicResponse) AsGetAlbumSuccessResponse() (GetAlbumSuccessResponse, error) {
+	var body GetAlbumSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetAlbumSuccessResponse overwrites any union data inside the GetAlbumResponse_SubsonicResponse as the provided GetAlbumSuccessResponse
+func (t *GetAlbumResponse_SubsonicResponse) FromGetAlbumSuccessResponse(v GetAlbumSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetAlbumSuccessResponse performs a merge with any union data inside the GetAlbumResponse_SubsonicResponse, using the provided GetAlbumSuccessResponse
+func (t *GetAlbumResponse_SubsonicResponse) MergeGetAlbumSuccessResponse(v GetAlbumSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetAlbumResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetAlbumResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetAlbumResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetAlbumResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetAlbumResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetAlbumResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetAlbumResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetAlbumResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetArtistInfo2SuccessResponse returns the union data inside the GetArtistInfo2Response_SubsonicResponse as a GetArtistInfo2SuccessResponse
+func (t GetArtistInfo2Response_SubsonicResponse) AsGetArtistInfo2SuccessResponse() (GetArtistInfo2SuccessResponse, error) {
+	var body GetArtistInfo2SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetArtistInfo2SuccessResponse overwrites any union data inside the GetArtistInfo2Response_SubsonicResponse as the provided GetArtistInfo2SuccessResponse
+func (t *GetArtistInfo2Response_SubsonicResponse) FromGetArtistInfo2SuccessResponse(v GetArtistInfo2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetArtistInfo2SuccessResponse performs a merge with any union data inside the GetArtistInfo2Response_SubsonicResponse, using the provided GetArtistInfo2SuccessResponse
+func (t *GetArtistInfo2Response_SubsonicResponse) MergeGetArtistInfo2SuccessResponse(v GetArtistInfo2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetArtistInfo2Response_SubsonicResponse as a SubsonicFailureResponse
+func (t GetArtistInfo2Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetArtistInfo2Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetArtistInfo2Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetArtistInfo2Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetArtistInfo2Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetArtistInfo2Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetArtistInfo2Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetArtistInfoSuccessResponse returns the union data inside the GetArtistInfoResponse_SubsonicResponse as a GetArtistInfoSuccessResponse
+func (t GetArtistInfoResponse_SubsonicResponse) AsGetArtistInfoSuccessResponse() (GetArtistInfoSuccessResponse, error) {
+	var body GetArtistInfoSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetArtistInfoSuccessResponse overwrites any union data inside the GetArtistInfoResponse_SubsonicResponse as the provided GetArtistInfoSuccessResponse
+func (t *GetArtistInfoResponse_SubsonicResponse) FromGetArtistInfoSuccessResponse(v GetArtistInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetArtistInfoSuccessResponse performs a merge with any union data inside the GetArtistInfoResponse_SubsonicResponse, using the provided GetArtistInfoSuccessResponse
+func (t *GetArtistInfoResponse_SubsonicResponse) MergeGetArtistInfoSuccessResponse(v GetArtistInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetArtistInfoResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetArtistInfoResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetArtistInfoResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetArtistInfoResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetArtistInfoResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetArtistInfoResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetArtistInfoResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetArtistInfoResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetArtistSuccessResponse returns the union data inside the GetArtistResponse_SubsonicResponse as a GetArtistSuccessResponse
+func (t GetArtistResponse_SubsonicResponse) AsGetArtistSuccessResponse() (GetArtistSuccessResponse, error) {
+	var body GetArtistSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetArtistSuccessResponse overwrites any union data inside the GetArtistResponse_SubsonicResponse as the provided GetArtistSuccessResponse
+func (t *GetArtistResponse_SubsonicResponse) FromGetArtistSuccessResponse(v GetArtistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetArtistSuccessResponse performs a merge with any union data inside the GetArtistResponse_SubsonicResponse, using the provided GetArtistSuccessResponse
+func (t *GetArtistResponse_SubsonicResponse) MergeGetArtistSuccessResponse(v GetArtistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetArtistResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetArtistResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetArtistResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetArtistResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetArtistResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetArtistResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetArtistResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetArtistResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetArtistsSuccessResponse returns the union data inside the GetArtistsResponse_SubsonicResponse as a GetArtistsSuccessResponse
+func (t GetArtistsResponse_SubsonicResponse) AsGetArtistsSuccessResponse() (GetArtistsSuccessResponse, error) {
+	var body GetArtistsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetArtistsSuccessResponse overwrites any union data inside the GetArtistsResponse_SubsonicResponse as the provided GetArtistsSuccessResponse
+func (t *GetArtistsResponse_SubsonicResponse) FromGetArtistsSuccessResponse(v GetArtistsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetArtistsSuccessResponse performs a merge with any union data inside the GetArtistsResponse_SubsonicResponse, using the provided GetArtistsSuccessResponse
+func (t *GetArtistsResponse_SubsonicResponse) MergeGetArtistsSuccessResponse(v GetArtistsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetArtistsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetArtistsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetArtistsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetArtistsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetArtistsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetArtistsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetArtistsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetArtistsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetBookmarksSuccessResponse returns the union data inside the GetBookmarksResponse_SubsonicResponse as a GetBookmarksSuccessResponse
+func (t GetBookmarksResponse_SubsonicResponse) AsGetBookmarksSuccessResponse() (GetBookmarksSuccessResponse, error) {
+	var body GetBookmarksSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetBookmarksSuccessResponse overwrites any union data inside the GetBookmarksResponse_SubsonicResponse as the provided GetBookmarksSuccessResponse
+func (t *GetBookmarksResponse_SubsonicResponse) FromGetBookmarksSuccessResponse(v GetBookmarksSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetBookmarksSuccessResponse performs a merge with any union data inside the GetBookmarksResponse_SubsonicResponse, using the provided GetBookmarksSuccessResponse
+func (t *GetBookmarksResponse_SubsonicResponse) MergeGetBookmarksSuccessResponse(v GetBookmarksSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetBookmarksResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetBookmarksResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetBookmarksResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetBookmarksResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetBookmarksResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetBookmarksResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetBookmarksResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetBookmarksResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetChatMessagesSuccessResponse returns the union data inside the GetChatMessagesResponse_SubsonicResponse as a GetChatMessagesSuccessResponse
+func (t GetChatMessagesResponse_SubsonicResponse) AsGetChatMessagesSuccessResponse() (GetChatMessagesSuccessResponse, error) {
+	var body GetChatMessagesSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetChatMessagesSuccessResponse overwrites any union data inside the GetChatMessagesResponse_SubsonicResponse as the provided GetChatMessagesSuccessResponse
+func (t *GetChatMessagesResponse_SubsonicResponse) FromGetChatMessagesSuccessResponse(v GetChatMessagesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetChatMessagesSuccessResponse performs a merge with any union data inside the GetChatMessagesResponse_SubsonicResponse, using the provided GetChatMessagesSuccessResponse
+func (t *GetChatMessagesResponse_SubsonicResponse) MergeGetChatMessagesSuccessResponse(v GetChatMessagesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetChatMessagesResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetChatMessagesResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetChatMessagesResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetChatMessagesResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetChatMessagesResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetChatMessagesResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetChatMessagesResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetChatMessagesResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetGenresSuccessResponse returns the union data inside the GetGenresResponse_SubsonicResponse as a GetGenresSuccessResponse
+func (t GetGenresResponse_SubsonicResponse) AsGetGenresSuccessResponse() (GetGenresSuccessResponse, error) {
+	var body GetGenresSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetGenresSuccessResponse overwrites any union data inside the GetGenresResponse_SubsonicResponse as the provided GetGenresSuccessResponse
+func (t *GetGenresResponse_SubsonicResponse) FromGetGenresSuccessResponse(v GetGenresSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetGenresSuccessResponse performs a merge with any union data inside the GetGenresResponse_SubsonicResponse, using the provided GetGenresSuccessResponse
+func (t *GetGenresResponse_SubsonicResponse) MergeGetGenresSuccessResponse(v GetGenresSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetGenresResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetGenresResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetGenresResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetGenresResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetGenresResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetGenresResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetGenresResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetGenresResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetIndexesSuccessResponse returns the union data inside the GetIndexesResponse_SubsonicResponse as a GetIndexesSuccessResponse
+func (t GetIndexesResponse_SubsonicResponse) AsGetIndexesSuccessResponse() (GetIndexesSuccessResponse, error) {
+	var body GetIndexesSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetIndexesSuccessResponse overwrites any union data inside the GetIndexesResponse_SubsonicResponse as the provided GetIndexesSuccessResponse
+func (t *GetIndexesResponse_SubsonicResponse) FromGetIndexesSuccessResponse(v GetIndexesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetIndexesSuccessResponse performs a merge with any union data inside the GetIndexesResponse_SubsonicResponse, using the provided GetIndexesSuccessResponse
+func (t *GetIndexesResponse_SubsonicResponse) MergeGetIndexesSuccessResponse(v GetIndexesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetIndexesResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetIndexesResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetIndexesResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetIndexesResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetIndexesResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetIndexesResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetIndexesResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetIndexesResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetInternetRadioStationsSuccessResponse returns the union data inside the GetInternetRadioStationsResponse_SubsonicResponse as a GetInternetRadioStationsSuccessResponse
+func (t GetInternetRadioStationsResponse_SubsonicResponse) AsGetInternetRadioStationsSuccessResponse() (GetInternetRadioStationsSuccessResponse, error) {
+	var body GetInternetRadioStationsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetInternetRadioStationsSuccessResponse overwrites any union data inside the GetInternetRadioStationsResponse_SubsonicResponse as the provided GetInternetRadioStationsSuccessResponse
+func (t *GetInternetRadioStationsResponse_SubsonicResponse) FromGetInternetRadioStationsSuccessResponse(v GetInternetRadioStationsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetInternetRadioStationsSuccessResponse performs a merge with any union data inside the GetInternetRadioStationsResponse_SubsonicResponse, using the provided GetInternetRadioStationsSuccessResponse
+func (t *GetInternetRadioStationsResponse_SubsonicResponse) MergeGetInternetRadioStationsSuccessResponse(v GetInternetRadioStationsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetInternetRadioStationsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetInternetRadioStationsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetInternetRadioStationsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetInternetRadioStationsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetInternetRadioStationsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetInternetRadioStationsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetInternetRadioStationsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetInternetRadioStationsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetLicenseSuccessResponse returns the union data inside the GetLicenseResponse_SubsonicResponse as a GetLicenseSuccessResponse
+func (t GetLicenseResponse_SubsonicResponse) AsGetLicenseSuccessResponse() (GetLicenseSuccessResponse, error) {
+	var body GetLicenseSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetLicenseSuccessResponse overwrites any union data inside the GetLicenseResponse_SubsonicResponse as the provided GetLicenseSuccessResponse
+func (t *GetLicenseResponse_SubsonicResponse) FromGetLicenseSuccessResponse(v GetLicenseSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetLicenseSuccessResponse performs a merge with any union data inside the GetLicenseResponse_SubsonicResponse, using the provided GetLicenseSuccessResponse
+func (t *GetLicenseResponse_SubsonicResponse) MergeGetLicenseSuccessResponse(v GetLicenseSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetLicenseResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetLicenseResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetLicenseResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetLicenseResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetLicenseResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetLicenseResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetLicenseResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetLicenseResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetLyricsBySongIdSuccessResponse returns the union data inside the GetLyricsBySongIdResponse_SubsonicResponse as a GetLyricsBySongIdSuccessResponse
+func (t GetLyricsBySongIdResponse_SubsonicResponse) AsGetLyricsBySongIdSuccessResponse() (GetLyricsBySongIdSuccessResponse, error) {
+	var body GetLyricsBySongIdSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetLyricsBySongIdSuccessResponse overwrites any union data inside the GetLyricsBySongIdResponse_SubsonicResponse as the provided GetLyricsBySongIdSuccessResponse
+func (t *GetLyricsBySongIdResponse_SubsonicResponse) FromGetLyricsBySongIdSuccessResponse(v GetLyricsBySongIdSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetLyricsBySongIdSuccessResponse performs a merge with any union data inside the GetLyricsBySongIdResponse_SubsonicResponse, using the provided GetLyricsBySongIdSuccessResponse
+func (t *GetLyricsBySongIdResponse_SubsonicResponse) MergeGetLyricsBySongIdSuccessResponse(v GetLyricsBySongIdSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetLyricsBySongIdResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetLyricsBySongIdResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetLyricsBySongIdResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetLyricsBySongIdResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetLyricsBySongIdResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetLyricsBySongIdResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetLyricsBySongIdResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetLyricsBySongIdResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetLyricsSuccessResponse returns the union data inside the GetLyricsResponse_SubsonicResponse as a GetLyricsSuccessResponse
+func (t GetLyricsResponse_SubsonicResponse) AsGetLyricsSuccessResponse() (GetLyricsSuccessResponse, error) {
+	var body GetLyricsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetLyricsSuccessResponse overwrites any union data inside the GetLyricsResponse_SubsonicResponse as the provided GetLyricsSuccessResponse
+func (t *GetLyricsResponse_SubsonicResponse) FromGetLyricsSuccessResponse(v GetLyricsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetLyricsSuccessResponse performs a merge with any union data inside the GetLyricsResponse_SubsonicResponse, using the provided GetLyricsSuccessResponse
+func (t *GetLyricsResponse_SubsonicResponse) MergeGetLyricsSuccessResponse(v GetLyricsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetLyricsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetLyricsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetLyricsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetLyricsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetLyricsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetLyricsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetLyricsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetLyricsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetMusicDirectorySuccessResponse returns the union data inside the GetMusicDirectoryResponse_SubsonicResponse as a GetMusicDirectorySuccessResponse
+func (t GetMusicDirectoryResponse_SubsonicResponse) AsGetMusicDirectorySuccessResponse() (GetMusicDirectorySuccessResponse, error) {
+	var body GetMusicDirectorySuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetMusicDirectorySuccessResponse overwrites any union data inside the GetMusicDirectoryResponse_SubsonicResponse as the provided GetMusicDirectorySuccessResponse
+func (t *GetMusicDirectoryResponse_SubsonicResponse) FromGetMusicDirectorySuccessResponse(v GetMusicDirectorySuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetMusicDirectorySuccessResponse performs a merge with any union data inside the GetMusicDirectoryResponse_SubsonicResponse, using the provided GetMusicDirectorySuccessResponse
+func (t *GetMusicDirectoryResponse_SubsonicResponse) MergeGetMusicDirectorySuccessResponse(v GetMusicDirectorySuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetMusicDirectoryResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetMusicDirectoryResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetMusicDirectoryResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetMusicDirectoryResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetMusicDirectoryResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetMusicDirectoryResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetMusicDirectoryResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetMusicDirectoryResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetMusicFoldersSuccessResponse returns the union data inside the GetMusicFoldersResponse_SubsonicResponse as a GetMusicFoldersSuccessResponse
+func (t GetMusicFoldersResponse_SubsonicResponse) AsGetMusicFoldersSuccessResponse() (GetMusicFoldersSuccessResponse, error) {
+	var body GetMusicFoldersSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetMusicFoldersSuccessResponse overwrites any union data inside the GetMusicFoldersResponse_SubsonicResponse as the provided GetMusicFoldersSuccessResponse
+func (t *GetMusicFoldersResponse_SubsonicResponse) FromGetMusicFoldersSuccessResponse(v GetMusicFoldersSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetMusicFoldersSuccessResponse performs a merge with any union data inside the GetMusicFoldersResponse_SubsonicResponse, using the provided GetMusicFoldersSuccessResponse
+func (t *GetMusicFoldersResponse_SubsonicResponse) MergeGetMusicFoldersSuccessResponse(v GetMusicFoldersSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetMusicFoldersResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetMusicFoldersResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetMusicFoldersResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetMusicFoldersResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetMusicFoldersResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetMusicFoldersResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetMusicFoldersResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetMusicFoldersResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetNewestPodcastsSuccessResponse returns the union data inside the GetNewestPodcastsResponse_SubsonicResponse as a GetNewestPodcastsSuccessResponse
+func (t GetNewestPodcastsResponse_SubsonicResponse) AsGetNewestPodcastsSuccessResponse() (GetNewestPodcastsSuccessResponse, error) {
+	var body GetNewestPodcastsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetNewestPodcastsSuccessResponse overwrites any union data inside the GetNewestPodcastsResponse_SubsonicResponse as the provided GetNewestPodcastsSuccessResponse
+func (t *GetNewestPodcastsResponse_SubsonicResponse) FromGetNewestPodcastsSuccessResponse(v GetNewestPodcastsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetNewestPodcastsSuccessResponse performs a merge with any union data inside the GetNewestPodcastsResponse_SubsonicResponse, using the provided GetNewestPodcastsSuccessResponse
+func (t *GetNewestPodcastsResponse_SubsonicResponse) MergeGetNewestPodcastsSuccessResponse(v GetNewestPodcastsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetNewestPodcastsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetNewestPodcastsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetNewestPodcastsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetNewestPodcastsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetNewestPodcastsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetNewestPodcastsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetNewestPodcastsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetNewestPodcastsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetNowPlayingSuccessResponse returns the union data inside the GetNowPlayingResponse_SubsonicResponse as a GetNowPlayingSuccessResponse
+func (t GetNowPlayingResponse_SubsonicResponse) AsGetNowPlayingSuccessResponse() (GetNowPlayingSuccessResponse, error) {
+	var body GetNowPlayingSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetNowPlayingSuccessResponse overwrites any union data inside the GetNowPlayingResponse_SubsonicResponse as the provided GetNowPlayingSuccessResponse
+func (t *GetNowPlayingResponse_SubsonicResponse) FromGetNowPlayingSuccessResponse(v GetNowPlayingSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetNowPlayingSuccessResponse performs a merge with any union data inside the GetNowPlayingResponse_SubsonicResponse, using the provided GetNowPlayingSuccessResponse
+func (t *GetNowPlayingResponse_SubsonicResponse) MergeGetNowPlayingSuccessResponse(v GetNowPlayingSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetNowPlayingResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetNowPlayingResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetNowPlayingResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetNowPlayingResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetNowPlayingResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetNowPlayingResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetNowPlayingResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetNowPlayingResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetOpenSubsonicExtensionsSuccessResponse returns the union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse as a GetOpenSubsonicExtensionsSuccessResponse
+func (t GetOpenSubsonicExtensionsResponse_SubsonicResponse) AsGetOpenSubsonicExtensionsSuccessResponse() (GetOpenSubsonicExtensionsSuccessResponse, error) {
+	var body GetOpenSubsonicExtensionsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetOpenSubsonicExtensionsSuccessResponse overwrites any union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse as the provided GetOpenSubsonicExtensionsSuccessResponse
+func (t *GetOpenSubsonicExtensionsResponse_SubsonicResponse) FromGetOpenSubsonicExtensionsSuccessResponse(v GetOpenSubsonicExtensionsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetOpenSubsonicExtensionsSuccessResponse performs a merge with any union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse, using the provided GetOpenSubsonicExtensionsSuccessResponse
+func (t *GetOpenSubsonicExtensionsResponse_SubsonicResponse) MergeGetOpenSubsonicExtensionsSuccessResponse(v GetOpenSubsonicExtensionsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetOpenSubsonicExtensionsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetOpenSubsonicExtensionsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetOpenSubsonicExtensionsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetOpenSubsonicExtensionsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetOpenSubsonicExtensionsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetOpenSubsonicExtensionsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPlayQueueByIndexSuccessResponse returns the union data inside the GetPlayQueueByIndexResponse_SubsonicResponse as a GetPlayQueueByIndexSuccessResponse
+func (t GetPlayQueueByIndexResponse_SubsonicResponse) AsGetPlayQueueByIndexSuccessResponse() (GetPlayQueueByIndexSuccessResponse, error) {
+	var body GetPlayQueueByIndexSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPlayQueueByIndexSuccessResponse overwrites any union data inside the GetPlayQueueByIndexResponse_SubsonicResponse as the provided GetPlayQueueByIndexSuccessResponse
+func (t *GetPlayQueueByIndexResponse_SubsonicResponse) FromGetPlayQueueByIndexSuccessResponse(v GetPlayQueueByIndexSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPlayQueueByIndexSuccessResponse performs a merge with any union data inside the GetPlayQueueByIndexResponse_SubsonicResponse, using the provided GetPlayQueueByIndexSuccessResponse
+func (t *GetPlayQueueByIndexResponse_SubsonicResponse) MergeGetPlayQueueByIndexSuccessResponse(v GetPlayQueueByIndexSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPlayQueueByIndexResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPlayQueueByIndexResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPlayQueueByIndexResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPlayQueueByIndexResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPlayQueueByIndexResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPlayQueueByIndexResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPlayQueueByIndexResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPlayQueueByIndexResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPlayQueueSuccessResponse returns the union data inside the GetPlayQueueResponse_SubsonicResponse as a GetPlayQueueSuccessResponse
+func (t GetPlayQueueResponse_SubsonicResponse) AsGetPlayQueueSuccessResponse() (GetPlayQueueSuccessResponse, error) {
+	var body GetPlayQueueSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPlayQueueSuccessResponse overwrites any union data inside the GetPlayQueueResponse_SubsonicResponse as the provided GetPlayQueueSuccessResponse
+func (t *GetPlayQueueResponse_SubsonicResponse) FromGetPlayQueueSuccessResponse(v GetPlayQueueSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPlayQueueSuccessResponse performs a merge with any union data inside the GetPlayQueueResponse_SubsonicResponse, using the provided GetPlayQueueSuccessResponse
+func (t *GetPlayQueueResponse_SubsonicResponse) MergeGetPlayQueueSuccessResponse(v GetPlayQueueSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPlayQueueResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPlayQueueResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPlayQueueResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPlayQueueResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPlayQueueResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPlayQueueResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPlayQueueResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPlayQueueResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPlaylistSuccessResponse returns the union data inside the GetPlaylistResponse_SubsonicResponse as a GetPlaylistSuccessResponse
+func (t GetPlaylistResponse_SubsonicResponse) AsGetPlaylistSuccessResponse() (GetPlaylistSuccessResponse, error) {
+	var body GetPlaylistSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPlaylistSuccessResponse overwrites any union data inside the GetPlaylistResponse_SubsonicResponse as the provided GetPlaylistSuccessResponse
+func (t *GetPlaylistResponse_SubsonicResponse) FromGetPlaylistSuccessResponse(v GetPlaylistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPlaylistSuccessResponse performs a merge with any union data inside the GetPlaylistResponse_SubsonicResponse, using the provided GetPlaylistSuccessResponse
+func (t *GetPlaylistResponse_SubsonicResponse) MergeGetPlaylistSuccessResponse(v GetPlaylistSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPlaylistResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPlaylistResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPlaylistResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPlaylistResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPlaylistResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPlaylistResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPlaylistResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPlaylistResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPlaylistsSuccessResponse returns the union data inside the GetPlaylistsResponse_SubsonicResponse as a GetPlaylistsSuccessResponse
+func (t GetPlaylistsResponse_SubsonicResponse) AsGetPlaylistsSuccessResponse() (GetPlaylistsSuccessResponse, error) {
+	var body GetPlaylistsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPlaylistsSuccessResponse overwrites any union data inside the GetPlaylistsResponse_SubsonicResponse as the provided GetPlaylistsSuccessResponse
+func (t *GetPlaylistsResponse_SubsonicResponse) FromGetPlaylistsSuccessResponse(v GetPlaylistsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPlaylistsSuccessResponse performs a merge with any union data inside the GetPlaylistsResponse_SubsonicResponse, using the provided GetPlaylistsSuccessResponse
+func (t *GetPlaylistsResponse_SubsonicResponse) MergeGetPlaylistsSuccessResponse(v GetPlaylistsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPlaylistsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPlaylistsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPlaylistsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPlaylistsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPlaylistsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPlaylistsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPlaylistsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPlaylistsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPodcastEpisodeSuccessResponse returns the union data inside the GetPodcastEpisodeResponse_SubsonicResponse as a GetPodcastEpisodeSuccessResponse
+func (t GetPodcastEpisodeResponse_SubsonicResponse) AsGetPodcastEpisodeSuccessResponse() (GetPodcastEpisodeSuccessResponse, error) {
+	var body GetPodcastEpisodeSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPodcastEpisodeSuccessResponse overwrites any union data inside the GetPodcastEpisodeResponse_SubsonicResponse as the provided GetPodcastEpisodeSuccessResponse
+func (t *GetPodcastEpisodeResponse_SubsonicResponse) FromGetPodcastEpisodeSuccessResponse(v GetPodcastEpisodeSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPodcastEpisodeSuccessResponse performs a merge with any union data inside the GetPodcastEpisodeResponse_SubsonicResponse, using the provided GetPodcastEpisodeSuccessResponse
+func (t *GetPodcastEpisodeResponse_SubsonicResponse) MergeGetPodcastEpisodeSuccessResponse(v GetPodcastEpisodeSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPodcastEpisodeResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPodcastEpisodeResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPodcastEpisodeResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPodcastEpisodeResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPodcastEpisodeResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPodcastEpisodeResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPodcastEpisodeResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPodcastEpisodeResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetPodcastsSuccessResponse returns the union data inside the GetPodcastsResponse_SubsonicResponse as a GetPodcastsSuccessResponse
+func (t GetPodcastsResponse_SubsonicResponse) AsGetPodcastsSuccessResponse() (GetPodcastsSuccessResponse, error) {
+	var body GetPodcastsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetPodcastsSuccessResponse overwrites any union data inside the GetPodcastsResponse_SubsonicResponse as the provided GetPodcastsSuccessResponse
+func (t *GetPodcastsResponse_SubsonicResponse) FromGetPodcastsSuccessResponse(v GetPodcastsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetPodcastsSuccessResponse performs a merge with any union data inside the GetPodcastsResponse_SubsonicResponse, using the provided GetPodcastsSuccessResponse
+func (t *GetPodcastsResponse_SubsonicResponse) MergeGetPodcastsSuccessResponse(v GetPodcastsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetPodcastsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetPodcastsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetPodcastsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetPodcastsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetPodcastsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetPodcastsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetPodcastsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetPodcastsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetRandomSongsSuccessResponse returns the union data inside the GetRandomSongsResponse_SubsonicResponse as a GetRandomSongsSuccessResponse
+func (t GetRandomSongsResponse_SubsonicResponse) AsGetRandomSongsSuccessResponse() (GetRandomSongsSuccessResponse, error) {
+	var body GetRandomSongsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetRandomSongsSuccessResponse overwrites any union data inside the GetRandomSongsResponse_SubsonicResponse as the provided GetRandomSongsSuccessResponse
+func (t *GetRandomSongsResponse_SubsonicResponse) FromGetRandomSongsSuccessResponse(v GetRandomSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetRandomSongsSuccessResponse performs a merge with any union data inside the GetRandomSongsResponse_SubsonicResponse, using the provided GetRandomSongsSuccessResponse
+func (t *GetRandomSongsResponse_SubsonicResponse) MergeGetRandomSongsSuccessResponse(v GetRandomSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetRandomSongsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetRandomSongsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetRandomSongsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetRandomSongsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetRandomSongsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetRandomSongsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetRandomSongsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetRandomSongsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetScanStatusSuccessResponse returns the union data inside the GetScanStatusResponse_SubsonicResponse as a GetScanStatusSuccessResponse
+func (t GetScanStatusResponse_SubsonicResponse) AsGetScanStatusSuccessResponse() (GetScanStatusSuccessResponse, error) {
+	var body GetScanStatusSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetScanStatusSuccessResponse overwrites any union data inside the GetScanStatusResponse_SubsonicResponse as the provided GetScanStatusSuccessResponse
+func (t *GetScanStatusResponse_SubsonicResponse) FromGetScanStatusSuccessResponse(v GetScanStatusSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetScanStatusSuccessResponse performs a merge with any union data inside the GetScanStatusResponse_SubsonicResponse, using the provided GetScanStatusSuccessResponse
+func (t *GetScanStatusResponse_SubsonicResponse) MergeGetScanStatusSuccessResponse(v GetScanStatusSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetScanStatusResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetScanStatusResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetScanStatusResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetScanStatusResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetScanStatusResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetScanStatusResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetScanStatusResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetScanStatusResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetSharesSuccessResponse returns the union data inside the GetSharesResponse_SubsonicResponse as a GetSharesSuccessResponse
+func (t GetSharesResponse_SubsonicResponse) AsGetSharesSuccessResponse() (GetSharesSuccessResponse, error) {
+	var body GetSharesSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetSharesSuccessResponse overwrites any union data inside the GetSharesResponse_SubsonicResponse as the provided GetSharesSuccessResponse
+func (t *GetSharesResponse_SubsonicResponse) FromGetSharesSuccessResponse(v GetSharesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetSharesSuccessResponse performs a merge with any union data inside the GetSharesResponse_SubsonicResponse, using the provided GetSharesSuccessResponse
+func (t *GetSharesResponse_SubsonicResponse) MergeGetSharesSuccessResponse(v GetSharesSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetSharesResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetSharesResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetSharesResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetSharesResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetSharesResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetSharesResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetSharesResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetSharesResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetSimilarSongs2SuccessResponse returns the union data inside the GetSimilarSongs2Response_SubsonicResponse as a GetSimilarSongs2SuccessResponse
+func (t GetSimilarSongs2Response_SubsonicResponse) AsGetSimilarSongs2SuccessResponse() (GetSimilarSongs2SuccessResponse, error) {
+	var body GetSimilarSongs2SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetSimilarSongs2SuccessResponse overwrites any union data inside the GetSimilarSongs2Response_SubsonicResponse as the provided GetSimilarSongs2SuccessResponse
+func (t *GetSimilarSongs2Response_SubsonicResponse) FromGetSimilarSongs2SuccessResponse(v GetSimilarSongs2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetSimilarSongs2SuccessResponse performs a merge with any union data inside the GetSimilarSongs2Response_SubsonicResponse, using the provided GetSimilarSongs2SuccessResponse
+func (t *GetSimilarSongs2Response_SubsonicResponse) MergeGetSimilarSongs2SuccessResponse(v GetSimilarSongs2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetSimilarSongs2Response_SubsonicResponse as a SubsonicFailureResponse
+func (t GetSimilarSongs2Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetSimilarSongs2Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetSimilarSongs2Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetSimilarSongs2Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetSimilarSongs2Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetSimilarSongs2Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetSimilarSongs2Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetSimilarSongsSuccessResponse returns the union data inside the GetSimilarSongsResponse_SubsonicResponse as a GetSimilarSongsSuccessResponse
+func (t GetSimilarSongsResponse_SubsonicResponse) AsGetSimilarSongsSuccessResponse() (GetSimilarSongsSuccessResponse, error) {
+	var body GetSimilarSongsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetSimilarSongsSuccessResponse overwrites any union data inside the GetSimilarSongsResponse_SubsonicResponse as the provided GetSimilarSongsSuccessResponse
+func (t *GetSimilarSongsResponse_SubsonicResponse) FromGetSimilarSongsSuccessResponse(v GetSimilarSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetSimilarSongsSuccessResponse performs a merge with any union data inside the GetSimilarSongsResponse_SubsonicResponse, using the provided GetSimilarSongsSuccessResponse
+func (t *GetSimilarSongsResponse_SubsonicResponse) MergeGetSimilarSongsSuccessResponse(v GetSimilarSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetSimilarSongsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetSimilarSongsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetSimilarSongsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetSimilarSongsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetSimilarSongsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetSimilarSongsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetSimilarSongsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetSimilarSongsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetSongSuccessResponse returns the union data inside the GetSongResponse_SubsonicResponse as a GetSongSuccessResponse
+func (t GetSongResponse_SubsonicResponse) AsGetSongSuccessResponse() (GetSongSuccessResponse, error) {
+	var body GetSongSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetSongSuccessResponse overwrites any union data inside the GetSongResponse_SubsonicResponse as the provided GetSongSuccessResponse
+func (t *GetSongResponse_SubsonicResponse) FromGetSongSuccessResponse(v GetSongSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetSongSuccessResponse performs a merge with any union data inside the GetSongResponse_SubsonicResponse, using the provided GetSongSuccessResponse
+func (t *GetSongResponse_SubsonicResponse) MergeGetSongSuccessResponse(v GetSongSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetSongResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetSongResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetSongResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetSongResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetSongResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetSongResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetSongResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetSongResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetSongsByGenreSuccessResponse returns the union data inside the GetSongsByGenreResponse_SubsonicResponse as a GetSongsByGenreSuccessResponse
+func (t GetSongsByGenreResponse_SubsonicResponse) AsGetSongsByGenreSuccessResponse() (GetSongsByGenreSuccessResponse, error) {
+	var body GetSongsByGenreSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetSongsByGenreSuccessResponse overwrites any union data inside the GetSongsByGenreResponse_SubsonicResponse as the provided GetSongsByGenreSuccessResponse
+func (t *GetSongsByGenreResponse_SubsonicResponse) FromGetSongsByGenreSuccessResponse(v GetSongsByGenreSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetSongsByGenreSuccessResponse performs a merge with any union data inside the GetSongsByGenreResponse_SubsonicResponse, using the provided GetSongsByGenreSuccessResponse
+func (t *GetSongsByGenreResponse_SubsonicResponse) MergeGetSongsByGenreSuccessResponse(v GetSongsByGenreSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetSongsByGenreResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetSongsByGenreResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetSongsByGenreResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetSongsByGenreResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetSongsByGenreResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetSongsByGenreResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetSongsByGenreResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetSongsByGenreResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetStarred2SuccessResponse returns the union data inside the GetStarred2Response_SubsonicResponse as a GetStarred2SuccessResponse
+func (t GetStarred2Response_SubsonicResponse) AsGetStarred2SuccessResponse() (GetStarred2SuccessResponse, error) {
+	var body GetStarred2SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetStarred2SuccessResponse overwrites any union data inside the GetStarred2Response_SubsonicResponse as the provided GetStarred2SuccessResponse
+func (t *GetStarred2Response_SubsonicResponse) FromGetStarred2SuccessResponse(v GetStarred2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetStarred2SuccessResponse performs a merge with any union data inside the GetStarred2Response_SubsonicResponse, using the provided GetStarred2SuccessResponse
+func (t *GetStarred2Response_SubsonicResponse) MergeGetStarred2SuccessResponse(v GetStarred2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetStarred2Response_SubsonicResponse as a SubsonicFailureResponse
+func (t GetStarred2Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetStarred2Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetStarred2Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetStarred2Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetStarred2Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetStarred2Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetStarred2Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetStarredSuccessResponse returns the union data inside the GetStarredResponse_SubsonicResponse as a GetStarredSuccessResponse
+func (t GetStarredResponse_SubsonicResponse) AsGetStarredSuccessResponse() (GetStarredSuccessResponse, error) {
+	var body GetStarredSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetStarredSuccessResponse overwrites any union data inside the GetStarredResponse_SubsonicResponse as the provided GetStarredSuccessResponse
+func (t *GetStarredResponse_SubsonicResponse) FromGetStarredSuccessResponse(v GetStarredSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetStarredSuccessResponse performs a merge with any union data inside the GetStarredResponse_SubsonicResponse, using the provided GetStarredSuccessResponse
+func (t *GetStarredResponse_SubsonicResponse) MergeGetStarredSuccessResponse(v GetStarredSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetStarredResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetStarredResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetStarredResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetStarredResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetStarredResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetStarredResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetStarredResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetStarredResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetTokenInfoSuccessResponse returns the union data inside the GetTokenInfoResponse_SubsonicResponse as a GetTokenInfoSuccessResponse
+func (t GetTokenInfoResponse_SubsonicResponse) AsGetTokenInfoSuccessResponse() (GetTokenInfoSuccessResponse, error) {
+	var body GetTokenInfoSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetTokenInfoSuccessResponse overwrites any union data inside the GetTokenInfoResponse_SubsonicResponse as the provided GetTokenInfoSuccessResponse
+func (t *GetTokenInfoResponse_SubsonicResponse) FromGetTokenInfoSuccessResponse(v GetTokenInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetTokenInfoSuccessResponse performs a merge with any union data inside the GetTokenInfoResponse_SubsonicResponse, using the provided GetTokenInfoSuccessResponse
+func (t *GetTokenInfoResponse_SubsonicResponse) MergeGetTokenInfoSuccessResponse(v GetTokenInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetTokenInfoResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetTokenInfoResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetTokenInfoResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetTokenInfoResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetTokenInfoResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetTokenInfoResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetTokenInfoResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetTokenInfoResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetTopSongsSuccessResponse returns the union data inside the GetTopSongsResponse_SubsonicResponse as a GetTopSongsSuccessResponse
+func (t GetTopSongsResponse_SubsonicResponse) AsGetTopSongsSuccessResponse() (GetTopSongsSuccessResponse, error) {
+	var body GetTopSongsSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetTopSongsSuccessResponse overwrites any union data inside the GetTopSongsResponse_SubsonicResponse as the provided GetTopSongsSuccessResponse
+func (t *GetTopSongsResponse_SubsonicResponse) FromGetTopSongsSuccessResponse(v GetTopSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetTopSongsSuccessResponse performs a merge with any union data inside the GetTopSongsResponse_SubsonicResponse, using the provided GetTopSongsSuccessResponse
+func (t *GetTopSongsResponse_SubsonicResponse) MergeGetTopSongsSuccessResponse(v GetTopSongsSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetTopSongsResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetTopSongsResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetTopSongsResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetTopSongsResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetTopSongsResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetTopSongsResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetTopSongsResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetTopSongsResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetUserSuccessResponse returns the union data inside the GetUserResponse_SubsonicResponse as a GetUserSuccessResponse
+func (t GetUserResponse_SubsonicResponse) AsGetUserSuccessResponse() (GetUserSuccessResponse, error) {
+	var body GetUserSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetUserSuccessResponse overwrites any union data inside the GetUserResponse_SubsonicResponse as the provided GetUserSuccessResponse
+func (t *GetUserResponse_SubsonicResponse) FromGetUserSuccessResponse(v GetUserSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetUserSuccessResponse performs a merge with any union data inside the GetUserResponse_SubsonicResponse, using the provided GetUserSuccessResponse
+func (t *GetUserResponse_SubsonicResponse) MergeGetUserSuccessResponse(v GetUserSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetUserResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetUserResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetUserResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetUserResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetUserResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetUserResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetUserResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetUserResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetUsersSuccessResponse returns the union data inside the GetUsersResponse_SubsonicResponse as a GetUsersSuccessResponse
+func (t GetUsersResponse_SubsonicResponse) AsGetUsersSuccessResponse() (GetUsersSuccessResponse, error) {
+	var body GetUsersSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetUsersSuccessResponse overwrites any union data inside the GetUsersResponse_SubsonicResponse as the provided GetUsersSuccessResponse
+func (t *GetUsersResponse_SubsonicResponse) FromGetUsersSuccessResponse(v GetUsersSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetUsersSuccessResponse performs a merge with any union data inside the GetUsersResponse_SubsonicResponse, using the provided GetUsersSuccessResponse
+func (t *GetUsersResponse_SubsonicResponse) MergeGetUsersSuccessResponse(v GetUsersSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetUsersResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetUsersResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetUsersResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetUsersResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetUsersResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetUsersResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetUsersResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetUsersResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetVideoInfoSuccessResponse returns the union data inside the GetVideoInfoResponse_SubsonicResponse as a GetVideoInfoSuccessResponse
+func (t GetVideoInfoResponse_SubsonicResponse) AsGetVideoInfoSuccessResponse() (GetVideoInfoSuccessResponse, error) {
+	var body GetVideoInfoSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetVideoInfoSuccessResponse overwrites any union data inside the GetVideoInfoResponse_SubsonicResponse as the provided GetVideoInfoSuccessResponse
+func (t *GetVideoInfoResponse_SubsonicResponse) FromGetVideoInfoSuccessResponse(v GetVideoInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetVideoInfoSuccessResponse performs a merge with any union data inside the GetVideoInfoResponse_SubsonicResponse, using the provided GetVideoInfoSuccessResponse
+func (t *GetVideoInfoResponse_SubsonicResponse) MergeGetVideoInfoSuccessResponse(v GetVideoInfoSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetVideoInfoResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetVideoInfoResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetVideoInfoResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetVideoInfoResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetVideoInfoResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetVideoInfoResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetVideoInfoResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetVideoInfoResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetVideosSuccessResponse returns the union data inside the GetVideosResponse_SubsonicResponse as a GetVideosSuccessResponse
+func (t GetVideosResponse_SubsonicResponse) AsGetVideosSuccessResponse() (GetVideosSuccessResponse, error) {
+	var body GetVideosSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetVideosSuccessResponse overwrites any union data inside the GetVideosResponse_SubsonicResponse as the provided GetVideosSuccessResponse
+func (t *GetVideosResponse_SubsonicResponse) FromGetVideosSuccessResponse(v GetVideosSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetVideosSuccessResponse performs a merge with any union data inside the GetVideosResponse_SubsonicResponse, using the provided GetVideosSuccessResponse
+func (t *GetVideosResponse_SubsonicResponse) MergeGetVideosSuccessResponse(v GetVideosSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the GetVideosResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t GetVideosResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the GetVideosResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *GetVideosResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the GetVideosResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *GetVideosResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetVideosResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetVideosResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsJukeboxControlSuccessResponse returns the union data inside the JukeboxControlResponse_SubsonicResponse as a JukeboxControlSuccessResponse
+func (t JukeboxControlResponse_SubsonicResponse) AsJukeboxControlSuccessResponse() (JukeboxControlSuccessResponse, error) {
+	var body JukeboxControlSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromJukeboxControlSuccessResponse overwrites any union data inside the JukeboxControlResponse_SubsonicResponse as the provided JukeboxControlSuccessResponse
+func (t *JukeboxControlResponse_SubsonicResponse) FromJukeboxControlSuccessResponse(v JukeboxControlSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeJukeboxControlSuccessResponse performs a merge with any union data inside the JukeboxControlResponse_SubsonicResponse, using the provided JukeboxControlSuccessResponse
+func (t *JukeboxControlResponse_SubsonicResponse) MergeJukeboxControlSuccessResponse(v JukeboxControlSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the JukeboxControlResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t JukeboxControlResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the JukeboxControlResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *JukeboxControlResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the JukeboxControlResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *JukeboxControlResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t JukeboxControlResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *JukeboxControlResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsSearch2SuccessResponse returns the union data inside the Search2Response_SubsonicResponse as a Search2SuccessResponse
+func (t Search2Response_SubsonicResponse) AsSearch2SuccessResponse() (Search2SuccessResponse, error) {
+	var body Search2SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSearch2SuccessResponse overwrites any union data inside the Search2Response_SubsonicResponse as the provided Search2SuccessResponse
+func (t *Search2Response_SubsonicResponse) FromSearch2SuccessResponse(v Search2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSearch2SuccessResponse performs a merge with any union data inside the Search2Response_SubsonicResponse, using the provided Search2SuccessResponse
+func (t *Search2Response_SubsonicResponse) MergeSearch2SuccessResponse(v Search2SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the Search2Response_SubsonicResponse as a SubsonicFailureResponse
+func (t Search2Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the Search2Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *Search2Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the Search2Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *Search2Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Search2Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Search2Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsSearch3SuccessResponse returns the union data inside the Search3Response_SubsonicResponse as a Search3SuccessResponse
+func (t Search3Response_SubsonicResponse) AsSearch3SuccessResponse() (Search3SuccessResponse, error) {
+	var body Search3SuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSearch3SuccessResponse overwrites any union data inside the Search3Response_SubsonicResponse as the provided Search3SuccessResponse
+func (t *Search3Response_SubsonicResponse) FromSearch3SuccessResponse(v Search3SuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSearch3SuccessResponse performs a merge with any union data inside the Search3Response_SubsonicResponse, using the provided Search3SuccessResponse
+func (t *Search3Response_SubsonicResponse) MergeSearch3SuccessResponse(v Search3SuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the Search3Response_SubsonicResponse as a SubsonicFailureResponse
+func (t Search3Response_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the Search3Response_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *Search3Response_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the Search3Response_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *Search3Response_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t Search3Response_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *Search3Response_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsSearchSuccessResponse returns the union data inside the SearchResponse_SubsonicResponse as a SearchSuccessResponse
+func (t SearchResponse_SubsonicResponse) AsSearchSuccessResponse() (SearchSuccessResponse, error) {
+	var body SearchSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSearchSuccessResponse overwrites any union data inside the SearchResponse_SubsonicResponse as the provided SearchSuccessResponse
+func (t *SearchResponse_SubsonicResponse) FromSearchSuccessResponse(v SearchSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSearchSuccessResponse performs a merge with any union data inside the SearchResponse_SubsonicResponse, using the provided SearchSuccessResponse
+func (t *SearchResponse_SubsonicResponse) MergeSearchSuccessResponse(v SearchSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the SearchResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t SearchResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the SearchResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *SearchResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the SearchResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *SearchResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SearchResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SearchResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsStartScanSuccessResponse returns the union data inside the StartScanResponse_SubsonicResponse as a StartScanSuccessResponse
+func (t StartScanResponse_SubsonicResponse) AsStartScanSuccessResponse() (StartScanSuccessResponse, error) {
+	var body StartScanSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromStartScanSuccessResponse overwrites any union data inside the StartScanResponse_SubsonicResponse as the provided StartScanSuccessResponse
+func (t *StartScanResponse_SubsonicResponse) FromStartScanSuccessResponse(v StartScanSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeStartScanSuccessResponse performs a merge with any union data inside the StartScanResponse_SubsonicResponse, using the provided StartScanSuccessResponse
+func (t *StartScanResponse_SubsonicResponse) MergeStartScanSuccessResponse(v StartScanSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the StartScanResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t StartScanResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the StartScanResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *StartScanResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the StartScanResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *StartScanResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t StartScanResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *StartScanResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsSubsonicSuccessResponse returns the union data inside the SubsonicResponse_SubsonicResponse as a SubsonicSuccessResponse
+func (t SubsonicResponse_SubsonicResponse) AsSubsonicSuccessResponse() (SubsonicSuccessResponse, error) {
+	var body SubsonicSuccessResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicSuccessResponse overwrites any union data inside the SubsonicResponse_SubsonicResponse as the provided SubsonicSuccessResponse
+func (t *SubsonicResponse_SubsonicResponse) FromSubsonicSuccessResponse(v SubsonicSuccessResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicSuccessResponse performs a merge with any union data inside the SubsonicResponse_SubsonicResponse, using the provided SubsonicSuccessResponse
+func (t *SubsonicResponse_SubsonicResponse) MergeSubsonicSuccessResponse(v SubsonicSuccessResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsSubsonicFailureResponse returns the union data inside the SubsonicResponse_SubsonicResponse as a SubsonicFailureResponse
+func (t SubsonicResponse_SubsonicResponse) AsSubsonicFailureResponse() (SubsonicFailureResponse, error) {
+	var body SubsonicFailureResponse
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromSubsonicFailureResponse overwrites any union data inside the SubsonicResponse_SubsonicResponse as the provided SubsonicFailureResponse
+func (t *SubsonicResponse_SubsonicResponse) FromSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeSubsonicFailureResponse performs a merge with any union data inside the SubsonicResponse_SubsonicResponse, using the provided SubsonicFailureResponse
+func (t *SubsonicResponse_SubsonicResponse) MergeSubsonicFailureResponse(v SubsonicFailureResponse) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t SubsonicResponse_SubsonicResponse) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *SubsonicResponse_SubsonicResponse) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -13213,6 +19927,31 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	return m
 }
 
+type BinaryResponseApplicationbinaryResponse struct {
+	Body io.Reader
+
+	ContentLength int64
+}
+type BinaryResponseTextxmlResponse struct {
+	Body io.Reader
+
+	ContentLength int64
+}
+
+type EmptySubsonicResponseJSONResponse SubsonicResponse
+
+type HTTPFormPostNotSupportedResponse struct {
+}
+
+type TranscodeDecisionResponseJSONResponse struct {
+	TranscodeDecision *TranscodeDecision `json:"transcodeDecision,omitempty"`
+}
+type TranscodeDecisionResponseApplicationxmlResponse struct {
+	Body io.Reader
+
+	ContentLength int64
+}
+
 type GetAddChatMessageRequestObject struct {
 	Params GetAddChatMessageParams
 }
@@ -13221,11 +19960,11 @@ type GetAddChatMessageResponseObject interface {
 	VisitGetAddChatMessageResponse(w http.ResponseWriter) error
 }
 
-type GetAddChatMessage200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAddChatMessage200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type GetAddChatMessage200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response GetAddChatMessage200JSONResponse_SubsonicResponse) VisitGetAddChatMessageResponse(w http.ResponseWriter) error {
+func (response GetAddChatMessage200JSONResponse) VisitGetAddChatMessageResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13240,19 +19979,18 @@ type PostAddChatMessageResponseObject interface {
 	VisitPostAddChatMessageResponse(w http.ResponseWriter) error
 }
 
-type PostAddChatMessage200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostAddChatMessage200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostAddChatMessage200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostAddChatMessage200JSONResponse_SubsonicResponse) VisitPostAddChatMessageResponse(w http.ResponseWriter) error {
+func (response PostAddChatMessage200JSONResponse) VisitPostAddChatMessageResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostAddChatMessage405Response struct {
-}
+type PostAddChatMessage405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostAddChatMessage405Response) VisitPostAddChatMessageResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13267,11 +20005,11 @@ type ChangePasswordResponseObject interface {
 	VisitChangePasswordResponse(w http.ResponseWriter) error
 }
 
-type ChangePassword200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *ChangePassword200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type ChangePassword200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response ChangePassword200JSONResponse_SubsonicResponse) VisitChangePasswordResponse(w http.ResponseWriter) error {
+func (response ChangePassword200JSONResponse) VisitChangePasswordResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13286,19 +20024,18 @@ type PostChangePasswordResponseObject interface {
 	VisitPostChangePasswordResponse(w http.ResponseWriter) error
 }
 
-type PostChangePassword200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostChangePassword200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostChangePassword200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostChangePassword200JSONResponse_SubsonicResponse) VisitPostChangePasswordResponse(w http.ResponseWriter) error {
+func (response PostChangePassword200JSONResponse) VisitPostChangePasswordResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostChangePassword405Response struct {
-}
+type PostChangePassword405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostChangePassword405Response) VisitPostChangePasswordResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13313,11 +20050,11 @@ type CreateBookmarkResponseObject interface {
 	VisitCreateBookmarkResponse(w http.ResponseWriter) error
 }
 
-type CreateBookmark200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreateBookmark200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type CreateBookmark200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response CreateBookmark200JSONResponse_SubsonicResponse) VisitCreateBookmarkResponse(w http.ResponseWriter) error {
+func (response CreateBookmark200JSONResponse) VisitCreateBookmarkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13332,19 +20069,18 @@ type PostCreateBookmarkResponseObject interface {
 	VisitPostCreateBookmarkResponse(w http.ResponseWriter) error
 }
 
-type PostCreateBookmark200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreateBookmark200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostCreateBookmark200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostCreateBookmark200JSONResponse_SubsonicResponse) VisitPostCreateBookmarkResponse(w http.ResponseWriter) error {
+func (response PostCreateBookmark200JSONResponse) VisitPostCreateBookmarkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreateBookmark405Response struct {
-}
+type PostCreateBookmark405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreateBookmark405Response) VisitPostCreateBookmarkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13359,11 +20095,11 @@ type CreateInternetRadioStationResponseObject interface {
 	VisitCreateInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type CreateInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreateInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type CreateInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response CreateInternetRadioStation200JSONResponse_SubsonicResponse) VisitCreateInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response CreateInternetRadioStation200JSONResponse) VisitCreateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13378,19 +20114,18 @@ type PostCreateInternetRadioStationResponseObject interface {
 	VisitPostCreateInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type PostCreateInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreateInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostCreateInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostCreateInternetRadioStation200JSONResponse_SubsonicResponse) VisitPostCreateInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response PostCreateInternetRadioStation200JSONResponse) VisitPostCreateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreateInternetRadioStation405Response struct {
-}
+type PostCreateInternetRadioStation405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreateInternetRadioStation405Response) VisitPostCreateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13405,11 +20140,9 @@ type CreatePlaylistResponseObject interface {
 	VisitCreatePlaylistResponse(w http.ResponseWriter) error
 }
 
-type CreatePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreatePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type CreatePlaylist200JSONResponse CreatePlaylistResponse
 
-func (response CreatePlaylist200JSONResponse_SubsonicResponse) VisitCreatePlaylistResponse(w http.ResponseWriter) error {
+func (response CreatePlaylist200JSONResponse) VisitCreatePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13424,19 +20157,16 @@ type PostCreatePlaylistResponseObject interface {
 	VisitPostCreatePlaylistResponse(w http.ResponseWriter) error
 }
 
-type PostCreatePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreatePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostCreatePlaylist200JSONResponse CreatePlaylistResponse
 
-func (response PostCreatePlaylist200JSONResponse_SubsonicResponse) VisitPostCreatePlaylistResponse(w http.ResponseWriter) error {
+func (response PostCreatePlaylist200JSONResponse) VisitPostCreatePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreatePlaylist405Response struct {
-}
+type PostCreatePlaylist405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreatePlaylist405Response) VisitPostCreatePlaylistResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13451,11 +20181,11 @@ type CreatePodcastChannelResponseObject interface {
 	VisitCreatePodcastChannelResponse(w http.ResponseWriter) error
 }
 
-type CreatePodcastChannel200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreatePodcastChannel200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type CreatePodcastChannel200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response CreatePodcastChannel200JSONResponse_SubsonicResponse) VisitCreatePodcastChannelResponse(w http.ResponseWriter) error {
+func (response CreatePodcastChannel200JSONResponse) VisitCreatePodcastChannelResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13470,19 +20200,18 @@ type PostCreatePodcastChannelResponseObject interface {
 	VisitPostCreatePodcastChannelResponse(w http.ResponseWriter) error
 }
 
-type PostCreatePodcastChannel200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreatePodcastChannel200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostCreatePodcastChannel200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostCreatePodcastChannel200JSONResponse_SubsonicResponse) VisitPostCreatePodcastChannelResponse(w http.ResponseWriter) error {
+func (response PostCreatePodcastChannel200JSONResponse) VisitPostCreatePodcastChannelResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreatePodcastChannel405Response struct {
-}
+type PostCreatePodcastChannel405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreatePodcastChannel405Response) VisitPostCreatePodcastChannelResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13497,11 +20226,9 @@ type CreateShareResponseObject interface {
 	VisitCreateShareResponse(w http.ResponseWriter) error
 }
 
-type CreateShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreateShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type CreateShare200JSONResponse CreateSharesResponse
 
-func (response CreateShare200JSONResponse_SubsonicResponse) VisitCreateShareResponse(w http.ResponseWriter) error {
+func (response CreateShare200JSONResponse) VisitCreateShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13516,19 +20243,16 @@ type PostCreateShareResponseObject interface {
 	VisitPostCreateShareResponse(w http.ResponseWriter) error
 }
 
-type PostCreateShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreateShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostCreateShare200JSONResponse CreateSharesResponse
 
-func (response PostCreateShare200JSONResponse_SubsonicResponse) VisitPostCreateShareResponse(w http.ResponseWriter) error {
+func (response PostCreateShare200JSONResponse) VisitPostCreateShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreateShare405Response struct {
-}
+type PostCreateShare405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreateShare405Response) VisitPostCreateShareResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13543,11 +20267,11 @@ type CreateUserResponseObject interface {
 	VisitCreateUserResponse(w http.ResponseWriter) error
 }
 
-type CreateUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *CreateUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type CreateUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response CreateUser200JSONResponse_SubsonicResponse) VisitCreateUserResponse(w http.ResponseWriter) error {
+func (response CreateUser200JSONResponse) VisitCreateUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13562,19 +20286,18 @@ type PostCreateUserResponseObject interface {
 	VisitPostCreateUserResponse(w http.ResponseWriter) error
 }
 
-type PostCreateUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostCreateUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostCreateUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostCreateUser200JSONResponse_SubsonicResponse) VisitPostCreateUserResponse(w http.ResponseWriter) error {
+func (response PostCreateUser200JSONResponse) VisitPostCreateUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostCreateUser405Response struct {
-}
+type PostCreateUser405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostCreateUser405Response) VisitPostCreateUserResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13589,11 +20312,11 @@ type DeleteBookmarkResponseObject interface {
 	VisitDeleteBookmarkResponse(w http.ResponseWriter) error
 }
 
-type DeleteBookmark200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeleteBookmark200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeleteBookmark200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeleteBookmark200JSONResponse_SubsonicResponse) VisitDeleteBookmarkResponse(w http.ResponseWriter) error {
+func (response DeleteBookmark200JSONResponse) VisitDeleteBookmarkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13608,19 +20331,18 @@ type PostDeleteBookmarkResponseObject interface {
 	VisitPostDeleteBookmarkResponse(w http.ResponseWriter) error
 }
 
-type PostDeleteBookmark200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeleteBookmark200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeleteBookmark200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeleteBookmark200JSONResponse_SubsonicResponse) VisitPostDeleteBookmarkResponse(w http.ResponseWriter) error {
+func (response PostDeleteBookmark200JSONResponse) VisitPostDeleteBookmarkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeleteBookmark405Response struct {
-}
+type PostDeleteBookmark405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeleteBookmark405Response) VisitPostDeleteBookmarkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13635,11 +20357,11 @@ type DeleteInternetRadioStationResponseObject interface {
 	VisitDeleteInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type DeleteInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeleteInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeleteInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeleteInternetRadioStation200JSONResponse_SubsonicResponse) VisitDeleteInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response DeleteInternetRadioStation200JSONResponse) VisitDeleteInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13654,19 +20376,18 @@ type PostDeleteInternetRadioStationResponseObject interface {
 	VisitPostDeleteInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type PostDeleteInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeleteInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeleteInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeleteInternetRadioStation200JSONResponse_SubsonicResponse) VisitPostDeleteInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response PostDeleteInternetRadioStation200JSONResponse) VisitPostDeleteInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeleteInternetRadioStation405Response struct {
-}
+type PostDeleteInternetRadioStation405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeleteInternetRadioStation405Response) VisitPostDeleteInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13681,11 +20402,11 @@ type DeletePlaylistResponseObject interface {
 	VisitDeletePlaylistResponse(w http.ResponseWriter) error
 }
 
-type DeletePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeletePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeletePlaylist200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeletePlaylist200JSONResponse_SubsonicResponse) VisitDeletePlaylistResponse(w http.ResponseWriter) error {
+func (response DeletePlaylist200JSONResponse) VisitDeletePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13700,19 +20421,18 @@ type PostDeletePlaylistResponseObject interface {
 	VisitPostDeletePlaylistResponse(w http.ResponseWriter) error
 }
 
-type PostDeletePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeletePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeletePlaylist200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeletePlaylist200JSONResponse_SubsonicResponse) VisitPostDeletePlaylistResponse(w http.ResponseWriter) error {
+func (response PostDeletePlaylist200JSONResponse) VisitPostDeletePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeletePlaylist405Response struct {
-}
+type PostDeletePlaylist405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeletePlaylist405Response) VisitPostDeletePlaylistResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13727,11 +20447,11 @@ type DeletePodcastChannelResponseObject interface {
 	VisitDeletePodcastChannelResponse(w http.ResponseWriter) error
 }
 
-type DeletePodcastChannel200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeletePodcastChannel200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeletePodcastChannel200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeletePodcastChannel200JSONResponse_SubsonicResponse) VisitDeletePodcastChannelResponse(w http.ResponseWriter) error {
+func (response DeletePodcastChannel200JSONResponse) VisitDeletePodcastChannelResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13746,19 +20466,18 @@ type PostDeletePodcastChannelResponseObject interface {
 	VisitPostDeletePodcastChannelResponse(w http.ResponseWriter) error
 }
 
-type PostDeletePodcastChannel200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeletePodcastChannel200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeletePodcastChannel200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeletePodcastChannel200JSONResponse_SubsonicResponse) VisitPostDeletePodcastChannelResponse(w http.ResponseWriter) error {
+func (response PostDeletePodcastChannel200JSONResponse) VisitPostDeletePodcastChannelResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeletePodcastChannel405Response struct {
-}
+type PostDeletePodcastChannel405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeletePodcastChannel405Response) VisitPostDeletePodcastChannelResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13773,11 +20492,11 @@ type DeletePodcastEpisodeResponseObject interface {
 	VisitDeletePodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type DeletePodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeletePodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeletePodcastEpisode200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeletePodcastEpisode200JSONResponse_SubsonicResponse) VisitDeletePodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response DeletePodcastEpisode200JSONResponse) VisitDeletePodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13792,19 +20511,18 @@ type PostDeletePodcastEpisodeResponseObject interface {
 	VisitPostDeletePodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type PostDeletePodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeletePodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeletePodcastEpisode200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeletePodcastEpisode200JSONResponse_SubsonicResponse) VisitPostDeletePodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response PostDeletePodcastEpisode200JSONResponse) VisitPostDeletePodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeletePodcastEpisode405Response struct {
-}
+type PostDeletePodcastEpisode405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeletePodcastEpisode405Response) VisitPostDeletePodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13819,11 +20537,11 @@ type DeleteShareResponseObject interface {
 	VisitDeleteShareResponse(w http.ResponseWriter) error
 }
 
-type DeleteShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeleteShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeleteShare200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeleteShare200JSONResponse_SubsonicResponse) VisitDeleteShareResponse(w http.ResponseWriter) error {
+func (response DeleteShare200JSONResponse) VisitDeleteShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13838,19 +20556,18 @@ type PostDeleteShareResponseObject interface {
 	VisitPostDeleteShareResponse(w http.ResponseWriter) error
 }
 
-type PostDeleteShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeleteShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeleteShare200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeleteShare200JSONResponse_SubsonicResponse) VisitPostDeleteShareResponse(w http.ResponseWriter) error {
+func (response PostDeleteShare200JSONResponse) VisitPostDeleteShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeleteShare405Response struct {
-}
+type PostDeleteShare405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeleteShare405Response) VisitPostDeleteShareResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13865,11 +20582,11 @@ type DeleteUserResponseObject interface {
 	VisitDeleteUserResponse(w http.ResponseWriter) error
 }
 
-type DeleteUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DeleteUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DeleteUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DeleteUser200JSONResponse_SubsonicResponse) VisitDeleteUserResponse(w http.ResponseWriter) error {
+func (response DeleteUser200JSONResponse) VisitDeleteUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -13884,19 +20601,18 @@ type PostDeleteUserResponseObject interface {
 	VisitPostDeleteUserResponse(w http.ResponseWriter) error
 }
 
-type PostDeleteUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDeleteUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDeleteUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDeleteUser200JSONResponse_SubsonicResponse) VisitPostDeleteUserResponse(w http.ResponseWriter) error {
+func (response PostDeleteUser200JSONResponse) VisitPostDeleteUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDeleteUser405Response struct {
-}
+type PostDeleteUser405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDeleteUser405Response) VisitPostDeleteUserResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -13912,8 +20628,7 @@ type DownloadResponseObject interface {
 }
 
 type Download200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response Download200ApplicationbinaryResponse) VisitDownloadResponse(w http.ResponseWriter) error {
@@ -13930,10 +20645,7 @@ func (response Download200ApplicationbinaryResponse) VisitDownloadResponse(w htt
 	return err
 }
 
-type Download200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type Download200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response Download200TextxmlResponse) VisitDownloadResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -13958,8 +20670,7 @@ type PostDownloadResponseObject interface {
 }
 
 type PostDownload200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response PostDownload200ApplicationbinaryResponse) VisitPostDownloadResponse(w http.ResponseWriter) error {
@@ -13976,10 +20687,7 @@ func (response PostDownload200ApplicationbinaryResponse) VisitPostDownloadRespon
 	return err
 }
 
-type PostDownload200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type PostDownload200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response PostDownload200TextxmlResponse) VisitPostDownloadResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -13995,8 +20703,7 @@ func (response PostDownload200TextxmlResponse) VisitPostDownloadResponse(w http.
 	return err
 }
 
-type PostDownload405Response struct {
-}
+type PostDownload405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDownload405Response) VisitPostDownloadResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14011,11 +20718,11 @@ type DownloadPodcastEpisodeResponseObject interface {
 	VisitDownloadPodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type DownloadPodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *DownloadPodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type DownloadPodcastEpisode200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response DownloadPodcastEpisode200JSONResponse_SubsonicResponse) VisitDownloadPodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response DownloadPodcastEpisode200JSONResponse) VisitDownloadPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14030,19 +20737,18 @@ type PostDownloadPodcastEpisodeResponseObject interface {
 	VisitPostDownloadPodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type PostDownloadPodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostDownloadPodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostDownloadPodcastEpisode200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostDownloadPodcastEpisode200JSONResponse_SubsonicResponse) VisitPostDownloadPodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response PostDownloadPodcastEpisode200JSONResponse) VisitPostDownloadPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostDownloadPodcastEpisode405Response struct {
-}
+type PostDownloadPodcastEpisode405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostDownloadPodcastEpisode405Response) VisitPostDownloadPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14057,11 +20763,9 @@ type GetAlbumResponseObject interface {
 	VisitGetAlbumResponse(w http.ResponseWriter) error
 }
 
-type GetAlbum200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAlbum200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetAlbum200JSONResponse GetAlbumResponse
 
-func (response GetAlbum200JSONResponse_SubsonicResponse) VisitGetAlbumResponse(w http.ResponseWriter) error {
+func (response GetAlbum200JSONResponse) VisitGetAlbumResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14076,19 +20780,16 @@ type PostGetAlbumResponseObject interface {
 	VisitPostGetAlbumResponse(w http.ResponseWriter) error
 }
 
-type PostGetAlbum200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetAlbum200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetAlbum200JSONResponse GetAlbumResponse
 
-func (response PostGetAlbum200JSONResponse_SubsonicResponse) VisitPostGetAlbumResponse(w http.ResponseWriter) error {
+func (response PostGetAlbum200JSONResponse) VisitPostGetAlbumResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetAlbum405Response struct {
-}
+type PostGetAlbum405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAlbum405Response) VisitPostGetAlbumResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14103,11 +20804,9 @@ type GetAlbumInfoResponseObject interface {
 	VisitGetAlbumInfoResponse(w http.ResponseWriter) error
 }
 
-type GetAlbumInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAlbumInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetAlbumInfo200JSONResponse GetAlbumInfoResponse
 
-func (response GetAlbumInfo200JSONResponse_SubsonicResponse) VisitGetAlbumInfoResponse(w http.ResponseWriter) error {
+func (response GetAlbumInfo200JSONResponse) VisitGetAlbumInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14122,19 +20821,16 @@ type PostGetAlbumInfoResponseObject interface {
 	VisitPostGetAlbumInfoResponse(w http.ResponseWriter) error
 }
 
-type PostGetAlbumInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetAlbumInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetAlbumInfo200JSONResponse GetAlbumInfoResponse
 
-func (response PostGetAlbumInfo200JSONResponse_SubsonicResponse) VisitPostGetAlbumInfoResponse(w http.ResponseWriter) error {
+func (response PostGetAlbumInfo200JSONResponse) VisitPostGetAlbumInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetAlbumInfo405Response struct {
-}
+type PostGetAlbumInfo405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAlbumInfo405Response) VisitPostGetAlbumInfoResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14149,11 +20845,9 @@ type GetAlbumInfo2ResponseObject interface {
 	VisitGetAlbumInfo2Response(w http.ResponseWriter) error
 }
 
-type GetAlbumInfo2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAlbumInfo2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetAlbumInfo2200JSONResponse GetAlbumInfoResponse
 
-func (response GetAlbumInfo2200JSONResponse_SubsonicResponse) VisitGetAlbumInfo2Response(w http.ResponseWriter) error {
+func (response GetAlbumInfo2200JSONResponse) VisitGetAlbumInfo2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14168,19 +20862,16 @@ type PostGetAlbumInfo2ResponseObject interface {
 	VisitPostGetAlbumInfo2Response(w http.ResponseWriter) error
 }
 
-type PostGetAlbumInfo2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetAlbumInfo2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetAlbumInfo2200JSONResponse GetAlbumInfoResponse
 
-func (response PostGetAlbumInfo2200JSONResponse_SubsonicResponse) VisitPostGetAlbumInfo2Response(w http.ResponseWriter) error {
+func (response PostGetAlbumInfo2200JSONResponse) VisitPostGetAlbumInfo2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetAlbumInfo2405Response struct {
-}
+type PostGetAlbumInfo2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAlbumInfo2405Response) VisitPostGetAlbumInfo2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14195,11 +20886,9 @@ type GetAlbumListResponseObject interface {
 	VisitGetAlbumListResponse(w http.ResponseWriter) error
 }
 
-type GetAlbumList200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAlbumList200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetAlbumList200JSONResponse GetAlbumListResponse
 
-func (response GetAlbumList200JSONResponse_SubsonicResponse) VisitGetAlbumListResponse(w http.ResponseWriter) error {
+func (response GetAlbumList200JSONResponse) VisitGetAlbumListResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14214,19 +20903,16 @@ type PostGetAlbumListResponseObject interface {
 	VisitPostGetAlbumListResponse(w http.ResponseWriter) error
 }
 
-type PostGetAlbumList200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetAlbumList200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetAlbumList200JSONResponse GetAlbumListResponse
 
-func (response PostGetAlbumList200JSONResponse_SubsonicResponse) VisitPostGetAlbumListResponse(w http.ResponseWriter) error {
+func (response PostGetAlbumList200JSONResponse) VisitPostGetAlbumListResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetAlbumList405Response struct {
-}
+type PostGetAlbumList405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAlbumList405Response) VisitPostGetAlbumListResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14241,11 +20927,9 @@ type GetAlbumList2ResponseObject interface {
 	VisitGetAlbumList2Response(w http.ResponseWriter) error
 }
 
-type GetAlbumList2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetAlbumList2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetAlbumList2200JSONResponse GetAlbumList2Response
 
-func (response GetAlbumList2200JSONResponse_SubsonicResponse) VisitGetAlbumList2Response(w http.ResponseWriter) error {
+func (response GetAlbumList2200JSONResponse) VisitGetAlbumList2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14260,19 +20944,16 @@ type PostGetAlbumList2ResponseObject interface {
 	VisitPostGetAlbumList2Response(w http.ResponseWriter) error
 }
 
-type PostGetAlbumList2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetAlbumList2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetAlbumList2200JSONResponse GetAlbumList2Response
 
-func (response PostGetAlbumList2200JSONResponse_SubsonicResponse) VisitPostGetAlbumList2Response(w http.ResponseWriter) error {
+func (response PostGetAlbumList2200JSONResponse) VisitPostGetAlbumList2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetAlbumList2405Response struct {
-}
+type PostGetAlbumList2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAlbumList2405Response) VisitPostGetAlbumList2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14287,11 +20968,9 @@ type GetArtistResponseObject interface {
 	VisitGetArtistResponse(w http.ResponseWriter) error
 }
 
-type GetArtist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetArtist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetArtist200JSONResponse GetArtistResponse
 
-func (response GetArtist200JSONResponse_SubsonicResponse) VisitGetArtistResponse(w http.ResponseWriter) error {
+func (response GetArtist200JSONResponse) VisitGetArtistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14306,19 +20985,16 @@ type PostGetArtistResponseObject interface {
 	VisitPostGetArtistResponse(w http.ResponseWriter) error
 }
 
-type PostGetArtist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetArtist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetArtist200JSONResponse GetArtistResponse
 
-func (response PostGetArtist200JSONResponse_SubsonicResponse) VisitPostGetArtistResponse(w http.ResponseWriter) error {
+func (response PostGetArtist200JSONResponse) VisitPostGetArtistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetArtist405Response struct {
-}
+type PostGetArtist405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetArtist405Response) VisitPostGetArtistResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14333,11 +21009,9 @@ type GetArtistInfoResponseObject interface {
 	VisitGetArtistInfoResponse(w http.ResponseWriter) error
 }
 
-type GetArtistInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetArtistInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetArtistInfo200JSONResponse GetArtistInfoResponse
 
-func (response GetArtistInfo200JSONResponse_SubsonicResponse) VisitGetArtistInfoResponse(w http.ResponseWriter) error {
+func (response GetArtistInfo200JSONResponse) VisitGetArtistInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14352,19 +21026,16 @@ type PostGetArtistInfoResponseObject interface {
 	VisitPostGetArtistInfoResponse(w http.ResponseWriter) error
 }
 
-type PostGetArtistInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetArtistInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetArtistInfo200JSONResponse GetArtistInfoResponse
 
-func (response PostGetArtistInfo200JSONResponse_SubsonicResponse) VisitPostGetArtistInfoResponse(w http.ResponseWriter) error {
+func (response PostGetArtistInfo200JSONResponse) VisitPostGetArtistInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetArtistInfo405Response struct {
-}
+type PostGetArtistInfo405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetArtistInfo405Response) VisitPostGetArtistInfoResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14379,11 +21050,9 @@ type GetArtistInfo2ResponseObject interface {
 	VisitGetArtistInfo2Response(w http.ResponseWriter) error
 }
 
-type GetArtistInfo2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetArtistInfo2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetArtistInfo2200JSONResponse GetArtistInfo2Response
 
-func (response GetArtistInfo2200JSONResponse_SubsonicResponse) VisitGetArtistInfo2Response(w http.ResponseWriter) error {
+func (response GetArtistInfo2200JSONResponse) VisitGetArtistInfo2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14398,19 +21067,16 @@ type PostGetArtistInfo2ResponseObject interface {
 	VisitPostGetArtistInfo2Response(w http.ResponseWriter) error
 }
 
-type PostGetArtistInfo2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetArtistInfo2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetArtistInfo2200JSONResponse GetArtistInfo2Response
 
-func (response PostGetArtistInfo2200JSONResponse_SubsonicResponse) VisitPostGetArtistInfo2Response(w http.ResponseWriter) error {
+func (response PostGetArtistInfo2200JSONResponse) VisitPostGetArtistInfo2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetArtistInfo2405Response struct {
-}
+type PostGetArtistInfo2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetArtistInfo2405Response) VisitPostGetArtistInfo2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14425,11 +21091,9 @@ type GetArtistsResponseObject interface {
 	VisitGetArtistsResponse(w http.ResponseWriter) error
 }
 
-type GetArtists200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetArtists200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetArtists200JSONResponse GetArtistsResponse
 
-func (response GetArtists200JSONResponse_SubsonicResponse) VisitGetArtistsResponse(w http.ResponseWriter) error {
+func (response GetArtists200JSONResponse) VisitGetArtistsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14444,19 +21108,16 @@ type PostGetArtistsResponseObject interface {
 	VisitPostGetArtistsResponse(w http.ResponseWriter) error
 }
 
-type PostGetArtists200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetArtists200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetArtists200JSONResponse GetArtistsResponse
 
-func (response PostGetArtists200JSONResponse_SubsonicResponse) VisitPostGetArtistsResponse(w http.ResponseWriter) error {
+func (response PostGetArtists200JSONResponse) VisitPostGetArtistsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetArtists405Response struct {
-}
+type PostGetArtists405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetArtists405Response) VisitPostGetArtistsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14472,8 +21133,7 @@ type GetAvatarResponseObject interface {
 }
 
 type GetAvatar200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response GetAvatar200ApplicationbinaryResponse) VisitGetAvatarResponse(w http.ResponseWriter) error {
@@ -14490,10 +21150,7 @@ func (response GetAvatar200ApplicationbinaryResponse) VisitGetAvatarResponse(w h
 	return err
 }
 
-type GetAvatar200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type GetAvatar200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response GetAvatar200TextxmlResponse) VisitGetAvatarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -14518,8 +21175,7 @@ type PostGetAvatarResponseObject interface {
 }
 
 type PostGetAvatar200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response PostGetAvatar200ApplicationbinaryResponse) VisitPostGetAvatarResponse(w http.ResponseWriter) error {
@@ -14536,10 +21192,7 @@ func (response PostGetAvatar200ApplicationbinaryResponse) VisitPostGetAvatarResp
 	return err
 }
 
-type PostGetAvatar200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type PostGetAvatar200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response PostGetAvatar200TextxmlResponse) VisitPostGetAvatarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -14555,8 +21208,7 @@ func (response PostGetAvatar200TextxmlResponse) VisitPostGetAvatarResponse(w htt
 	return err
 }
 
-type PostGetAvatar405Response struct {
-}
+type PostGetAvatar405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetAvatar405Response) VisitPostGetAvatarResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14570,11 +21222,9 @@ type GetBookmarksResponseObject interface {
 	VisitGetBookmarksResponse(w http.ResponseWriter) error
 }
 
-type GetBookmarks200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetBookmarks200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetBookmarks200JSONResponse GetBookmarksResponse
 
-func (response GetBookmarks200JSONResponse_SubsonicResponse) VisitGetBookmarksResponse(w http.ResponseWriter) error {
+func (response GetBookmarks200JSONResponse) VisitGetBookmarksResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14589,19 +21239,16 @@ type PostGetBookmarksResponseObject interface {
 	VisitPostGetBookmarksResponse(w http.ResponseWriter) error
 }
 
-type PostGetBookmarks200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetBookmarks200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetBookmarks200JSONResponse GetBookmarksResponse
 
-func (response PostGetBookmarks200JSONResponse_SubsonicResponse) VisitPostGetBookmarksResponse(w http.ResponseWriter) error {
+func (response PostGetBookmarks200JSONResponse) VisitPostGetBookmarksResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetBookmarks405Response struct {
-}
+type PostGetBookmarks405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetBookmarks405Response) VisitPostGetBookmarksResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14682,8 +21329,7 @@ func (response PostGetCaptions200TextResponse) VisitPostGetCaptionsResponse(w ht
 	return err
 }
 
-type PostGetCaptions405Response struct {
-}
+type PostGetCaptions405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetCaptions405Response) VisitPostGetCaptionsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14697,11 +21343,9 @@ type GetChatMessagesResponseObject interface {
 	VisitGetChatMessagesResponse(w http.ResponseWriter) error
 }
 
-type GetChatMessages200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetChatMessages200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetChatMessages200JSONResponse GetChatMessagesResponse
 
-func (response GetChatMessages200JSONResponse_SubsonicResponse) VisitGetChatMessagesResponse(w http.ResponseWriter) error {
+func (response GetChatMessages200JSONResponse) VisitGetChatMessagesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14716,19 +21360,16 @@ type PostGetChatMessagesResponseObject interface {
 	VisitPostGetChatMessagesResponse(w http.ResponseWriter) error
 }
 
-type PostGetChatMessages200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetChatMessages200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetChatMessages200JSONResponse GetChatMessagesResponse
 
-func (response PostGetChatMessages200JSONResponse_SubsonicResponse) VisitPostGetChatMessagesResponse(w http.ResponseWriter) error {
+func (response PostGetChatMessages200JSONResponse) VisitPostGetChatMessagesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetChatMessages405Response struct {
-}
+type PostGetChatMessages405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetChatMessages405Response) VisitPostGetChatMessagesResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14744,8 +21385,7 @@ type GetCoverArtResponseObject interface {
 }
 
 type GetCoverArt200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response GetCoverArt200ApplicationbinaryResponse) VisitGetCoverArtResponse(w http.ResponseWriter) error {
@@ -14762,10 +21402,7 @@ func (response GetCoverArt200ApplicationbinaryResponse) VisitGetCoverArtResponse
 	return err
 }
 
-type GetCoverArt200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type GetCoverArt200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response GetCoverArt200TextxmlResponse) VisitGetCoverArtResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -14790,8 +21427,7 @@ type PostGetCoverArtResponseObject interface {
 }
 
 type PostGetCoverArt200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response PostGetCoverArt200ApplicationbinaryResponse) VisitPostGetCoverArtResponse(w http.ResponseWriter) error {
@@ -14808,10 +21444,7 @@ func (response PostGetCoverArt200ApplicationbinaryResponse) VisitPostGetCoverArt
 	return err
 }
 
-type PostGetCoverArt200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type PostGetCoverArt200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response PostGetCoverArt200TextxmlResponse) VisitPostGetCoverArtResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -14827,8 +21460,7 @@ func (response PostGetCoverArt200TextxmlResponse) VisitPostGetCoverArtResponse(w
 	return err
 }
 
-type PostGetCoverArt405Response struct {
-}
+type PostGetCoverArt405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetCoverArt405Response) VisitPostGetCoverArtResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14842,11 +21474,9 @@ type GetGenresResponseObject interface {
 	VisitGetGenresResponse(w http.ResponseWriter) error
 }
 
-type GetGenres200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetGenres200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetGenres200JSONResponse GetGenresResponse
 
-func (response GetGenres200JSONResponse_SubsonicResponse) VisitGetGenresResponse(w http.ResponseWriter) error {
+func (response GetGenres200JSONResponse) VisitGetGenresResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14861,19 +21491,16 @@ type PostGetGenresResponseObject interface {
 	VisitPostGetGenresResponse(w http.ResponseWriter) error
 }
 
-type PostGetGenres200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetGenres200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetGenres200JSONResponse GetGenresResponse
 
-func (response PostGetGenres200JSONResponse_SubsonicResponse) VisitPostGetGenresResponse(w http.ResponseWriter) error {
+func (response PostGetGenres200JSONResponse) VisitPostGetGenresResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetGenres405Response struct {
-}
+type PostGetGenres405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetGenres405Response) VisitPostGetGenresResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14888,11 +21515,9 @@ type GetIndexesResponseObject interface {
 	VisitGetIndexesResponse(w http.ResponseWriter) error
 }
 
-type GetIndexes200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetIndexes200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetIndexes200JSONResponse GetIndexesResponse
 
-func (response GetIndexes200JSONResponse_SubsonicResponse) VisitGetIndexesResponse(w http.ResponseWriter) error {
+func (response GetIndexes200JSONResponse) VisitGetIndexesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14907,19 +21532,16 @@ type PostGetIndexesResponseObject interface {
 	VisitPostGetIndexesResponse(w http.ResponseWriter) error
 }
 
-type PostGetIndexes200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetIndexes200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetIndexes200JSONResponse GetIndexesResponse
 
-func (response PostGetIndexes200JSONResponse_SubsonicResponse) VisitPostGetIndexesResponse(w http.ResponseWriter) error {
+func (response PostGetIndexes200JSONResponse) VisitPostGetIndexesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetIndexes405Response struct {
-}
+type PostGetIndexes405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetIndexes405Response) VisitPostGetIndexesResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14933,11 +21555,9 @@ type GetInternetRadioStationsResponseObject interface {
 	VisitGetInternetRadioStationsResponse(w http.ResponseWriter) error
 }
 
-type GetInternetRadioStations200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetInternetRadioStations200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetInternetRadioStations200JSONResponse GetInternetRadioStationsResponse
 
-func (response GetInternetRadioStations200JSONResponse_SubsonicResponse) VisitGetInternetRadioStationsResponse(w http.ResponseWriter) error {
+func (response GetInternetRadioStations200JSONResponse) VisitGetInternetRadioStationsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14952,19 +21572,16 @@ type PostGetInternetRadioStationsResponseObject interface {
 	VisitPostGetInternetRadioStationsResponse(w http.ResponseWriter) error
 }
 
-type PostGetInternetRadioStations200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetInternetRadioStations200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetInternetRadioStations200JSONResponse GetInternetRadioStationsResponse
 
-func (response PostGetInternetRadioStations200JSONResponse_SubsonicResponse) VisitPostGetInternetRadioStationsResponse(w http.ResponseWriter) error {
+func (response PostGetInternetRadioStations200JSONResponse) VisitPostGetInternetRadioStationsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetInternetRadioStations405Response struct {
-}
+type PostGetInternetRadioStations405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetInternetRadioStations405Response) VisitPostGetInternetRadioStationsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -14978,11 +21595,9 @@ type GetLicenseResponseObject interface {
 	VisitGetLicenseResponse(w http.ResponseWriter) error
 }
 
-type GetLicense200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetLicense200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetLicense200JSONResponse GetLicenseResponse
 
-func (response GetLicense200JSONResponse_SubsonicResponse) VisitGetLicenseResponse(w http.ResponseWriter) error {
+func (response GetLicense200JSONResponse) VisitGetLicenseResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -14997,19 +21612,16 @@ type PostGetLicenseResponseObject interface {
 	VisitPostGetLicenseResponse(w http.ResponseWriter) error
 }
 
-type PostGetLicense200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetLicense200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetLicense200JSONResponse GetLicenseResponse
 
-func (response PostGetLicense200JSONResponse_SubsonicResponse) VisitPostGetLicenseResponse(w http.ResponseWriter) error {
+func (response PostGetLicense200JSONResponse) VisitPostGetLicenseResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetLicense405Response struct {
-}
+type PostGetLicense405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetLicense405Response) VisitPostGetLicenseResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15024,11 +21636,9 @@ type GetLyricsResponseObject interface {
 	VisitGetLyricsResponse(w http.ResponseWriter) error
 }
 
-type GetLyrics200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetLyrics200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetLyrics200JSONResponse GetLyricsResponse
 
-func (response GetLyrics200JSONResponse_SubsonicResponse) VisitGetLyricsResponse(w http.ResponseWriter) error {
+func (response GetLyrics200JSONResponse) VisitGetLyricsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15043,19 +21653,16 @@ type PostGetLyricsResponseObject interface {
 	VisitPostGetLyricsResponse(w http.ResponseWriter) error
 }
 
-type PostGetLyrics200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetLyrics200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetLyrics200JSONResponse GetLyricsResponse
 
-func (response PostGetLyrics200JSONResponse_SubsonicResponse) VisitPostGetLyricsResponse(w http.ResponseWriter) error {
+func (response PostGetLyrics200JSONResponse) VisitPostGetLyricsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetLyrics405Response struct {
-}
+type PostGetLyrics405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetLyrics405Response) VisitPostGetLyricsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15070,11 +21677,9 @@ type GetLyricsBySongIdResponseObject interface {
 	VisitGetLyricsBySongIdResponse(w http.ResponseWriter) error
 }
 
-type GetLyricsBySongId200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetLyricsBySongId200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetLyricsBySongId200JSONResponse GetLyricsBySongIdResponse
 
-func (response GetLyricsBySongId200JSONResponse_SubsonicResponse) VisitGetLyricsBySongIdResponse(w http.ResponseWriter) error {
+func (response GetLyricsBySongId200JSONResponse) VisitGetLyricsBySongIdResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15097,11 +21702,9 @@ type PostGetLyricsBySongIdResponseObject interface {
 	VisitPostGetLyricsBySongIdResponse(w http.ResponseWriter) error
 }
 
-type PostGetLyricsBySongId200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetLyricsBySongId200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetLyricsBySongId200JSONResponse GetLyricsBySongIdResponse
 
-func (response PostGetLyricsBySongId200JSONResponse_SubsonicResponse) VisitPostGetLyricsBySongIdResponse(w http.ResponseWriter) error {
+func (response PostGetLyricsBySongId200JSONResponse) VisitPostGetLyricsBySongIdResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15116,8 +21719,7 @@ func (response PostGetLyricsBySongId404Response) VisitPostGetLyricsBySongIdRespo
 	return nil
 }
 
-type PostGetLyricsBySongId405Response struct {
-}
+type PostGetLyricsBySongId405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetLyricsBySongId405Response) VisitPostGetLyricsBySongIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15132,11 +21734,9 @@ type GetMusicDirectoryResponseObject interface {
 	VisitGetMusicDirectoryResponse(w http.ResponseWriter) error
 }
 
-type GetMusicDirectory200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetMusicDirectory200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetMusicDirectory200JSONResponse GetMusicDirectoryResponse
 
-func (response GetMusicDirectory200JSONResponse_SubsonicResponse) VisitGetMusicDirectoryResponse(w http.ResponseWriter) error {
+func (response GetMusicDirectory200JSONResponse) VisitGetMusicDirectoryResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15151,19 +21751,16 @@ type PostGetMusicDirectoryResponseObject interface {
 	VisitPostGetMusicDirectoryResponse(w http.ResponseWriter) error
 }
 
-type PostGetMusicDirectory200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetMusicDirectory200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetMusicDirectory200JSONResponse GetMusicDirectoryResponse
 
-func (response PostGetMusicDirectory200JSONResponse_SubsonicResponse) VisitPostGetMusicDirectoryResponse(w http.ResponseWriter) error {
+func (response PostGetMusicDirectory200JSONResponse) VisitPostGetMusicDirectoryResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetMusicDirectory405Response struct {
-}
+type PostGetMusicDirectory405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetMusicDirectory405Response) VisitPostGetMusicDirectoryResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15177,11 +21774,9 @@ type GetMusicFoldersResponseObject interface {
 	VisitGetMusicFoldersResponse(w http.ResponseWriter) error
 }
 
-type GetMusicFolders200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetMusicFolders200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetMusicFolders200JSONResponse GetMusicFoldersResponse
 
-func (response GetMusicFolders200JSONResponse_SubsonicResponse) VisitGetMusicFoldersResponse(w http.ResponseWriter) error {
+func (response GetMusicFolders200JSONResponse) VisitGetMusicFoldersResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15196,19 +21791,16 @@ type PostGetMusicFoldersResponseObject interface {
 	VisitPostGetMusicFoldersResponse(w http.ResponseWriter) error
 }
 
-type PostGetMusicFolders200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetMusicFolders200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetMusicFolders200JSONResponse GetMusicFoldersResponse
 
-func (response PostGetMusicFolders200JSONResponse_SubsonicResponse) VisitPostGetMusicFoldersResponse(w http.ResponseWriter) error {
+func (response PostGetMusicFolders200JSONResponse) VisitPostGetMusicFoldersResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetMusicFolders405Response struct {
-}
+type PostGetMusicFolders405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetMusicFolders405Response) VisitPostGetMusicFoldersResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15223,11 +21815,9 @@ type GetNewestPodcastsResponseObject interface {
 	VisitGetNewestPodcastsResponse(w http.ResponseWriter) error
 }
 
-type GetNewestPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetNewestPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetNewestPodcasts200JSONResponse GetNewestPodcastsResponse
 
-func (response GetNewestPodcasts200JSONResponse_SubsonicResponse) VisitGetNewestPodcastsResponse(w http.ResponseWriter) error {
+func (response GetNewestPodcasts200JSONResponse) VisitGetNewestPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15242,19 +21832,16 @@ type PostGetNewestPodcastsResponseObject interface {
 	VisitPostGetNewestPodcastsResponse(w http.ResponseWriter) error
 }
 
-type PostGetNewestPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetNewestPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetNewestPodcasts200JSONResponse GetNewestPodcastsResponse
 
-func (response PostGetNewestPodcasts200JSONResponse_SubsonicResponse) VisitPostGetNewestPodcastsResponse(w http.ResponseWriter) error {
+func (response PostGetNewestPodcasts200JSONResponse) VisitPostGetNewestPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetNewestPodcasts405Response struct {
-}
+type PostGetNewestPodcasts405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetNewestPodcasts405Response) VisitPostGetNewestPodcastsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15268,11 +21855,9 @@ type GetNowPlayingResponseObject interface {
 	VisitGetNowPlayingResponse(w http.ResponseWriter) error
 }
 
-type GetNowPlaying200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetNowPlaying200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetNowPlaying200JSONResponse GetNowPlayingResponse
 
-func (response GetNowPlaying200JSONResponse_SubsonicResponse) VisitGetNowPlayingResponse(w http.ResponseWriter) error {
+func (response GetNowPlaying200JSONResponse) VisitGetNowPlayingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15287,19 +21872,16 @@ type PostGetNowPlayingResponseObject interface {
 	VisitPostGetNowPlayingResponse(w http.ResponseWriter) error
 }
 
-type PostGetNowPlaying200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetNowPlaying200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetNowPlaying200JSONResponse GetNowPlayingResponse
 
-func (response PostGetNowPlaying200JSONResponse_SubsonicResponse) VisitPostGetNowPlayingResponse(w http.ResponseWriter) error {
+func (response PostGetNowPlaying200JSONResponse) VisitPostGetNowPlayingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetNowPlaying405Response struct {
-}
+type PostGetNowPlaying405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetNowPlaying405Response) VisitPostGetNowPlayingResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15313,11 +21895,9 @@ type GetOpenSubsonicExtensionsResponseObject interface {
 	VisitGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error
 }
 
-type GetOpenSubsonicExtensions200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetOpenSubsonicExtensions200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetOpenSubsonicExtensions200JSONResponse GetOpenSubsonicExtensionsResponse
 
-func (response GetOpenSubsonicExtensions200JSONResponse_SubsonicResponse) VisitGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error {
+func (response GetOpenSubsonicExtensions200JSONResponse) VisitGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15332,19 +21912,16 @@ type PostGetOpenSubsonicExtensionsResponseObject interface {
 	VisitPostGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error
 }
 
-type PostGetOpenSubsonicExtensions200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetOpenSubsonicExtensions200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetOpenSubsonicExtensions200JSONResponse GetOpenSubsonicExtensionsResponse
 
-func (response PostGetOpenSubsonicExtensions200JSONResponse_SubsonicResponse) VisitPostGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error {
+func (response PostGetOpenSubsonicExtensions200JSONResponse) VisitPostGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetOpenSubsonicExtensions405Response struct {
-}
+type PostGetOpenSubsonicExtensions405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetOpenSubsonicExtensions405Response) VisitPostGetOpenSubsonicExtensionsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15358,11 +21935,9 @@ type GetPlayQueueResponseObject interface {
 	VisitGetPlayQueueResponse(w http.ResponseWriter) error
 }
 
-type GetPlayQueue200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPlayQueue200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPlayQueue200JSONResponse GetPlayQueueResponse
 
-func (response GetPlayQueue200JSONResponse_SubsonicResponse) VisitGetPlayQueueResponse(w http.ResponseWriter) error {
+func (response GetPlayQueue200JSONResponse) VisitGetPlayQueueResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15377,19 +21952,16 @@ type PostGetPlayQueueResponseObject interface {
 	VisitPostGetPlayQueueResponse(w http.ResponseWriter) error
 }
 
-type PostGetPlayQueue200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPlayQueue200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPlayQueue200JSONResponse GetPlayQueueResponse
 
-func (response PostGetPlayQueue200JSONResponse_SubsonicResponse) VisitPostGetPlayQueueResponse(w http.ResponseWriter) error {
+func (response PostGetPlayQueue200JSONResponse) VisitPostGetPlayQueueResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetPlayQueue405Response struct {
-}
+type PostGetPlayQueue405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPlayQueue405Response) VisitPostGetPlayQueueResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15403,11 +21975,9 @@ type GetPlayQueueByIndexResponseObject interface {
 	VisitGetPlayQueueByIndexResponse(w http.ResponseWriter) error
 }
 
-type GetPlayQueueByIndex200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPlayQueueByIndex200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPlayQueueByIndex200JSONResponse GetPlayQueueByIndexResponse
 
-func (response GetPlayQueueByIndex200JSONResponse_SubsonicResponse) VisitGetPlayQueueByIndexResponse(w http.ResponseWriter) error {
+func (response GetPlayQueueByIndex200JSONResponse) VisitGetPlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15422,19 +21992,16 @@ type PostGetPlayQueueByIndexResponseObject interface {
 	VisitPostGetPlayQueueByIndexResponse(w http.ResponseWriter) error
 }
 
-type PostGetPlayQueueByIndex200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPlayQueueByIndex200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPlayQueueByIndex200JSONResponse GetPlayQueueByIndexResponse
 
-func (response PostGetPlayQueueByIndex200JSONResponse_SubsonicResponse) VisitPostGetPlayQueueByIndexResponse(w http.ResponseWriter) error {
+func (response PostGetPlayQueueByIndex200JSONResponse) VisitPostGetPlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetPlayQueueByIndex405Response struct {
-}
+type PostGetPlayQueueByIndex405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPlayQueueByIndex405Response) VisitPostGetPlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15449,11 +22016,9 @@ type GetPlaylistResponseObject interface {
 	VisitGetPlaylistResponse(w http.ResponseWriter) error
 }
 
-type GetPlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPlaylist200JSONResponse GetPlaylistResponse
 
-func (response GetPlaylist200JSONResponse_SubsonicResponse) VisitGetPlaylistResponse(w http.ResponseWriter) error {
+func (response GetPlaylist200JSONResponse) VisitGetPlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15468,19 +22033,16 @@ type PostGetPlaylistResponseObject interface {
 	VisitPostGetPlaylistResponse(w http.ResponseWriter) error
 }
 
-type PostGetPlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPlaylist200JSONResponse GetPlaylistResponse
 
-func (response PostGetPlaylist200JSONResponse_SubsonicResponse) VisitPostGetPlaylistResponse(w http.ResponseWriter) error {
+func (response PostGetPlaylist200JSONResponse) VisitPostGetPlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetPlaylist405Response struct {
-}
+type PostGetPlaylist405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPlaylist405Response) VisitPostGetPlaylistResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15495,11 +22057,9 @@ type GetPlaylistsResponseObject interface {
 	VisitGetPlaylistsResponse(w http.ResponseWriter) error
 }
 
-type GetPlaylists200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPlaylists200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPlaylists200JSONResponse GetPlaylistsResponse
 
-func (response GetPlaylists200JSONResponse_SubsonicResponse) VisitGetPlaylistsResponse(w http.ResponseWriter) error {
+func (response GetPlaylists200JSONResponse) VisitGetPlaylistsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15514,19 +22074,16 @@ type PostGetPlaylistsResponseObject interface {
 	VisitPostGetPlaylistsResponse(w http.ResponseWriter) error
 }
 
-type PostGetPlaylists200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPlaylists200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPlaylists200JSONResponse GetPlaylistsResponse
 
-func (response PostGetPlaylists200JSONResponse_SubsonicResponse) VisitPostGetPlaylistsResponse(w http.ResponseWriter) error {
+func (response PostGetPlaylists200JSONResponse) VisitPostGetPlaylistsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetPlaylists405Response struct {
-}
+type PostGetPlaylists405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPlaylists405Response) VisitPostGetPlaylistsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15541,11 +22098,9 @@ type GetPodcastEpisodeResponseObject interface {
 	VisitGetPodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type GetPodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPodcastEpisode200JSONResponse GetPodcastEpisodeResponse
 
-func (response GetPodcastEpisode200JSONResponse_SubsonicResponse) VisitGetPodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response GetPodcastEpisode200JSONResponse) VisitGetPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15568,11 +22123,9 @@ type PostGetPodcastEpisodeResponseObject interface {
 	VisitPostGetPodcastEpisodeResponse(w http.ResponseWriter) error
 }
 
-type PostGetPodcastEpisode200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPodcastEpisode200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPodcastEpisode200JSONResponse GetPodcastEpisodeResponse
 
-func (response PostGetPodcastEpisode200JSONResponse_SubsonicResponse) VisitPostGetPodcastEpisodeResponse(w http.ResponseWriter) error {
+func (response PostGetPodcastEpisode200JSONResponse) VisitPostGetPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15587,8 +22140,7 @@ func (response PostGetPodcastEpisode404Response) VisitPostGetPodcastEpisodeRespo
 	return nil
 }
 
-type PostGetPodcastEpisode405Response struct {
-}
+type PostGetPodcastEpisode405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPodcastEpisode405Response) VisitPostGetPodcastEpisodeResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15603,11 +22155,9 @@ type GetPodcastsResponseObject interface {
 	VisitGetPodcastsResponse(w http.ResponseWriter) error
 }
 
-type GetPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetPodcasts200JSONResponse GetPodcastsResponse
 
-func (response GetPodcasts200JSONResponse_SubsonicResponse) VisitGetPodcastsResponse(w http.ResponseWriter) error {
+func (response GetPodcasts200JSONResponse) VisitGetPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15622,19 +22172,16 @@ type PostGetPodcastsResponseObject interface {
 	VisitPostGetPodcastsResponse(w http.ResponseWriter) error
 }
 
-type PostGetPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetPodcasts200JSONResponse GetPodcastsResponse
 
-func (response PostGetPodcasts200JSONResponse_SubsonicResponse) VisitPostGetPodcastsResponse(w http.ResponseWriter) error {
+func (response PostGetPodcasts200JSONResponse) VisitPostGetPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetPodcasts405Response struct {
-}
+type PostGetPodcasts405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetPodcasts405Response) VisitPostGetPodcastsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15649,11 +22196,9 @@ type GetRandomSongsResponseObject interface {
 	VisitGetRandomSongsResponse(w http.ResponseWriter) error
 }
 
-type GetRandomSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetRandomSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetRandomSongs200JSONResponse GetRandomSongsResponse
 
-func (response GetRandomSongs200JSONResponse_SubsonicResponse) VisitGetRandomSongsResponse(w http.ResponseWriter) error {
+func (response GetRandomSongs200JSONResponse) VisitGetRandomSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15668,19 +22213,16 @@ type PostGetRandomSongsResponseObject interface {
 	VisitPostGetRandomSongsResponse(w http.ResponseWriter) error
 }
 
-type PostGetRandomSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetRandomSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetRandomSongs200JSONResponse GetRandomSongsResponse
 
-func (response PostGetRandomSongs200JSONResponse_SubsonicResponse) VisitPostGetRandomSongsResponse(w http.ResponseWriter) error {
+func (response PostGetRandomSongs200JSONResponse) VisitPostGetRandomSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetRandomSongs405Response struct {
-}
+type PostGetRandomSongs405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetRandomSongs405Response) VisitPostGetRandomSongsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15694,11 +22236,9 @@ type GetScanStatusResponseObject interface {
 	VisitGetScanStatusResponse(w http.ResponseWriter) error
 }
 
-type GetScanStatus200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetScanStatus200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetScanStatus200JSONResponse GetScanStatusResponse
 
-func (response GetScanStatus200JSONResponse_SubsonicResponse) VisitGetScanStatusResponse(w http.ResponseWriter) error {
+func (response GetScanStatus200JSONResponse) VisitGetScanStatusResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15713,19 +22253,16 @@ type PostGetScanStatusResponseObject interface {
 	VisitPostGetScanStatusResponse(w http.ResponseWriter) error
 }
 
-type PostGetScanStatus200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetScanStatus200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetScanStatus200JSONResponse GetScanStatusResponse
 
-func (response PostGetScanStatus200JSONResponse_SubsonicResponse) VisitPostGetScanStatusResponse(w http.ResponseWriter) error {
+func (response PostGetScanStatus200JSONResponse) VisitPostGetScanStatusResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetScanStatus405Response struct {
-}
+type PostGetScanStatus405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetScanStatus405Response) VisitPostGetScanStatusResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15739,11 +22276,9 @@ type GetSharesResponseObject interface {
 	VisitGetSharesResponse(w http.ResponseWriter) error
 }
 
-type GetShares200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetShares200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetShares200JSONResponse GetSharesResponse
 
-func (response GetShares200JSONResponse_SubsonicResponse) VisitGetSharesResponse(w http.ResponseWriter) error {
+func (response GetShares200JSONResponse) VisitGetSharesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15758,19 +22293,16 @@ type PostGetSharesResponseObject interface {
 	VisitPostGetSharesResponse(w http.ResponseWriter) error
 }
 
-type PostGetShares200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetShares200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetShares200JSONResponse GetSharesResponse
 
-func (response PostGetShares200JSONResponse_SubsonicResponse) VisitPostGetSharesResponse(w http.ResponseWriter) error {
+func (response PostGetShares200JSONResponse) VisitPostGetSharesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetShares405Response struct {
-}
+type PostGetShares405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetShares405Response) VisitPostGetSharesResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15785,11 +22317,9 @@ type GetSimilarSongsResponseObject interface {
 	VisitGetSimilarSongsResponse(w http.ResponseWriter) error
 }
 
-type GetSimilarSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetSimilarSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetSimilarSongs200JSONResponse GetSimilarSongsResponse
 
-func (response GetSimilarSongs200JSONResponse_SubsonicResponse) VisitGetSimilarSongsResponse(w http.ResponseWriter) error {
+func (response GetSimilarSongs200JSONResponse) VisitGetSimilarSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15804,19 +22334,16 @@ type PostGetSimilarSongsResponseObject interface {
 	VisitPostGetSimilarSongsResponse(w http.ResponseWriter) error
 }
 
-type PostGetSimilarSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetSimilarSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetSimilarSongs200JSONResponse GetSimilarSongsResponse
 
-func (response PostGetSimilarSongs200JSONResponse_SubsonicResponse) VisitPostGetSimilarSongsResponse(w http.ResponseWriter) error {
+func (response PostGetSimilarSongs200JSONResponse) VisitPostGetSimilarSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetSimilarSongs405Response struct {
-}
+type PostGetSimilarSongs405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetSimilarSongs405Response) VisitPostGetSimilarSongsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15831,11 +22358,9 @@ type GetSimilarSongs2ResponseObject interface {
 	VisitGetSimilarSongs2Response(w http.ResponseWriter) error
 }
 
-type GetSimilarSongs2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetSimilarSongs2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetSimilarSongs2200JSONResponse GetSimilarSongs2Response
 
-func (response GetSimilarSongs2200JSONResponse_SubsonicResponse) VisitGetSimilarSongs2Response(w http.ResponseWriter) error {
+func (response GetSimilarSongs2200JSONResponse) VisitGetSimilarSongs2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15850,19 +22375,16 @@ type PostGetSimilarSongs2ResponseObject interface {
 	VisitPostGetSimilarSongs2Response(w http.ResponseWriter) error
 }
 
-type PostGetSimilarSongs2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetSimilarSongs2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetSimilarSongs2200JSONResponse GetSimilarSongs2Response
 
-func (response PostGetSimilarSongs2200JSONResponse_SubsonicResponse) VisitPostGetSimilarSongs2Response(w http.ResponseWriter) error {
+func (response PostGetSimilarSongs2200JSONResponse) VisitPostGetSimilarSongs2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetSimilarSongs2405Response struct {
-}
+type PostGetSimilarSongs2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetSimilarSongs2405Response) VisitPostGetSimilarSongs2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15877,11 +22399,9 @@ type GetSongResponseObject interface {
 	VisitGetSongResponse(w http.ResponseWriter) error
 }
 
-type GetSong200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetSong200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetSong200JSONResponse GetSongResponse
 
-func (response GetSong200JSONResponse_SubsonicResponse) VisitGetSongResponse(w http.ResponseWriter) error {
+func (response GetSong200JSONResponse) VisitGetSongResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15896,19 +22416,16 @@ type PostGetSongResponseObject interface {
 	VisitPostGetSongResponse(w http.ResponseWriter) error
 }
 
-type PostGetSong200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetSong200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetSong200JSONResponse GetSongResponse
 
-func (response PostGetSong200JSONResponse_SubsonicResponse) VisitPostGetSongResponse(w http.ResponseWriter) error {
+func (response PostGetSong200JSONResponse) VisitPostGetSongResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetSong405Response struct {
-}
+type PostGetSong405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetSong405Response) VisitPostGetSongResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15923,11 +22440,9 @@ type GetSongsByGenreResponseObject interface {
 	VisitGetSongsByGenreResponse(w http.ResponseWriter) error
 }
 
-type GetSongsByGenre200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetSongsByGenre200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetSongsByGenre200JSONResponse GetSongsByGenreResponse
 
-func (response GetSongsByGenre200JSONResponse_SubsonicResponse) VisitGetSongsByGenreResponse(w http.ResponseWriter) error {
+func (response GetSongsByGenre200JSONResponse) VisitGetSongsByGenreResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15942,19 +22457,16 @@ type PostGetSongsByGenreResponseObject interface {
 	VisitPostGetSongsByGenreResponse(w http.ResponseWriter) error
 }
 
-type PostGetSongsByGenre200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetSongsByGenre200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetSongsByGenre200JSONResponse GetSongsByGenreResponse
 
-func (response PostGetSongsByGenre200JSONResponse_SubsonicResponse) VisitPostGetSongsByGenreResponse(w http.ResponseWriter) error {
+func (response PostGetSongsByGenre200JSONResponse) VisitPostGetSongsByGenreResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetSongsByGenre405Response struct {
-}
+type PostGetSongsByGenre405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetSongsByGenre405Response) VisitPostGetSongsByGenreResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -15969,11 +22481,9 @@ type GetStarredResponseObject interface {
 	VisitGetStarredResponse(w http.ResponseWriter) error
 }
 
-type GetStarred200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetStarred200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetStarred200JSONResponse GetStarredResponse
 
-func (response GetStarred200JSONResponse_SubsonicResponse) VisitGetStarredResponse(w http.ResponseWriter) error {
+func (response GetStarred200JSONResponse) VisitGetStarredResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -15988,19 +22498,16 @@ type PostGetStarredResponseObject interface {
 	VisitPostGetStarredResponse(w http.ResponseWriter) error
 }
 
-type PostGetStarred200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetStarred200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetStarred200JSONResponse GetStarredResponse
 
-func (response PostGetStarred200JSONResponse_SubsonicResponse) VisitPostGetStarredResponse(w http.ResponseWriter) error {
+func (response PostGetStarred200JSONResponse) VisitPostGetStarredResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetStarred405Response struct {
-}
+type PostGetStarred405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetStarred405Response) VisitPostGetStarredResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16015,11 +22522,9 @@ type GetStarred2ResponseObject interface {
 	VisitGetStarred2Response(w http.ResponseWriter) error
 }
 
-type GetStarred2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetStarred2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetStarred2200JSONResponse GetStarred2Response
 
-func (response GetStarred2200JSONResponse_SubsonicResponse) VisitGetStarred2Response(w http.ResponseWriter) error {
+func (response GetStarred2200JSONResponse) VisitGetStarred2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16034,19 +22539,16 @@ type PostGetStarred2ResponseObject interface {
 	VisitPostGetStarred2Response(w http.ResponseWriter) error
 }
 
-type PostGetStarred2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetStarred2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetStarred2200JSONResponse GetStarred2Response
 
-func (response PostGetStarred2200JSONResponse_SubsonicResponse) VisitPostGetStarred2Response(w http.ResponseWriter) error {
+func (response PostGetStarred2200JSONResponse) VisitPostGetStarred2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetStarred2405Response struct {
-}
+type PostGetStarred2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetStarred2405Response) VisitPostGetStarred2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16061,11 +22563,9 @@ type GetTopSongsResponseObject interface {
 	VisitGetTopSongsResponse(w http.ResponseWriter) error
 }
 
-type GetTopSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetTopSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetTopSongs200JSONResponse GetTopSongsResponse
 
-func (response GetTopSongs200JSONResponse_SubsonicResponse) VisitGetTopSongsResponse(w http.ResponseWriter) error {
+func (response GetTopSongs200JSONResponse) VisitGetTopSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16080,19 +22580,16 @@ type PostGetTopSongsResponseObject interface {
 	VisitPostGetTopSongsResponse(w http.ResponseWriter) error
 }
 
-type PostGetTopSongs200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetTopSongs200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetTopSongs200JSONResponse GetTopSongsResponse
 
-func (response PostGetTopSongs200JSONResponse_SubsonicResponse) VisitPostGetTopSongsResponse(w http.ResponseWriter) error {
+func (response PostGetTopSongs200JSONResponse) VisitPostGetTopSongsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetTopSongs405Response struct {
-}
+type PostGetTopSongs405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetTopSongs405Response) VisitPostGetTopSongsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16109,33 +22606,7 @@ type GetTranscodeDecisionResponseObject interface {
 }
 
 type GetTranscodeDecision200JSONResponse struct {
-	TranscodeDecision *struct {
-		CanDirectPlay bool    `json:"canDirectPlay"`
-		CanTranscode  bool    `json:"canTranscode"`
-		ErrorReason   *string `json:"errorReason,omitempty"`
-		SourceStream  *struct {
-			AudioBitdepth   *int                                                                     `json:"audioBitdepth,omitempty"`
-			AudioBitrate    *int                                                                     `json:"audioBitrate,omitempty"`
-			AudioChannels   *int                                                                     `json:"audioChannels,omitempty"`
-			AudioProfile    *string                                                                  `json:"audioProfile,omitempty"`
-			AudioSamplerate *int                                                                     `json:"audioSamplerate,omitempty"`
-			Codec           string                                                                   `json:"codec"`
-			Container       string                                                                   `json:"container"`
-			Protocol        string `json:"protocol"`
-		} `json:"sourceStream,omitempty"`
-		TranscodeParams *string   `json:"transcodeParams,omitempty"`
-		TranscodeReason *[]string `json:"transcodeReason,omitempty"`
-		TranscodeStream *struct {
-			AudioBitdepth   *int                                                                        `json:"audioBitdepth,omitempty"`
-			AudioBitrate    *int                                                                        `json:"audioBitrate,omitempty"`
-			AudioChannels   *int                                                                        `json:"audioChannels,omitempty"`
-			AudioProfile    *string                                                                     `json:"audioProfile,omitempty"`
-			AudioSamplerate *int                                                                        `json:"audioSamplerate,omitempty"`
-			Codec           string                                                                      `json:"codec"`
-			Container       string                                                                      `json:"container"`
-			Protocol        string `json:"protocol"`
-		} `json:"transcodeStream,omitempty"`
-	} `json:"transcodeDecision,omitempty"`
+	TranscodeDecisionResponseJSONResponse
 }
 
 func (response GetTranscodeDecision200JSONResponse) VisitGetTranscodeDecisionResponse(w http.ResponseWriter) error {
@@ -16146,8 +22617,7 @@ func (response GetTranscodeDecision200JSONResponse) VisitGetTranscodeDecisionRes
 }
 
 type GetTranscodeDecision200ApplicationxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	TranscodeDecisionResponseApplicationxmlResponse
 }
 
 func (response GetTranscodeDecision200ApplicationxmlResponse) VisitGetTranscodeDecisionResponse(w http.ResponseWriter) error {
@@ -16231,11 +22701,9 @@ type GetUserResponseObject interface {
 	VisitGetUserResponse(w http.ResponseWriter) error
 }
 
-type GetUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetUser200JSONResponse GetUserResponse
 
-func (response GetUser200JSONResponse_SubsonicResponse) VisitGetUserResponse(w http.ResponseWriter) error {
+func (response GetUser200JSONResponse) VisitGetUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16250,19 +22718,16 @@ type PostGetUserResponseObject interface {
 	VisitPostGetUserResponse(w http.ResponseWriter) error
 }
 
-type PostGetUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetUser200JSONResponse GetUserResponse
 
-func (response PostGetUser200JSONResponse_SubsonicResponse) VisitPostGetUserResponse(w http.ResponseWriter) error {
+func (response PostGetUser200JSONResponse) VisitPostGetUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetUser405Response struct {
-}
+type PostGetUser405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetUser405Response) VisitPostGetUserResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16276,11 +22741,9 @@ type GetUsersResponseObject interface {
 	VisitGetUsersResponse(w http.ResponseWriter) error
 }
 
-type GetUsers200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetUsers200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetUsers200JSONResponse GetUsersResponse
 
-func (response GetUsers200JSONResponse_SubsonicResponse) VisitGetUsersResponse(w http.ResponseWriter) error {
+func (response GetUsers200JSONResponse) VisitGetUsersResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16295,19 +22758,16 @@ type PostGetUsersResponseObject interface {
 	VisitPostGetUsersResponse(w http.ResponseWriter) error
 }
 
-type PostGetUsers200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetUsers200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetUsers200JSONResponse GetUsersResponse
 
-func (response PostGetUsers200JSONResponse_SubsonicResponse) VisitPostGetUsersResponse(w http.ResponseWriter) error {
+func (response PostGetUsers200JSONResponse) VisitPostGetUsersResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetUsers405Response struct {
-}
+type PostGetUsers405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetUsers405Response) VisitPostGetUsersResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16322,11 +22782,9 @@ type GetVideoInfoResponseObject interface {
 	VisitGetVideoInfoResponse(w http.ResponseWriter) error
 }
 
-type GetVideoInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetVideoInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetVideoInfo200JSONResponse GetVideoInfoResponse
 
-func (response GetVideoInfo200JSONResponse_SubsonicResponse) VisitGetVideoInfoResponse(w http.ResponseWriter) error {
+func (response GetVideoInfo200JSONResponse) VisitGetVideoInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16341,19 +22799,16 @@ type PostGetVideoInfoResponseObject interface {
 	VisitPostGetVideoInfoResponse(w http.ResponseWriter) error
 }
 
-type PostGetVideoInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetVideoInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetVideoInfo200JSONResponse GetVideoInfoResponse
 
-func (response PostGetVideoInfo200JSONResponse_SubsonicResponse) VisitPostGetVideoInfoResponse(w http.ResponseWriter) error {
+func (response PostGetVideoInfo200JSONResponse) VisitPostGetVideoInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetVideoInfo405Response struct {
-}
+type PostGetVideoInfo405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetVideoInfo405Response) VisitPostGetVideoInfoResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16367,11 +22822,9 @@ type GetVideosResponseObject interface {
 	VisitGetVideosResponse(w http.ResponseWriter) error
 }
 
-type GetVideos200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *GetVideos200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type GetVideos200JSONResponse GetVideosResponse
 
-func (response GetVideos200JSONResponse_SubsonicResponse) VisitGetVideosResponse(w http.ResponseWriter) error {
+func (response GetVideos200JSONResponse) VisitGetVideosResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16386,19 +22839,16 @@ type PostGetVideosResponseObject interface {
 	VisitPostGetVideosResponse(w http.ResponseWriter) error
 }
 
-type PostGetVideos200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostGetVideos200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostGetVideos200JSONResponse GetVideosResponse
 
-func (response PostGetVideos200JSONResponse_SubsonicResponse) VisitPostGetVideosResponse(w http.ResponseWriter) error {
+func (response PostGetVideos200JSONResponse) VisitPostGetVideosResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostGetVideos405Response struct {
-}
+type PostGetVideos405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostGetVideos405Response) VisitPostGetVideosResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16497,8 +22947,7 @@ func (response PostHlsM3u8200TextxmlResponse) VisitPostHlsM3u8Response(w http.Re
 	return err
 }
 
-type PostHlsM3u8405Response struct {
-}
+type PostHlsM3u8405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostHlsM3u8405Response) VisitPostHlsM3u8Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16513,11 +22962,9 @@ type JukeboxControlResponseObject interface {
 	VisitJukeboxControlResponse(w http.ResponseWriter) error
 }
 
-type JukeboxControl200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *JukeboxControl200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type JukeboxControl200JSONResponse JukeboxControlResponse
 
-func (response JukeboxControl200JSONResponse_SubsonicResponse) VisitJukeboxControlResponse(w http.ResponseWriter) error {
+func (response JukeboxControl200JSONResponse) VisitJukeboxControlResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16532,19 +22979,16 @@ type PostJukeboxControlResponseObject interface {
 	VisitPostJukeboxControlResponse(w http.ResponseWriter) error
 }
 
-type PostJukeboxControl200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostJukeboxControl200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostJukeboxControl200JSONResponse JukeboxControlResponse
 
-func (response PostJukeboxControl200JSONResponse_SubsonicResponse) VisitPostJukeboxControlResponse(w http.ResponseWriter) error {
+func (response PostJukeboxControl200JSONResponse) VisitPostJukeboxControlResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostJukeboxControl405Response struct {
-}
+type PostJukeboxControl405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostJukeboxControl405Response) VisitPostJukeboxControlResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16558,11 +23002,11 @@ type PingResponseObject interface {
 	VisitPingResponse(w http.ResponseWriter) error
 }
 
-type Ping200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Ping200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type Ping200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response Ping200JSONResponse_SubsonicResponse) VisitPingResponse(w http.ResponseWriter) error {
+func (response Ping200JSONResponse) VisitPingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16577,19 +23021,18 @@ type PostPingResponseObject interface {
 	VisitPostPingResponse(w http.ResponseWriter) error
 }
 
-type PostPing200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostPing200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostPing200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostPing200JSONResponse_SubsonicResponse) VisitPostPingResponse(w http.ResponseWriter) error {
+func (response PostPing200JSONResponse) VisitPostPingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostPing405Response struct {
-}
+type PostPing405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostPing405Response) VisitPostPingResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16603,11 +23046,11 @@ type RefreshPodcastsResponseObject interface {
 	VisitRefreshPodcastsResponse(w http.ResponseWriter) error
 }
 
-type RefreshPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *RefreshPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type RefreshPodcasts200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response RefreshPodcasts200JSONResponse_SubsonicResponse) VisitRefreshPodcastsResponse(w http.ResponseWriter) error {
+func (response RefreshPodcasts200JSONResponse) VisitRefreshPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16622,19 +23065,18 @@ type PostRefreshPodcastsResponseObject interface {
 	VisitPostRefreshPodcastsResponse(w http.ResponseWriter) error
 }
 
-type PostRefreshPodcasts200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostRefreshPodcasts200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostRefreshPodcasts200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostRefreshPodcasts200JSONResponse_SubsonicResponse) VisitPostRefreshPodcastsResponse(w http.ResponseWriter) error {
+func (response PostRefreshPodcasts200JSONResponse) VisitPostRefreshPodcastsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostRefreshPodcasts405Response struct {
-}
+type PostRefreshPodcasts405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostRefreshPodcasts405Response) VisitPostRefreshPodcastsResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16649,11 +23091,11 @@ type SavePlayQueueResponseObject interface {
 	VisitSavePlayQueueResponse(w http.ResponseWriter) error
 }
 
-type SavePlayQueue200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *SavePlayQueue200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type SavePlayQueue200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response SavePlayQueue200JSONResponse_SubsonicResponse) VisitSavePlayQueueResponse(w http.ResponseWriter) error {
+func (response SavePlayQueue200JSONResponse) VisitSavePlayQueueResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16668,19 +23110,18 @@ type PostSavePlayQueueResponseObject interface {
 	VisitPostSavePlayQueueResponse(w http.ResponseWriter) error
 }
 
-type PostSavePlayQueue200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSavePlayQueue200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostSavePlayQueue200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostSavePlayQueue200JSONResponse_SubsonicResponse) VisitPostSavePlayQueueResponse(w http.ResponseWriter) error {
+func (response PostSavePlayQueue200JSONResponse) VisitPostSavePlayQueueResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSavePlayQueue405Response struct {
-}
+type PostSavePlayQueue405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSavePlayQueue405Response) VisitPostSavePlayQueueResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16695,11 +23136,11 @@ type SavePlayQueueByIndexResponseObject interface {
 	VisitSavePlayQueueByIndexResponse(w http.ResponseWriter) error
 }
 
-type SavePlayQueueByIndex200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *SavePlayQueueByIndex200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type SavePlayQueueByIndex200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response SavePlayQueueByIndex200JSONResponse_SubsonicResponse) VisitSavePlayQueueByIndexResponse(w http.ResponseWriter) error {
+func (response SavePlayQueueByIndex200JSONResponse) VisitSavePlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16714,19 +23155,18 @@ type PostSavePlayQueueByIndexResponseObject interface {
 	VisitPostSavePlayQueueByIndexResponse(w http.ResponseWriter) error
 }
 
-type PostSavePlayQueueByIndex200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSavePlayQueueByIndex200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostSavePlayQueueByIndex200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostSavePlayQueueByIndex200JSONResponse_SubsonicResponse) VisitPostSavePlayQueueByIndexResponse(w http.ResponseWriter) error {
+func (response PostSavePlayQueueByIndex200JSONResponse) VisitPostSavePlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSavePlayQueueByIndex405Response struct {
-}
+type PostSavePlayQueueByIndex405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSavePlayQueueByIndex405Response) VisitPostSavePlayQueueByIndexResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16741,11 +23181,11 @@ type ScrobbleResponseObject interface {
 	VisitScrobbleResponse(w http.ResponseWriter) error
 }
 
-type Scrobble200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Scrobble200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type Scrobble200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response Scrobble200JSONResponse_SubsonicResponse) VisitScrobbleResponse(w http.ResponseWriter) error {
+func (response Scrobble200JSONResponse) VisitScrobbleResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16760,19 +23200,18 @@ type PostScrobbleResponseObject interface {
 	VisitPostScrobbleResponse(w http.ResponseWriter) error
 }
 
-type PostScrobble200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostScrobble200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostScrobble200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostScrobble200JSONResponse_SubsonicResponse) VisitPostScrobbleResponse(w http.ResponseWriter) error {
+func (response PostScrobble200JSONResponse) VisitPostScrobbleResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostScrobble405Response struct {
-}
+type PostScrobble405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostScrobble405Response) VisitPostScrobbleResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16787,11 +23226,9 @@ type SearchResponseObject interface {
 	VisitSearchResponse(w http.ResponseWriter) error
 }
 
-type Search200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Search200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type Search200JSONResponse SearchResponse
 
-func (response Search200JSONResponse_SubsonicResponse) VisitSearchResponse(w http.ResponseWriter) error {
+func (response Search200JSONResponse) VisitSearchResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16806,19 +23243,16 @@ type PostSearchResponseObject interface {
 	VisitPostSearchResponse(w http.ResponseWriter) error
 }
 
-type PostSearch200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSearch200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostSearch200JSONResponse SearchResponse
 
-func (response PostSearch200JSONResponse_SubsonicResponse) VisitPostSearchResponse(w http.ResponseWriter) error {
+func (response PostSearch200JSONResponse) VisitPostSearchResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSearch405Response struct {
-}
+type PostSearch405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSearch405Response) VisitPostSearchResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16833,11 +23267,9 @@ type Search2ResponseObject interface {
 	VisitSearch2Response(w http.ResponseWriter) error
 }
 
-type Search2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Search2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type Search2200JSONResponse Search2Response
 
-func (response Search2200JSONResponse_SubsonicResponse) VisitSearch2Response(w http.ResponseWriter) error {
+func (response Search2200JSONResponse) VisitSearch2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16852,19 +23284,16 @@ type PostSearch2ResponseObject interface {
 	VisitPostSearch2Response(w http.ResponseWriter) error
 }
 
-type PostSearch2200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSearch2200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostSearch2200JSONResponse Search2Response
 
-func (response PostSearch2200JSONResponse_SubsonicResponse) VisitPostSearch2Response(w http.ResponseWriter) error {
+func (response PostSearch2200JSONResponse) VisitPostSearch2Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSearch2405Response struct {
-}
+type PostSearch2405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSearch2405Response) VisitPostSearch2Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16879,11 +23308,9 @@ type Search3ResponseObject interface {
 	VisitSearch3Response(w http.ResponseWriter) error
 }
 
-type Search3200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Search3200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type Search3200JSONResponse Search3Response
 
-func (response Search3200JSONResponse_SubsonicResponse) VisitSearch3Response(w http.ResponseWriter) error {
+func (response Search3200JSONResponse) VisitSearch3Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16898,19 +23325,16 @@ type PostSearch3ResponseObject interface {
 	VisitPostSearch3Response(w http.ResponseWriter) error
 }
 
-type PostSearch3200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSearch3200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostSearch3200JSONResponse Search3Response
 
-func (response PostSearch3200JSONResponse_SubsonicResponse) VisitPostSearch3Response(w http.ResponseWriter) error {
+func (response PostSearch3200JSONResponse) VisitPostSearch3Response(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSearch3405Response struct {
-}
+type PostSearch3405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSearch3405Response) VisitPostSearch3Response(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16925,11 +23349,11 @@ type SetRatingResponseObject interface {
 	VisitSetRatingResponse(w http.ResponseWriter) error
 }
 
-type SetRating200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *SetRating200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type SetRating200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response SetRating200JSONResponse_SubsonicResponse) VisitSetRatingResponse(w http.ResponseWriter) error {
+func (response SetRating200JSONResponse) VisitSetRatingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16944,19 +23368,18 @@ type PostSetRatingResponseObject interface {
 	VisitPostSetRatingResponse(w http.ResponseWriter) error
 }
 
-type PostSetRating200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostSetRating200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostSetRating200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostSetRating200JSONResponse_SubsonicResponse) VisitPostSetRatingResponse(w http.ResponseWriter) error {
+func (response PostSetRating200JSONResponse) VisitPostSetRatingResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostSetRating405Response struct {
-}
+type PostSetRating405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostSetRating405Response) VisitPostSetRatingResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -16971,11 +23394,11 @@ type StarResponseObject interface {
 	VisitStarResponse(w http.ResponseWriter) error
 }
 
-type Star200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Star200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type Star200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response Star200JSONResponse_SubsonicResponse) VisitStarResponse(w http.ResponseWriter) error {
+func (response Star200JSONResponse) VisitStarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -16990,19 +23413,18 @@ type PostStarResponseObject interface {
 	VisitPostStarResponse(w http.ResponseWriter) error
 }
 
-type PostStar200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostStar200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostStar200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostStar200JSONResponse_SubsonicResponse) VisitPostStarResponse(w http.ResponseWriter) error {
+func (response PostStar200JSONResponse) VisitPostStarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostStar405Response struct {
-}
+type PostStar405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostStar405Response) VisitPostStarResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17016,11 +23438,9 @@ type StartScanResponseObject interface {
 	VisitStartScanResponse(w http.ResponseWriter) error
 }
 
-type StartScan200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *StartScan200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type StartScan200JSONResponse StartScanResponse
 
-func (response StartScan200JSONResponse_SubsonicResponse) VisitStartScanResponse(w http.ResponseWriter) error {
+func (response StartScan200JSONResponse) VisitStartScanResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17035,19 +23455,16 @@ type PostStartScanResponseObject interface {
 	VisitPostStartScanResponse(w http.ResponseWriter) error
 }
 
-type PostStartScan200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostStartScan200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostStartScan200JSONResponse StartScanResponse
 
-func (response PostStartScan200JSONResponse_SubsonicResponse) VisitPostStartScanResponse(w http.ResponseWriter) error {
+func (response PostStartScan200JSONResponse) VisitPostStartScanResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostStartScan405Response struct {
-}
+type PostStartScan405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostStartScan405Response) VisitPostStartScanResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17063,8 +23480,7 @@ type StreamResponseObject interface {
 }
 
 type Stream200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response Stream200ApplicationbinaryResponse) VisitStreamResponse(w http.ResponseWriter) error {
@@ -17081,10 +23497,7 @@ func (response Stream200ApplicationbinaryResponse) VisitStreamResponse(w http.Re
 	return err
 }
 
-type Stream200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type Stream200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response Stream200TextxmlResponse) VisitStreamResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -17109,8 +23522,7 @@ type PostStreamResponseObject interface {
 }
 
 type PostStream200ApplicationbinaryResponse struct {
-	Body          io.Reader
-	ContentLength int64
+	BinaryResponseApplicationbinaryResponse
 }
 
 func (response PostStream200ApplicationbinaryResponse) VisitPostStreamResponse(w http.ResponseWriter) error {
@@ -17127,10 +23539,7 @@ func (response PostStream200ApplicationbinaryResponse) VisitPostStreamResponse(w
 	return err
 }
 
-type PostStream200TextxmlResponse struct {
-	Body          io.Reader
-	ContentLength int64
-}
+type PostStream200TextxmlResponse struct{ BinaryResponseTextxmlResponse }
 
 func (response PostStream200TextxmlResponse) VisitPostStreamResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "text/xml")
@@ -17146,8 +23555,7 @@ func (response PostStream200TextxmlResponse) VisitPostStreamResponse(w http.Resp
 	return err
 }
 
-type PostStream405Response struct {
-}
+type PostStream405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostStream405Response) VisitPostStreamResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17161,11 +23569,9 @@ type TokenInfoResponseObject interface {
 	VisitTokenInfoResponse(w http.ResponseWriter) error
 }
 
-type TokenInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *TokenInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type TokenInfo200JSONResponse GetTokenInfoResponse
 
-func (response TokenInfo200JSONResponse_SubsonicResponse) VisitTokenInfoResponse(w http.ResponseWriter) error {
+func (response TokenInfo200JSONResponse) VisitTokenInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17188,11 +23594,9 @@ type PostTokenInfoResponseObject interface {
 	VisitPostTokenInfoResponse(w http.ResponseWriter) error
 }
 
-type PostTokenInfo200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostTokenInfo200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
-}
+type PostTokenInfo200JSONResponse GetTokenInfoResponse
 
-func (response PostTokenInfo200JSONResponse_SubsonicResponse) VisitPostTokenInfoResponse(w http.ResponseWriter) error {
+func (response PostTokenInfo200JSONResponse) VisitPostTokenInfoResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17207,8 +23611,7 @@ func (response PostTokenInfo404Response) VisitPostTokenInfoResponse(w http.Respo
 	return nil
 }
 
-type PostTokenInfo405Response struct {
-}
+type PostTokenInfo405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostTokenInfo405Response) VisitPostTokenInfoResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17223,11 +23626,11 @@ type UnstarResponseObject interface {
 	VisitUnstarResponse(w http.ResponseWriter) error
 }
 
-type Unstar200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *Unstar200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type Unstar200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response Unstar200JSONResponse_SubsonicResponse) VisitUnstarResponse(w http.ResponseWriter) error {
+func (response Unstar200JSONResponse) VisitUnstarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17242,19 +23645,18 @@ type PostUnstarResponseObject interface {
 	VisitPostUnstarResponse(w http.ResponseWriter) error
 }
 
-type PostUnstar200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostUnstar200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostUnstar200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostUnstar200JSONResponse_SubsonicResponse) VisitPostUnstarResponse(w http.ResponseWriter) error {
+func (response PostUnstar200JSONResponse) VisitPostUnstarResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostUnstar405Response struct {
-}
+type PostUnstar405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostUnstar405Response) VisitPostUnstarResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17269,11 +23671,11 @@ type UpdateInternetRadioStationResponseObject interface {
 	VisitUpdateInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type UpdateInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *UpdateInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type UpdateInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response UpdateInternetRadioStation200JSONResponse_SubsonicResponse) VisitUpdateInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response UpdateInternetRadioStation200JSONResponse) VisitUpdateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17288,19 +23690,18 @@ type PostUpdateInternetRadioStationResponseObject interface {
 	VisitPostUpdateInternetRadioStationResponse(w http.ResponseWriter) error
 }
 
-type PostUpdateInternetRadioStation200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostUpdateInternetRadioStation200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostUpdateInternetRadioStation200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostUpdateInternetRadioStation200JSONResponse_SubsonicResponse) VisitPostUpdateInternetRadioStationResponse(w http.ResponseWriter) error {
+func (response PostUpdateInternetRadioStation200JSONResponse) VisitPostUpdateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostUpdateInternetRadioStation405Response struct {
-}
+type PostUpdateInternetRadioStation405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostUpdateInternetRadioStation405Response) VisitPostUpdateInternetRadioStationResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17315,11 +23716,11 @@ type UpdatePlaylistResponseObject interface {
 	VisitUpdatePlaylistResponse(w http.ResponseWriter) error
 }
 
-type UpdatePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *UpdatePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type UpdatePlaylist200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response UpdatePlaylist200JSONResponse_SubsonicResponse) VisitUpdatePlaylistResponse(w http.ResponseWriter) error {
+func (response UpdatePlaylist200JSONResponse) VisitUpdatePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17334,19 +23735,18 @@ type PostUpdatePlaylistResponseObject interface {
 	VisitPostUpdatePlaylistResponse(w http.ResponseWriter) error
 }
 
-type PostUpdatePlaylist200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostUpdatePlaylist200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostUpdatePlaylist200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostUpdatePlaylist200JSONResponse_SubsonicResponse) VisitPostUpdatePlaylistResponse(w http.ResponseWriter) error {
+func (response PostUpdatePlaylist200JSONResponse) VisitPostUpdatePlaylistResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostUpdatePlaylist405Response struct {
-}
+type PostUpdatePlaylist405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostUpdatePlaylist405Response) VisitPostUpdatePlaylistResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17361,11 +23761,11 @@ type UpdateShareResponseObject interface {
 	VisitUpdateShareResponse(w http.ResponseWriter) error
 }
 
-type UpdateShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *UpdateShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type UpdateShare200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response UpdateShare200JSONResponse_SubsonicResponse) VisitUpdateShareResponse(w http.ResponseWriter) error {
+func (response UpdateShare200JSONResponse) VisitUpdateShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17380,19 +23780,18 @@ type PostUpdateShareResponseObject interface {
 	VisitPostUpdateShareResponse(w http.ResponseWriter) error
 }
 
-type PostUpdateShare200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostUpdateShare200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostUpdateShare200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostUpdateShare200JSONResponse_SubsonicResponse) VisitPostUpdateShareResponse(w http.ResponseWriter) error {
+func (response PostUpdateShare200JSONResponse) VisitPostUpdateShareResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostUpdateShare405Response struct {
-}
+type PostUpdateShare405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostUpdateShare405Response) VisitPostUpdateShareResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
@@ -17407,11 +23806,11 @@ type UpdateUserResponseObject interface {
 	VisitUpdateUserResponse(w http.ResponseWriter) error
 }
 
-type UpdateUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *UpdateUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type UpdateUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response UpdateUser200JSONResponse_SubsonicResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+func (response UpdateUser200JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
@@ -17426,19 +23825,18 @@ type PostUpdateUserResponseObject interface {
 	VisitPostUpdateUserResponse(w http.ResponseWriter) error
 }
 
-type PostUpdateUser200JSONResponse_SubsonicResponse struct {
-	SubsonicResponse *PostUpdateUser200JSONResponse_SubsonicResponse `json:"subsonic-response,omitempty"`
+type PostUpdateUser200JSONResponse struct {
+	EmptySubsonicResponseJSONResponse
 }
 
-func (response PostUpdateUser200JSONResponse_SubsonicResponse) VisitPostUpdateUserResponse(w http.ResponseWriter) error {
+func (response PostUpdateUser200JSONResponse) VisitPostUpdateUserResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostUpdateUser405Response struct {
-}
+type PostUpdateUser405Response = HTTPFormPostNotSupportedResponse
 
 func (response PostUpdateUser405Response) VisitPostUpdateUserResponse(w http.ResponseWriter) error {
 	w.WriteHeader(405)
